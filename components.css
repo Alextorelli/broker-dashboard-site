@@ -1,0 +1,296 @@
+/* ---- TAG collateral components ------------------------------------------
+   The shared look layer. Templates position; this file styles. A component
+   here is position-agnostic: it fills whatever box the template gives it, so
+   the same table works on an absolutely-positioned BOV page, in the Property
+   Setup's flex column, and in an OM.
+
+   CORPORATE INK. Every colour resolves through --mm-* per brand-colors.css:
+   "Use these --mm-* values for any NEW piece." The Anthony-era --bov-* and
+   --ing-* palettes are for reading the old books and nothing else.
+
+   SIZES ARE MEASURED, NOT CHOSEN. Two independent measurements of the shipped
+   book agree, which is why these three are used verbatim:
+
+       role        pptx/brand.py        tokens/bov-type.css     used here
+       table cell  PT_TABLE  8.5pt  ->  --fs-fine   11.3px      11.3px
+       label       PT_LABEL  8.0pt  ->  --fs-micro  10.7px      10.7px
+       stat figure PT_STAT  18.5pt  ->  (none)                  24.7px
+
+   The comps table's 11.5px and the pricing callout's 26px are drift -- neither
+   is in any scale. They are corrected to the measured values above.
+
+   TABULAR FIGURES. Verified with fontTools 4.63.0 against the shipped woff2s:
+   Rubik, Roboto, Arboria and Frank Ruhl Libre all carry `tnum`; OSWALD DOES
+   NOT. So a numeric cell must never be set in the display face -- it would
+   silently fall back to proportional figures and the decimal columns would
+   not align. --tag-face-num is --f-figure (Source Serif Pro).
+
+   TABLE TAXONOMY. Two styles, ported from pptx/table_style.py, which measured
+   them from the shipped book. `data` is the default: reference tables
+   outnumber argument tables, and a table that arrives quiet can be promoted,
+   whereas one that arrives loud has already spent emphasis the reader cannot
+   get back. BOTH DROP VERTICAL RULES -- they are what makes a table read as a
+   spreadsheet rather than a typeset page.
+   -------------------------------------------------------------------- */
+
+:root {
+  /* --- faces. Numeric content MUST use --tag-face-num (see tnum note). --- */
+  --tag-face-label: var(--cond);
+  --tag-face-body:  var(--sans);
+  --tag-face-num:   var(--f-figure);
+
+  /* --- measured sizes (see header) --- */
+  --tag-fs-label: 10.7px;
+  --tag-fs-cell:  11.3px;
+  --tag-fs-body:  12px;
+  --tag-fs-stat:  24.7px;
+  --tag-fs-micro: 8.7px;
+
+  --tag-tr-label: .12em;
+
+  /* --- component roles. Retune these per scope, never the rules below. --- */
+  --tag-rule:          var(--mm-band);
+  --tag-rule-strong:   var(--mm-navy);
+  --tag-band:          var(--mm-page-tint);
+  --tag-label-ink:     var(--mm-warm-grey);
+  --tag-value-ink:     var(--mm-navy-near-black);
+  --tag-head-bg:       var(--mm-page-tint);
+  --tag-head-ink:      var(--mm-warm-grey);
+  --tag-emphasis:      var(--mm-orange);
+
+  --tag-row-pad-y: 5.2px;
+  --tag-cell-pad-x: 8px;
+}
+
+/* ============================================================
+   TableFacts — label/value pairs.
+   Property facts, summary fields, KEY DETAILS. Not a matrix:
+   for anything with periods or multiple value columns use
+   TableFinancial instead.
+   ============================================================ */
+
+.tag-facts {
+  display: grid;
+  grid-template-columns: repeat(var(--tag-facts-cols, 1), minmax(0, 1fr));
+  gap: 0 30px;
+}
+
+/* Navy header band spanning every column. Property facts only; financial
+   tables never take a header fill. */
+.tag-facts__head {
+  grid-column: 1 / -1;
+  background: var(--mm-navy);
+  color: var(--mm-white);
+  font-family:var(--cond-bold-family);
+  font-weight:var(--cond-bold-weight);
+  font-size: var(--tag-fs-label);
+  letter-spacing: var(--tag-tr-label);
+  text-transform: uppercase;
+  padding: var(--tag-row-pad-y) var(--tag-cell-pad-x);
+}
+
+.tag-facts__label, .tag-facts__value { margin: 0 }
+
+.tag-facts__row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 14px;
+  padding: var(--tag-row-pad-y) 0;
+  border-bottom: 1px solid var(--tag-rule);
+}
+
+/* Last row in each column loses its rule. :last-child alone is wrong in a
+   multi-column grid -- it only clears the final cell of the final column. */
+.tag-facts--flush .tag-facts__row:last-child { border-bottom: 0 }
+
+.tag-facts__label {
+  font-family:var(--cond-medium-family);
+  font-weight:var(--cond-medium-weight);
+  font-size: var(--tag-fs-label);
+  letter-spacing: var(--tag-tr-label);
+  text-transform: uppercase;
+  color: var(--tag-label-ink);
+  white-space: nowrap;
+}
+
+.tag-facts__value {
+  font-family:var(--figure-bold-family);
+  font-weight:var(--figure-bold-weight);
+  font-size: var(--tag-fs-cell);
+  color: var(--tag-value-ink);
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ============================================================
+   TableFinancial — the matrix. Proformas, rent rolls, comps.
+   A real <table> so a row is one element: it can carry a
+   background and a rule, and fill_deal.py can clone it.
+   ============================================================ */
+
+.tag-table {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed;
+  font-family:var(--figure-bold-family);font-weight:var(--figure-bold-weight);
+  font-size: var(--tag-fs-cell);
+  color: var(--tag-value-ink);
+  font-variant-numeric: tabular-nums;
+}
+
+.tag-table th,
+.tag-table td {
+  padding: var(--tag-row-pad-y) var(--tag-cell-pad-x);
+  border-bottom: 1px solid var(--tag-rule);
+  vertical-align: baseline;
+  overflow-wrap: break-word;
+}
+
+/* No vertical rules, ever. See the taxonomy note in the header. */
+.tag-table th:first-child,
+.tag-table td:first-child { padding-left: 0 }
+.tag-table th:last-child,
+.tag-table td:last-child  { padding-right: 0 }
+
+.tag-table thead th {
+  font-family:var(--cond-bold-family);
+  font-weight:var(--cond-bold-weight);
+  font-size: var(--tag-fs-label);
+  letter-spacing: var(--tag-tr-label);
+  text-transform: uppercase;
+  text-align: left;
+  background: none;
+  color: var(--mm-navy);
+  border-bottom: 1px solid var(--tag-rule);
+}
+
+/* The label column reads as text; every other column is a figure. */
+.tag-table__col--num,
+.tag-table th.tag-table__col--num { text-align: right }
+
+/* --- variant: emphasis. Retired 2026-09-24: financial tables never take a
+   header fill. The class is kept so existing markup does not break. --- */
+
+/* --- banding. Retired 2026-09-24: rows are never shaded. Class kept so
+   existing markup does not break. --- */
+
+/* --- summary rows --- */
+.tag-table__row--subtotal td {
+  font-family:var(--figure-bold-family);font-weight:var(--figure-bold-weight);
+  border-top: 1px solid var(--tag-rule);
+}
+
+.tag-table__row--total td {
+  font-family:var(--figure-bold-family);font-weight:var(--figure-bold-weight);
+  color: var(--mm-navy);
+  border-top: 1.5px solid var(--tag-rule-strong);
+  border-bottom: 0;
+}
+
+/* A row the template repeats. Kept visible in the blank template on purpose:
+   verify.py checks 6 and 7 need live, extractable text on every page. */
+.tag-table__row--proto { }
+
+/* ============================================================
+   StatBlock — the data callout.
+   One figure, one label, an optional caption. Use for the
+   number a page is arguing; do not build a grid of six.
+   ============================================================ */
+
+.tag-stats {
+  display: grid;
+  grid-template-columns: repeat(var(--tag-stats-cols, 3), minmax(0, 1fr));
+  gap: 18px;
+}
+
+.tag-stat__label {
+  font-family:var(--cond-medium-family);
+  font-weight:var(--cond-medium-weight);
+  font-size: var(--tag-fs-label);
+  letter-spacing: var(--tag-tr-label);
+  text-transform: uppercase;
+  color: var(--mm-navy);
+  margin-bottom: 6px;
+}
+
+.tag-stat__value {
+  font-family:var(--sans-medium-family);
+  font-weight:var(--sans-medium-weight);
+  font-size: var(--tag-fs-stat);
+  line-height: 1.05;
+  color: var(--mm-navy);
+  font-variant-numeric: tabular-nums;
+}
+
+/* The one figure being argued for. Once per page, like the chart rule. */
+.tag-stat--emphasis .tag-stat__value { color: var(--tag-emphasis) }
+
+.tag-stat__caption {
+  font-family:var(--sans-regular-family);font-weight:var(--sans-regular-weight);
+  font-size: var(--tag-fs-micro);
+  line-height: 1.3;
+  color: var(--tag-label-ink);
+  margin-top: 4px;
+}
+
+/* On a navy panel. */
+.tag-stat--on-dark .tag-stat__label,
+.tag-stat--on-dark .tag-stat__value { color: var(--mm-white) }
+.tag-stat--on-dark .tag-stat__caption { color: var(--mm-taupe) }
+
+/* A tinted tray behind a stat row, as the comps summary uses. */
+.tag-stats--tray {
+  background: var(--tag-band);
+  padding: 16px 20px;
+  box-sizing: border-box;
+}
+
+/* ============================================================
+   Charts — shared furniture.
+   Geometry is per-chart; these are the parts every chart shares
+   so a waterfall and a valuation summary cannot disagree.
+
+   The palette rule is brand-colors.css's own: step through the
+   navy ramp for 4+ categories before ever adding a hue, and let
+   orange mark the one series being argued for, once per chart.
+   ============================================================ */
+
+.tag-chart {
+  font-family:var(--figure-bold-family);font-weight:var(--figure-bold-weight);
+  font-size: var(--tag-fs-label);
+  color: var(--tag-value-ink);
+  font-variant-numeric: tabular-nums;
+}
+
+.tag-chart__axis { stroke: var(--mm-chart-axis); stroke-width: 1 }
+.tag-chart__reference { stroke: var(--mm-chart-reference); stroke-dasharray: 3 3 }
+.tag-chart__leader { stroke: var(--mm-chart-leader); stroke-width: 1 }
+
+.tag-chart__label {
+  font-family:var(--cond-regular-family);font-weight:var(--cond-regular-weight);
+  font-size: var(--tag-fs-label);
+  letter-spacing: var(--tag-tr-label);
+  text-transform: uppercase;
+  fill: var(--tag-label-ink);
+}
+
+.tag-chart__value {
+  font-family:var(--figure-bold-family);
+  font-size: var(--tag-fs-cell);
+  font-weight:var(--figure-bold-weight);
+  fill: var(--tag-value-ink);
+  font-variant-numeric: tabular-nums;
+}
+
+/* Series fills. Bars step through the ramp; --emphasis is spent once. */
+.tag-chart__bar          { fill: var(--mm-chart-series-1) }
+.tag-chart__bar--2       { fill: var(--mm-chart-series-2) }
+.tag-chart__bar--3       { fill: var(--mm-chart-series-3) }
+.tag-chart__bar--emphasis{ fill: var(--mm-chart-emphasis) }
+
+/* Waterfall: a bar that subtracts reads muted, not red. This book does not
+   use red -- the palette has no negative colour and inventing one would be
+   the first hue added outside the ramp. */
+.tag-chart__bar--decrease { fill: var(--mm-chart-navy-200) }
+.tag-chart__connector     { stroke: var(--mm-chart-leader); stroke-width: 1; stroke-dasharray: 2 2 }

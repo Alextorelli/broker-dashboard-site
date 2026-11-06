@@ -1,0 +1,76 @@
+/* ---- Corporate brand palette (Marcus & Millichap / The Anton Group) ------
+   Memorialized 2026-08-19 from TAG_Design_System (tokens/colors.css there).
+   Source of truth for the three brand inks: MM_ColorPalette_InDesign.ase
+
+       PANTONE 295 C   navy     LAB 14.90 / -2 / -34
+       PANTONE 1575 C  orange   LAB 69.41 /  50 /  65
+       PANTONE 427 C   grey     LAB 84.31 /  -1 /  -1
+
+   THIS IS THE CORPORATE REFERENCE, NOT THE ACTIVE PALETTE OF EITHER PIECE
+   IN THIS PROJECT. Both Anthony-era masters drifted from it and are
+   reproduced verbatim on purpose:
+
+       corporate navy   #002956   |  BOV master #002D5C  |  Ingenious #002E5C
+       corporate orange #FF7F30   |  BOV master #F7934D  |  Ingenious #F7934E
+
+   Use these --mm-* values for any NEW piece. Every name is prefixed so that
+   nothing here can override the --bov-* / --ing-* semantics in the
+   piece palettes; those files are imported after this one.
+   -------------------------------------------------------------------- */
+
+:root{
+  /* ---- the three brand inks ---- */
+  --mm-pantone-295:#002956;         /* navy   */
+  --mm-pantone-1575:#FF7F30;        /* orange */
+  --mm-pantone-427:#CFD3D4;         /* grey   */
+
+  /* ---- core ---- */
+  --mm-navy:#002956;
+  --mm-navy-near-black:#001B39;
+  --mm-orange:#FF7F30;
+  --mm-white:#FFFFFF;
+
+  /* ---- secondary accent: sky ----
+     Not a Pantone ink. Office-style tint/shade ramp generated off navy
+     (added 2026-09-24). --mm-sky is the Lighter 80% step: ~12:1 on navy,
+     so it works as text or rules on navy grounds. Near-invisible on white;
+     use it there only as a fill behind navy type.                        */
+  --mm-sky:#D4E8FF;                 /* navy, lighter 80% */
+  --mm-sky-60:#95C7FF;              /* navy, lighter 60% */
+  --mm-sky-40:#2B90FF;              /* navy, lighter 40% */
+  --mm-sky-dark-25:#005BC0;         /* navy, darker 25%  */
+  --mm-sky-dark-50:#003D80;         /* navy, darker 50%  */
+
+  /* ---- neutrals ---- */
+  --mm-taupe:#CFD3D4;
+  --mm-warm-grey:#8C9296;
+  --mm-charcoal:#2E4159;
+
+  /* ---- derived tints and hovers, used sparingly ---- */
+  --mm-orange-hover:#E86A18;
+  --mm-orange-tint:#FFE3D0;
+  --mm-navy-hover:#003D7C;
+  --mm-band:#DDE0E2;                /* 427 tint — footer bands, table rules */
+  --mm-page-tint:#F1F2F3;
+  --mm-stripe:rgba(207,211,212,.35);/* 427 at low alpha — table stripe      */
+  --mm-border-soft:rgba(207,211,212,.7);
+  --mm-border-on-dark:rgba(255,255,255,.28);
+
+  /* ---- charts ----
+     Step through the navy ramp for 4+ categories before ever adding a hue.
+     Orange marks the one series being argued for, once per chart.          */
+  --mm-chart-navy-100:#CBD5E0;
+  --mm-chart-navy-200:#A3B4C6;
+  --mm-chart-navy-300:#7A90AA;
+  --mm-chart-navy-400:#4E6C8E;
+  --mm-chart-navy-500:#1F4874;
+  --mm-chart-navy-600:#002956;
+
+  --mm-chart-series-1:var(--mm-navy);
+  --mm-chart-series-2:var(--mm-chart-navy-300);
+  --mm-chart-series-3:var(--mm-taupe);
+  --mm-chart-emphasis:var(--mm-orange);
+  --mm-chart-axis:var(--mm-taupe);
+  --mm-chart-reference:rgba(207,211,212,.55);
+  --mm-chart-leader:var(--mm-warm-grey);
+}

@@ -1,0 +1,39 @@
+:root{
+  /* ---- Type scale, measured from the May 2023 export ----
+     Point sizes below are the actual values pdfplumber reported, with the
+     character count at each size in the comment. The page is US Letter
+     portrait, 612 x 792 pt (8.5 x 11 in), so pt maps 1:1 to the print grid.  */
+
+  --ing-page-w:612pt; /* @kind spacing */
+  --ing-page-h:792pt; /* @kind spacing */
+
+  /* Deal pages (3-7 in the original) */
+  --fs-title:29pt; /* @kind font */          /* "INGENIOUS SALE OF THE FRANK GEHRY BUILDING" (42 chars) */
+  --fs-section:18pt; /* @kind font */        /* "Key Challenges" / "Creative Solutions"      (68 chars) */
+  --fs-caption:15pt; /* @kind font */        /* orange photo caption bar, property name      (10 chars) */
+  --fs-body:11pt; /* @kind font */           /* lead paragraph and all bullets             (1112 chars) */
+  --fs-table:10pt; /* @kind font */          /* KEY DETAILS rows                            (212 chars) */
+  --fs-badge:13pt; /* @kind font */          /* magenta date badge                            (5 chars) */
+  --fs-folio:9pt; /* @kind font */           /* page number                                  (11 chars) */
+
+  /* Executive summary (page 2) — set in Proxima Nova, its own scale */
+  --fs-exec-eyebrow:42pt; /* @kind font */   /* "W H AT  M A K E S  O U R  T E A M ..."      (29 chars) */
+  --fs-exec-title:13pt; /* @kind font */     /* "Executive Summary: The Anton Advantage"    (163 chars) */
+  --fs-exec-head:12pt; /* @kind font */      /* "Experience in Complex Transactions:"       (261 chars) */
+  --fs-exec-body:11pt; /* @kind font */      /*                                            (2620 chars) */
+
+  /* Leading. The original sets body copy tight and justified. */
+  --lh-title:1.02; /* @kind font */
+  --lh-section:1.15; /* @kind font */
+  --lh-body:1.42; /* @kind font */
+  --lh-table:1.30; /* @kind font */
+
+  /* Tracking. The cover and page-2 eyebrow are heavily letterspaced; the
+     condensed display faces are not. */
+  --tr-eyebrow:0.34em; /* @kind font */      /* page-2 eyebrow and cover headline */
+  --tr-display:0.01em; /* @kind font */
+  --tr-tablehead:0.16em; /* @kind font */    /* the white "KEY DETAILS" label */
+  --tr-body:0; /* @kind font */
+
+  /* Weights, mapped to the faces that actually carry them */
+}

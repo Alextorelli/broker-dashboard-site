@@ -1,0 +1,1458 @@
+@import url('https://use.typekit.net/qjp6ivx.css');
+@import url('tokens/brand-colors.css');
+@import url('tokens/colors.css');
+@import url('tokens/fonts.css');
+@import url('tokens/typography.css');
+@import url('tokens/spacing.css');
+
+/* ---- TAG type system, from the 315 Broadway OM ---------------------------
+   SOURCE   315 Broadway - OM Vertical vF.idml (Resources/Styles.xml), read
+            2026-09-26. Every class below is generated from an InDesign
+            paragraph style, inheritance fully resolved, and keeps its name:
+            PS_Body_L -> .ps-body-l. Sizes are in pt (1pt = 1.333px on the
+            1056x816px page), tracking is InDesign /1000 em -> em.
+   FONTS    Adobe Fonts web project qjp6ivx. Each kit face was matched to the
+            desktop font InDesign uses by comparing glyph outlines (exact
+            match, diff 0), because the kit's CSS weights are NOT the fonts'
+            real weights for every family. Never write a numeric weight for
+            these faces -- use the --*-family / --*-weight pairs below.
+
+   KIT MAP (re-matched 2026-09-26 after Book/Light/UltraLight were added;
+   every face the styles use is now the real font -- no fallbacks):
+     fira-sans              true to weight 100-900; 900 = Ultra
+     fira-sans-2            400 = Hair   600 = BOOK   700 = Heavy
+     fira-sans-condensed    SHIFTED one step:
+                              300 = Regular   400 = Medium   500 = SemiBold
+                              600 = Bold      700 = ExtraBold
+     fira-sans-condensed-2  400 = Hair   600 = ULTRALIGHT   700 = ExtraLight
+                            800 = LIGHT  900 = BOOK
+   The -2 aliases are Adobe's overflow for styles that collide on a CSS
+   weight, so their numbers mean nothing: fira-sans-2 at 400 is Hair, and
+   condensed-2 at 900 is Book. If the web project changes, re-match.
+   -------------------------------------------------------------------------- */
+
+:root {
+  /* ---- faces: family + weight, as served by kit qjp6ivx ---- */
+  --sans:  "fira-sans", "Fira Sans", Helvetica, Arial, sans-serif; /* @kind font */
+  --cond:  "fira-sans-condensed", "Fira Sans Condensed", "Arial Narrow", sans-serif; /* @kind font */
+  --sans2: "fira-sans-2", "Fira Sans", Helvetica, Arial, sans-serif; /* @kind font */
+  --cond2: "fira-sans-condensed-2", "Fira Sans Condensed", "Arial Narrow", sans-serif; /* @kind font */
+
+  --sans-light-family: var(--sans);         --sans-light-weight: 300;
+  --sans-light-italic-family: var(--sans);  --sans-light-italic-weight: 300;
+  --sans-book-family: var(--sans2);         --sans-book-weight: 600;       /* overflow alias: 600 IS Book */
+  --sans-regular-family: var(--sans);       --sans-regular-weight: 400;
+  --sans-medium-family: var(--sans);        --sans-medium-weight: 500;
+  --sans-semibold-family: var(--sans);      --sans-semibold-weight: 600;
+  --sans-bold-family: var(--sans);          --sans-bold-weight: 700;
+
+  --cond-ultralight-family: var(--cond2);   --cond-ultralight-weight: 600; /* overflow alias: 600 IS UltraLight */
+  --cond-light-family: var(--cond2);        --cond-light-weight: 800;      /* overflow alias: 800 IS Light */
+  --cond-book-family: var(--cond2);         --cond-book-weight: 900;       /* overflow alias: 900 IS Book */
+  --cond-regular-family: var(--cond);       --cond-regular-weight: 300;    /* shifted: 300 IS Regular */
+  --cond-medium-family: var(--cond);        --cond-medium-weight: 400;     /* shifted */
+  --cond-semibold-family: var(--cond);      --cond-semibold-weight: 500;   /* shifted */
+  --cond-bold-family: var(--cond);           --cond-bold-weight: 600;       /* shifted: 600 IS Bold (added for former Oswald 700) */
+
+  --display-bold-family: "essonnes-headline", "Essonnes Headline", Georgia, serif; /* @kind font */  --display-bold-weight: 700;
+  --display-text-bold-family: "essonnes-text", "Essonnes Text", Georgia, serif;     --display-text-bold-weight: 700;
+  --figure-bold-family: "source-serif-pro", "Source Serif Pro", Georgia, serif; /* @kind font */     --figure-bold-weight: 700;
+
+  /* ---- roles, for code that predates the classes ---- */
+  --f-body:     var(--sans);                          /* was Rubik / Roboto */
+  --f-accent:   var(--cond);                          /* was Arboria */
+  --f-display:  var(--cond);                          /* was Quiche Sans / Oswald: labels, kickers, page titles */
+  --f-serif:    var(--display-bold-family);           /* was Frank Ruhl Libre: cover, divider, TOC titles */
+  --f-figure:   var(--figure-bold-family);            /* new: KPI figures, pull stats */
+
+  /* ---- color: the OM's swatches. All but orange are already brand tokens;
+          the var() defers to them where the page has brand-colors.css ---- */
+  --om-navy:      var(--mm-navy, #002956);             /* OM: LAB 14.9/-2/-34 = #002856 */
+  --om-navy-deep: var(--mm-navy-near-black, #001B39);
+  --om-charcoal:  var(--mm-charcoal, #2E4159);
+  --om-orange:    var(--mm-orange, #FF7F30);           /* OM: spot CMYK 0/62/90/0, no RGB alternate */
+  --om-band:      var(--mm-band, #DDE0E2);
+  --om-warm-grey: var(--mm-warm-grey, #8C9296);
+  --om-white:     #FFFFFF;
+  --om-black:     #000000;
+  --om-taupe:     var(--mm-taupe, #CFD3D4);
+  --om-page-tint: var(--mm-page-tint, #F1F2F3);
+  --om-peach:     #FFE3D1;                             /* Stack Peach; brand orange-tint is #FFE3D0 */
+  --om-pin-culture: #5A6B7C;  --om-pin-food: #002B5C;
+  --om-pin-hotels:  #B7791F;  --om-pin-schools: #6B5B95;
+}
+
+/* ---- base: InDesign defaults every style below assumes ---- */
+[class^="ps-"], [class*=" ps-"] {
+  margin: 0;
+  font-kerning: normal;
+  hyphens: manual;           /* every style has hyphenation off */
+  font-synthesis: none;      /* never fake a missing weight */
+}
+
+/* ---- character styles ---- */
+.ch-bold     { font-weight: var(--ch-semibold, 600); }   /* SemiBold in the parent's family */
+.ch-medium   { font-weight: var(--ch-medium, 500); }
+.ch-orange, .ch-title-accent { color: var(--om-orange); }
+.ch-caps-tracked { text-transform: uppercase; letter-spacing: 0.15em; }
+.ch-superscript  { font-variant-position: super; }
+.ch-tabular      { font-variant-numeric: tabular-nums lining-nums; }
+.ch-continued    { font-family: var(--sans-light-family); font-weight: var(--sans-light-weight);
+                   font-size: 16pt; color: var(--om-warm-grey); }
+
+/* ---- paragraph styles, generated. Comment = InDesign name <- parent, face,
+        usage in 315 Broadway, and where the OM overrides the size locally ---- */
+/* PS_Body  <- PS__Base  [sans-light]  defined, unused in 315 Broadway */
+.ps-body {
+  font-family: var(--sans-light-family);
+  font-weight: var(--sans-light-weight);
+  --ch-medium: var(--sans-medium-weight);
+  --ch-semibold: var(--sans-semibold-weight);
+  font-size: 9pt;
+  line-height: 13pt;
+  color: var(--om-navy-deep);
+  margin-bottom: 6pt;
+}
+/* PS_Body_Bullet  <- PS_Body  [sans-light]  defined, unused in 315 Broadway */
+.ps-body-bullet {
+  font-family: var(--sans-light-family);
+  font-weight: var(--sans-light-weight);
+  --ch-medium: var(--sans-medium-weight);
+  --ch-semibold: var(--sans-semibold-weight);
+  font-size: 9pt;
+  line-height: 13pt;
+  color: var(--om-navy-deep);
+  margin-bottom: 3pt;
+  padding-left: 10pt;
+  text-indent: -10pt;
+}
+/* PS_Body_S  <- PS_Body  [sans-light]  1399 chars in 315 Broadway | AS SET: 93% at 11pt, not 9pt */
+.ps-body-s {
+  font-family: var(--sans-light-family);
+  font-weight: var(--sans-light-weight);
+  --ch-medium: var(--sans-medium-weight);
+  --ch-semibold: var(--sans-semibold-weight);
+  font-size: 9pt;
+  line-height: 13pt;
+  color: var(--om-navy-deep);
+  margin-bottom: 6pt;
+}
+/* PS_Body_M  <- PS_Body  [sans-light]  423 chars in 315 Broadway */
+.ps-body-m {
+  font-family: var(--sans-light-family);
+  font-weight: var(--sans-light-weight);
+  --ch-medium: var(--sans-medium-weight);
+  --ch-semibold: var(--sans-semibold-weight);
+  font-size: 10pt;
+  line-height: 14.5pt;
+  color: var(--om-navy-deep);
+  margin-bottom: 7pt;
+}
+/* PS_Body_L  <- PS_Body  [sans-light]  3454 chars in 315 Broadway */
+.ps-body-l {
+  font-family: var(--sans-light-family);
+  font-weight: var(--sans-light-weight);
+  --ch-medium: var(--sans-medium-weight);
+  --ch-semibold: var(--sans-semibold-weight);
+  font-size: 11.5pt;
+  line-height: 16.5pt;
+  color: var(--om-navy-deep);
+  margin-bottom: 8pt;
+}
+/* PS_Body_Bullet_S  <- PS_Body_Bullet  [sans-light]  defined, unused in 315 Broadway */
+.ps-body-bullet-s {
+  font-family: var(--sans-light-family);
+  font-weight: var(--sans-light-weight);
+  --ch-medium: var(--sans-medium-weight);
+  --ch-semibold: var(--sans-semibold-weight);
+  font-size: 9pt;
+  line-height: 13pt;
+  color: var(--om-navy-deep);
+  margin-bottom: 3pt;
+  padding-left: 10pt;
+  text-indent: -10pt;
+}
+/* PS_Body_Bullet_M  <- PS_Body_Bullet  [sans-light]  1190 chars in 315 Broadway | AS SET: 100% at 11pt, not 10pt */
+.ps-body-bullet-m {
+  font-family: var(--sans-light-family);
+  font-weight: var(--sans-light-weight);
+  --ch-medium: var(--sans-medium-weight);
+  --ch-semibold: var(--sans-semibold-weight);
+  font-size: 10pt;
+  line-height: 14.5pt;
+  color: var(--om-navy-deep);
+  margin-bottom: 4pt;
+  padding-left: 11pt;
+  text-indent: -11pt;
+}
+/* PS_Body_Bullet_L  <- PS_Body_Bullet  [sans-light]  897 chars in 315 Broadway */
+.ps-body-bullet-l {
+  font-family: var(--sans-light-family);
+  font-weight: var(--sans-light-weight);
+  --ch-medium: var(--sans-medium-weight);
+  --ch-semibold: var(--sans-semibold-weight);
+  font-size: 11.5pt;
+  line-height: 16.5pt;
+  color: var(--om-navy-deep);
+  margin-bottom: 5pt;
+  padding-left: 12pt;
+  text-indent: -12pt;
+}
+/* PS_Body_Reversed  <- PS_Body  [sans-light]  288 chars in 315 Broadway */
+.ps-body-reversed {
+  font-family: var(--sans-light-family);
+  font-weight: var(--sans-light-weight);
+  --ch-medium: var(--sans-medium-weight);
+  --ch-semibold: var(--sans-semibold-weight);
+  font-size: 9pt;
+  line-height: 13pt;
+  color: var(--om-white);
+  margin-bottom: 6pt;
+}
+/* PS_Lede  <- [No paragraph style]  [sans-book]  280 chars in 315 Broadway */
+.ps-lede {
+  font-family: var(--sans-book-family);
+  font-weight: var(--sans-book-weight);
+  --ch-medium: var(--sans-medium-weight);
+  --ch-semibold: var(--sans-semibold-weight);
+  font-size: 12pt;
+  line-height: 17pt;
+  color: var(--om-navy);
+  margin-bottom: 10pt;
+}
+/* PS_Lede_Reversed  <- PS_Lede  [sans-book]  133 chars in 315 Broadway */
+.ps-lede-reversed {
+  font-family: var(--sans-book-family);
+  font-weight: var(--sans-book-weight);
+  --ch-medium: var(--sans-medium-weight);
+  --ch-semibold: var(--sans-semibold-weight);
+  font-size: 12pt;
+  line-height: 17pt;
+  color: var(--om-white);
+  margin-bottom: 10pt;
+}
+/* PS_Lede_L  <- PS_Lede  [sans-book]  123 chars in 315 Broadway */
+.ps-lede-l {
+  font-family: var(--sans-book-family);
+  font-weight: var(--sans-book-weight);
+  --ch-medium: var(--sans-medium-weight);
+  --ch-semibold: var(--sans-semibold-weight);
+  font-size: 14pt;
+  line-height: 20pt;
+  color: var(--om-navy);
+  margin-bottom: 12pt;
+}
+/* PS_Section_Head  <- [No paragraph style]  [cond-semibold]  450 chars in 315 Broadway */
+.ps-section-head {
+  font-family: var(--cond-semibold-family);
+  font-weight: var(--cond-semibold-weight);
+  --ch-medium: var(--cond-medium-weight);
+  --ch-semibold: var(--cond-semibold-weight);
+  font-size: 11pt;
+  line-height: 14pt;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--om-navy);
+  margin-bottom: 4pt;
+}
+/* PS_Subhead  <- [No paragraph style]  [sans-semibold]  37 chars in 315 Broadway | AS SET: 100% at 12pt, not 10pt */
+.ps-subhead {
+  font-family: var(--sans-semibold-family);
+  font-weight: var(--sans-semibold-weight);
+  --ch-medium: var(--sans-medium-weight);
+  --ch-semibold: var(--sans-semibold-weight);
+  font-size: 10pt;
+  line-height: 13pt;
+  color: var(--om-navy);
+  margin-bottom: 2pt;
+}
+/* PS_Page_Kicker  <- [No paragraph style]  [cond-medium]  defined, unused in 315 Broadway */
+.ps-page-kicker {
+  font-family: var(--cond-medium-family);
+  font-weight: var(--cond-medium-weight);
+  --ch-medium: var(--cond-medium-weight);
+  --ch-semibold: var(--cond-semibold-weight);
+  font-size: 9pt;
+  line-height: 11pt;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--om-charcoal);
+}
+/* PS_Page_Title  <- [No paragraph style]  [cond-light]  371 chars in 315 Broadway */
+.ps-page-title {
+  font-family: var(--cond-light-family);
+  font-weight: var(--cond-light-weight);
+  --ch-medium: var(--cond-medium-weight);
+  --ch-semibold: var(--cond-semibold-weight);
+  font-size: 24pt;
+  line-height: 26pt;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--om-navy);
+}
+/* PS_Page_Title_Reversed  <- PS_Page_Title  [cond-light]  defined, unused in 315 Broadway */
+.ps-page-title-reversed {
+  font-family: var(--cond-light-family);
+  font-weight: var(--cond-light-weight);
+  --ch-medium: var(--cond-medium-weight);
+  --ch-semibold: var(--cond-semibold-weight);
+  font-size: 24pt;
+  line-height: 26pt;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--om-white);
+}
+/* PS_Footer  <- [No paragraph style]  [cond-book]  5 chars in 315 Broadway */
+.ps-footer {
+  font-family: var(--cond-book-family);
+  font-weight: var(--cond-book-weight);
+  --ch-medium: var(--cond-medium-weight);
+  --ch-semibold: var(--cond-semibold-weight);
+  font-size: 8pt;
+  line-height: 10pt;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--om-charcoal);
+}
+/* PS_Footer_Right  <- PS_Footer  [cond-book]  5 chars in 315 Broadway */
+.ps-footer-right {
+  font-family: var(--cond-book-family);
+  font-weight: var(--cond-book-weight);
+  --ch-medium: var(--cond-medium-weight);
+  --ch-semibold: var(--cond-semibold-weight);
+  font-size: 8pt;
+  line-height: 10pt;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--om-charcoal);
+  text-align: right;
+}
+/* PS_Footer_Reversed  <- PS_Footer  [cond-book]  5 chars in 315 Broadway */
+.ps-footer-reversed {
+  font-family: var(--cond-book-family);
+  font-weight: var(--cond-book-weight);
+  --ch-medium: var(--cond-medium-weight);
+  --ch-semibold: var(--cond-semibold-weight);
+  font-size: 8pt;
+  line-height: 10pt;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--om-white);
+}
+/* PS_Footer_Reversed_Right  <- PS_Footer_Right  [cond-book]  5 chars in 315 Broadway */
+.ps-footer-reversed-right {
+  font-family: var(--cond-book-family);
+  font-weight: var(--cond-book-weight);
+  --ch-medium: var(--cond-medium-weight);
+  --ch-semibold: var(--cond-semibold-weight);
+  font-size: 8pt;
+  line-height: 10pt;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--om-white);
+  text-align: right;
+}
+/* PS_Folio  <- [No paragraph style]  [cond-semibold]  defined, unused in 315 Broadway */
+.ps-folio {
+  font-family: var(--cond-semibold-family);
+  font-weight: var(--cond-semibold-weight);
+  --ch-medium: var(--cond-medium-weight);
+  --ch-semibold: var(--cond-semibold-weight);
+  font-size: 9pt;
+  line-height: 10pt;
+  color: var(--om-white);
+  text-align: center;
+}
+/* PS_Cover_Kicker  <- [No paragraph style]  [cond-medium]  26 chars in 315 Broadway | AS SET: 100% at 18pt, not 9pt */
+.ps-cover-kicker {
+  font-family: var(--cond-medium-family);
+  font-weight: var(--cond-medium-weight);
+  --ch-medium: var(--cond-medium-weight);
+  --ch-semibold: var(--cond-semibold-weight);
+  font-size: 9pt;
+  line-height: 12pt;
+  letter-spacing: 0.4em;
+  text-transform: uppercase;
+  color: var(--om-white);
+}
+/* PS_Cover_Title  <- [No paragraph style]  [display-bold]  defined, unused in 315 Broadway */
+.ps-cover-title {
+  font-family: var(--display-bold-family);
+  font-weight: var(--display-bold-weight);
+  --ch-medium: var(--sans-medium-weight);
+  --ch-semibold: var(--sans-semibold-weight);
+  font-size: 44pt;
+  line-height: 46pt;
+  color: var(--om-white);
+}
+/* PS_Cover_Subtitle  <- [No paragraph style]  [display-bold]  defined, unused in 315 Broadway */
+.ps-cover-subtitle {
+  font-family: var(--display-bold-family);
+  font-weight: var(--display-bold-weight);
+  --ch-medium: var(--sans-medium-weight);
+  --ch-semibold: var(--sans-semibold-weight);
+  font-size: 18pt;
+  line-height: 22pt;
+  color: var(--om-white);
+}
+/* PS_Cover_Location  <- [No paragraph style]  [cond-book]  defined, unused in 315 Broadway */
+.ps-cover-location {
+  font-family: var(--cond-book-family);
+  font-weight: var(--cond-book-weight);
+  --ch-medium: var(--cond-medium-weight);
+  --ch-semibold: var(--cond-semibold-weight);
+  font-size: 10pt;
+  line-height: 13pt;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--om-white);
+}
+/* PS_Divider_Numeral  <- [No paragraph style]  [display-bold]  6 chars in 315 Broadway */
+.ps-divider-numeral {
+  font-family: var(--display-bold-family);
+  font-weight: var(--display-bold-weight);
+  --ch-medium: var(--sans-medium-weight);
+  --ch-semibold: var(--sans-semibold-weight);
+  font-size: 150pt;
+  line-height: 140pt;
+  color: var(--om-orange);
+}
+/* PS_Divider_Title  <- [No paragraph style]  [display-bold]  54 chars in 315 Broadway */
+.ps-divider-title {
+  font-family: var(--display-bold-family);
+  font-weight: var(--display-bold-weight);
+  --ch-medium: var(--sans-medium-weight);
+  --ch-semibold: var(--sans-semibold-weight);
+  font-size: 34pt;
+  line-height: 36pt;
+  color: var(--om-white);
+}
+/* PS_Divider_Eyebrow  <- [No paragraph style]  [cond-ultralight]  52 chars in 315 Broadway */
+.ps-divider-eyebrow {
+  font-family: var(--cond-ultralight-family);
+  font-weight: var(--cond-ultralight-weight);
+  --ch-medium: var(--cond-medium-weight);
+  --ch-semibold: var(--cond-semibold-weight);
+  font-size: 18pt;
+  line-height: 12pt;
+  letter-spacing: 0.4em;
+  text-transform: uppercase;
+  color: var(--om-white);
+}
+/* PS_Divider_Address  <- PS_Divider_Eyebrow  [cond-book]  56 chars in 315 Broadway */
+.ps-divider-address {
+  font-family: var(--cond-book-family);
+  font-weight: var(--cond-book-weight);
+  --ch-medium: var(--cond-medium-weight);
+  --ch-semibold: var(--cond-semibold-weight);
+  font-size: 18pt;
+  line-height: 12pt;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--om-band);
+}
+/* PS_KPI_Figure  <- [No paragraph style]  [figure-bold]  42 chars in 315 Broadway */
+.ps-kpi-figure {
+  font-family: var(--figure-bold-family);
+  font-weight: var(--figure-bold-weight);
+  --ch-medium: var(--sans-medium-weight);
+  --ch-semibold: var(--sans-semibold-weight);
+  font-size: 26pt;
+  line-height: 28pt;
+  color: var(--om-navy);
+}
+/* PS_KPI_Figure_Reversed  <- PS_KPI_Figure  [figure-bold]  22 chars in 315 Broadway */
+.ps-kpi-figure-reversed {
+  font-family: var(--figure-bold-family);
+  font-weight: var(--figure-bold-weight);
+  --ch-medium: var(--sans-medium-weight);
+  --ch-semibold: var(--sans-semibold-weight);
+  font-size: 26pt;
+  line-height: 28pt;
+  color: var(--om-white);
+}
+/* PS_KPI_Label  <- [No paragraph style]  [cond-medium]  170 chars in 315 Broadway */
+.ps-kpi-label {
+  font-family: var(--cond-medium-family);
+  font-weight: var(--cond-medium-weight);
+  --ch-medium: var(--cond-medium-weight);
+  --ch-semibold: var(--cond-semibold-weight);
+  font-size: 8pt;
+  line-height: 10pt;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--om-charcoal);
+}
+/* PS_KPI_Label_Reversed  <- PS_KPI_Label  [cond-medium]  155 chars in 315 Broadway */
+.ps-kpi-label-reversed {
+  font-family: var(--cond-medium-family);
+  font-weight: var(--cond-medium-weight);
+  --ch-medium: var(--cond-medium-weight);
+  --ch-semibold: var(--cond-semibold-weight);
+  font-size: 8pt;
+  line-height: 10pt;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--om-band);
+}
+/* PS_Highlight_Number  <- [No paragraph style]  [display-bold]  defined, unused in 315 Broadway */
+.ps-highlight-number {
+  font-family: var(--display-bold-family);
+  font-weight: var(--display-bold-weight);
+  --ch-medium: var(--sans-medium-weight);
+  --ch-semibold: var(--sans-semibold-weight);
+  font-size: 54pt;
+  line-height: 54pt;
+  color: var(--om-orange);
+}
+/* PS_Pull_Stat  <- [No paragraph style]  [figure-bold]  71 chars in 315 Broadway */
+.ps-pull-stat {
+  font-family: var(--figure-bold-family);
+  font-weight: var(--figure-bold-weight);
+  --ch-medium: var(--sans-medium-weight);
+  --ch-semibold: var(--sans-semibold-weight);
+  font-size: 20pt;
+  line-height: 25pt;
+  color: var(--om-navy);
+}
+/* PS_KPI_Figure_L  <- PS_KPI_Figure  [figure-bold]  defined, unused in 315 Broadway */
+.ps-kpi-figure-l {
+  font-family: var(--figure-bold-family);
+  font-weight: var(--figure-bold-weight);
+  --ch-medium: var(--sans-medium-weight);
+  --ch-semibold: var(--sans-semibold-weight);
+  font-size: 40pt;
+  line-height: 40pt;
+  color: var(--om-navy);
+}
+/* PS_KPI_Figure_L_Reversed  <- PS_KPI_Figure_L  [figure-bold]  defined, unused in 315 Broadway */
+.ps-kpi-figure-l-reversed {
+  font-family: var(--figure-bold-family);
+  font-weight: var(--figure-bold-weight);
+  --ch-medium: var(--sans-medium-weight);
+  --ch-semibold: var(--sans-semibold-weight);
+  font-size: 40pt;
+  line-height: 40pt;
+  color: var(--om-white);
+}
+/* PS_TOC_Title  <- [No paragraph style]  [display-bold]  8 chars in 315 Broadway */
+.ps-toc-title {
+  font-family: var(--display-bold-family);
+  font-weight: var(--display-bold-weight);
+  --ch-medium: var(--sans-medium-weight);
+  --ch-semibold: var(--sans-semibold-weight);
+  font-size: 64pt;
+  line-height: 64pt;
+  color: var(--om-navy);
+}
+/* PS_TOC_Number  <- [No paragraph style]  [display-bold]  8 chars in 315 Broadway */
+.ps-toc-number {
+  font-family: var(--display-bold-family);
+  font-weight: var(--display-bold-weight);
+  --ch-medium: var(--sans-medium-weight);
+  --ch-semibold: var(--sans-semibold-weight);
+  font-size: 24pt;
+  line-height: 18pt;
+  color: var(--om-orange);
+}
+/* PS_TOC_Entry  <- [No paragraph style]  [sans-medium]  defined, unused in 315 Broadway */
+.ps-toc-entry {
+  font-family: var(--sans-medium-family);
+  font-weight: var(--sans-medium-weight);
+  --ch-medium: var(--sans-medium-weight);
+  --ch-semibold: var(--sans-semibold-weight);
+  font-size: 24pt;
+  line-height: 12pt;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--om-navy);
+}
+/* PS_TOC_Page  <- PS_TOC_Entry  [sans-book]  defined, unused in 315 Broadway */
+.ps-toc-page {
+  font-family: var(--sans-book-family);
+  font-weight: var(--sans-book-weight);
+  --ch-medium: var(--sans-medium-weight);
+  --ch-semibold: var(--sans-semibold-weight);
+  font-size: 24pt;
+  line-height: 12pt;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--om-charcoal);
+  text-align: right;
+  font-variant-numeric: tabular-nums lining-nums;
+}
+/* PS_Contact_Role  <- [No paragraph style]  [cond-medium]  77 chars in 315 Broadway | AS SET: 45% at 12pt, not 7.5pt */
+.ps-contact-role {
+  font-family: var(--cond-medium-family);
+  font-weight: var(--cond-medium-weight);
+  --ch-medium: var(--cond-medium-weight);
+  --ch-semibold: var(--cond-semibold-weight);
+  font-size: 7.5pt;
+  line-height: 10pt;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--om-orange);
+}
+/* PS_Contact_Name  <- [No paragraph style]  [cond-semibold]  47 chars in 315 Broadway */
+.ps-contact-name {
+  font-family: var(--cond-semibold-family);
+  font-weight: var(--cond-semibold-weight);
+  --ch-medium: var(--cond-medium-weight);
+  --ch-semibold: var(--cond-semibold-weight);
+  font-size: 10pt;
+  line-height: 13pt;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--om-navy);
+}
+/* PS_Contact_Detail  <- [No paragraph style]  [sans-light]  defined, unused in 315 Broadway */
+.ps-contact-detail {
+  font-family: var(--sans-light-family);
+  font-weight: var(--sans-light-weight);
+  --ch-medium: var(--sans-medium-weight);
+  --ch-semibold: var(--sans-semibold-weight);
+  font-size: 8pt;
+  line-height: 11pt;
+  color: var(--om-navy-deep);
+}
+/* PS_Legal_Head  <- [No paragraph style]  [cond-semibold]  105 chars in 315 Broadway */
+.ps-legal-head {
+  font-family: var(--cond-semibold-family);
+  font-weight: var(--cond-semibold-weight);
+  --ch-medium: var(--cond-medium-weight);
+  --ch-semibold: var(--cond-semibold-weight);
+  font-size: 8.5pt;
+  line-height: 11pt;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--om-navy);
+  margin-top: 6pt;
+  margin-bottom: 2pt;
+}
+/* PS_Legal  <- [No paragraph style]  [sans-light]  96 chars in 315 Broadway */
+.ps-legal {
+  font-family: var(--sans-light-family);
+  font-weight: var(--sans-light-weight);
+  --ch-medium: var(--sans-medium-weight);
+  --ch-semibold: var(--sans-semibold-weight);
+  font-size: 7.5pt;
+  line-height: 10.5pt;
+  color: var(--om-charcoal);
+  margin-bottom: 5pt;
+}
+/* PS_Caption  <- [No paragraph style]  [sans-book]  1332 chars in 315 Broadway | AS SET: 47% at 9pt, not 7.5pt */
+.ps-caption {
+  font-family: var(--sans-book-family);
+  font-weight: var(--sans-book-weight);
+  --ch-medium: var(--sans-medium-weight);
+  --ch-semibold: var(--sans-semibold-weight);
+  font-size: 7.5pt;
+  line-height: 10pt;
+  color: var(--om-charcoal);
+}
+/* PS_Caption_Reversed  <- [No paragraph style]  [cond-medium]  41 chars in 315 Broadway */
+.ps-caption-reversed {
+  font-family: var(--cond-medium-family);
+  font-weight: var(--cond-medium-weight);
+  --ch-medium: var(--cond-medium-weight);
+  --ch-semibold: var(--cond-semibold-weight);
+  font-size: 8pt;
+  line-height: 10pt;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--om-white);
+}
+/* PS_Legend_Head  <- [No paragraph style]  [cond-semibold]  defined, unused in 315 Broadway */
+.ps-legend-head {
+  font-family: var(--cond-semibold-family);
+  font-weight: var(--cond-semibold-weight);
+  --ch-medium: var(--cond-medium-weight);
+  --ch-semibold: var(--cond-semibold-weight);
+  font-size: 8pt;
+  line-height: 10pt;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--om-navy);
+  margin-top: 4pt;
+  margin-bottom: 2pt;
+}
+/* PS_Legend  <- [No paragraph style]  [sans-book]  41 chars in 315 Broadway */
+.ps-legend {
+  font-family: var(--sans-book-family);
+  font-weight: var(--sans-book-weight);
+  --ch-medium: var(--sans-medium-weight);
+  --ch-semibold: var(--sans-semibold-weight);
+  font-size: 7.5pt;
+  line-height: 10pt;
+  color: var(--om-navy-deep);
+}
+/* PS_Note  <- [No paragraph style]  [cond-medium]  2911 chars in 315 Broadway */
+.ps-note {
+  font-family: var(--cond-medium-family);
+  font-weight: var(--cond-medium-weight);
+  --ch-medium: var(--cond-medium-weight);
+  --ch-semibold: var(--cond-semibold-weight);
+  font-size: 8pt;
+  line-height: 10.5pt;
+  color: var(--om-orange);
+  margin-bottom: 4pt;
+}
+/* PS_Table_Header  <- [No paragraph style]  [cond-medium]  46 chars in 315 Broadway | AS SET: 91% at 11pt, not 7.5pt */
+.ps-table-header {
+  font-family: var(--cond-medium-family);
+  font-weight: var(--cond-medium-weight);
+  --ch-medium: var(--cond-medium-weight);
+  --ch-semibold: var(--cond-semibold-weight);
+  font-size: 7.5pt;
+  line-height: 9pt;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--om-charcoal);
+}
+/* PS_Table_Header_Num  <- PS_Table_Header  [cond-medium]  39 chars in 315 Broadway | AS SET: 62% at 11pt, not 7.5pt */
+.ps-table-header-num {
+  font-family: var(--cond-medium-family);
+  font-weight: var(--cond-medium-weight);
+  --ch-medium: var(--cond-medium-weight);
+  --ch-semibold: var(--cond-semibold-weight);
+  font-size: 7.5pt;
+  line-height: 9pt;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--om-charcoal);
+  text-align: right;
+}
+/* PS_Table_Label  <- [No paragraph style]  [sans-book]  43 chars in 315 Broadway | AS SET: 86% at 10pt, not 8pt */
+.ps-table-label {
+  font-family: var(--sans-book-family);
+  font-weight: var(--sans-book-weight);
+  --ch-medium: var(--sans-medium-weight);
+  --ch-semibold: var(--sans-semibold-weight);
+  font-size: 8pt;
+  line-height: 10.5pt;
+  color: var(--om-navy);
+}
+/* PS_Table_Label_Indent  <- PS_Table_Label  [sans-light]  defined, unused in 315 Broadway */
+.ps-table-label-indent {
+  font-family: var(--sans-light-family);
+  font-weight: var(--sans-light-weight);
+  --ch-medium: var(--sans-medium-weight);
+  --ch-semibold: var(--sans-semibold-weight);
+  font-size: 8pt;
+  line-height: 10.5pt;
+  color: var(--om-navy);
+  padding-left: 8pt;
+}
+/* PS_Table_Text  <- [No paragraph style]  [sans-light]  233 chars in 315 Broadway | AS SET: 100% at 10pt, not 8pt */
+.ps-table-text {
+  font-family: var(--sans-light-family);
+  font-weight: var(--sans-light-weight);
+  --ch-medium: var(--sans-medium-weight);
+  --ch-semibold: var(--sans-semibold-weight);
+  font-size: 8pt;
+  line-height: 10.5pt;
+  color: var(--om-navy);
+}
+/* PS_Table_Num  <- [No paragraph style]  [sans-light]  168 chars in 315 Broadway | AS SET: 56% at 10pt, not 8pt */
+.ps-table-num {
+  font-family: var(--sans-light-family);
+  font-weight: var(--sans-light-weight);
+  --ch-medium: var(--sans-medium-weight);
+  --ch-semibold: var(--sans-semibold-weight);
+  font-size: 8pt;
+  line-height: 10.5pt;
+  color: var(--om-navy);
+  text-align: right;
+  font-variant-numeric: tabular-nums lining-nums;
+}
+/* PS_Table_Rev  <- [No paragraph style]  [sans-semibold]  defined, unused in 315 Broadway */
+.ps-table-rev {
+  font-family: var(--sans-semibold-family);
+  font-weight: var(--sans-semibold-weight);
+  --ch-medium: var(--sans-medium-weight);
+  --ch-semibold: var(--sans-semibold-weight);
+  font-size: 8pt;
+  line-height: 10.5pt;
+  color: var(--om-white);
+}
+/* PS_Table_Rev_Num  <- PS_Table_Rev  [sans-semibold]  defined, unused in 315 Broadway */
+.ps-table-rev-num {
+  font-family: var(--sans-semibold-family);
+  font-weight: var(--sans-semibold-weight);
+  --ch-medium: var(--sans-medium-weight);
+  --ch-semibold: var(--sans-semibold-weight);
+  font-size: 8pt;
+  line-height: 10.5pt;
+  color: var(--om-white);
+  text-align: right;
+  font-variant-numeric: tabular-nums lining-nums;
+}
+/* PS_Fact_Label  <- [No paragraph style]  [cond-light]  825 chars in 315 Broadway | AS SET: 36% at 10pt, not 8.5pt */
+.ps-fact-label {
+  font-family: var(--cond-light-family);
+  font-weight: var(--cond-light-weight);
+  --ch-medium: var(--cond-medium-weight);
+  --ch-semibold: var(--cond-semibold-weight);
+  font-size: 8.5pt;
+  line-height: 11pt;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--om-charcoal);
+}
+/* PS_Fact_Value  <- [No paragraph style]  [sans-book]  487 chars in 315 Broadway | AS SET: 78% at 11pt, not 9pt */
+.ps-fact-value {
+  font-family: var(--sans-book-family);
+  font-weight: var(--sans-book-weight);
+  --ch-medium: var(--sans-medium-weight);
+  --ch-semibold: var(--sans-semibold-weight);
+  font-size: 9pt;
+  line-height: 12pt;
+  color: var(--om-navy);
+  text-align: right;
+  font-variant-numeric: tabular-nums lining-nums;
+}
+/* PS_Fact_Value_Text  <- PS_Fact_Value  [sans-book]  527 chars in 315 Broadway | AS SET: 62% at 10pt, not 9pt */
+.ps-fact-value-text {
+  font-family: var(--sans-book-family);
+  font-weight: var(--sans-book-weight);
+  --ch-medium: var(--sans-medium-weight);
+  --ch-semibold: var(--sans-semibold-weight);
+  font-size: 9pt;
+  line-height: 12pt;
+  color: var(--om-navy);
+  font-variant-numeric: tabular-nums lining-nums;
+}
+/* PS_Stack_Label  <- [No paragraph style]  [cond-medium]  61 chars in 315 Broadway */
+.ps-stack-label {
+  font-family: var(--cond-medium-family);
+  font-weight: var(--cond-medium-weight);
+  --ch-medium: var(--cond-medium-weight);
+  --ch-semibold: var(--cond-semibold-weight);
+  font-size: 8pt;
+  line-height: 10pt;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--om-white);
+}
+/* PS_Stack_Value  <- [No paragraph style]  [sans-book]  162 chars in 315 Broadway */
+.ps-stack-value {
+  font-family: var(--sans-book-family);
+  font-weight: var(--sans-book-weight);
+  --ch-medium: var(--sans-medium-weight);
+  --ch-semibold: var(--sans-semibold-weight);
+  font-size: 11pt;
+  line-height: 13pt;
+  color: var(--om-navy);
+  font-variant-numeric: tabular-nums lining-nums;
+}
+/* PS_Table_Section  <- [No paragraph style]  [cond-semibold]  defined, unused in 315 Broadway */
+.ps-table-section {
+  font-family: var(--cond-semibold-family);
+  font-weight: var(--cond-semibold-weight);
+  --ch-medium: var(--cond-medium-weight);
+  --ch-semibold: var(--cond-semibold-weight);
+  font-size: 7.5pt;
+  line-height: 9.5pt;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--om-navy);
+}
+/* PS_Table_Total_Label  <- [No paragraph style]  [sans-semibold]  defined, unused in 315 Broadway */
+.ps-table-total-label {
+  font-family: var(--sans-semibold-family);
+  font-weight: var(--sans-semibold-weight);
+  --ch-medium: var(--sans-medium-weight);
+  --ch-semibold: var(--sans-semibold-weight);
+  font-size: 8pt;
+  line-height: 10.5pt;
+  color: var(--om-navy);
+}
+/* PS_Table_Total_Num  <- PS_Table_Total_Label  [sans-semibold]  defined, unused in 315 Broadway */
+.ps-table-total-num {
+  font-family: var(--sans-semibold-family);
+  font-weight: var(--sans-semibold-weight);
+  --ch-medium: var(--sans-medium-weight);
+  --ch-semibold: var(--sans-semibold-weight);
+  font-size: 8pt;
+  line-height: 10.5pt;
+  color: var(--om-navy);
+  text-align: right;
+  font-variant-numeric: tabular-nums lining-nums;
+}
+/* PS_Field_Label  <- [No paragraph style]  [sans-medium]  defined, unused in 315 Broadway */
+.ps-field-label {
+  font-family: var(--sans-medium-family);
+  font-weight: var(--sans-medium-weight);
+  --ch-medium: var(--sans-medium-weight);
+  --ch-semibold: var(--sans-semibold-weight);
+  font-size: 8pt;
+  line-height: 10.5pt;
+  color: var(--om-navy);
+}
+/* PS_Field_Value  <- [No paragraph style]  [sans-light]  defined, unused in 315 Broadway */
+.ps-field-value {
+  font-family: var(--sans-light-family);
+  font-weight: var(--sans-light-weight);
+  --ch-medium: var(--sans-medium-weight);
+  --ch-semibold: var(--sans-semibold-weight);
+  font-size: 8pt;
+  line-height: 10.5pt;
+  color: var(--om-navy-deep);
+  text-align: right;
+  font-variant-numeric: tabular-nums lining-nums;
+}
+/* PS_Field_Value_Text  <- [No paragraph style]  [sans-light]  defined, unused in 315 Broadway */
+.ps-field-value-text {
+  font-family: var(--sans-light-family);
+  font-weight: var(--sans-light-weight);
+  --ch-medium: var(--sans-medium-weight);
+  --ch-semibold: var(--sans-semibold-weight);
+  font-size: 8pt;
+  line-height: 10.5pt;
+  color: var(--om-navy-deep);
+}
+/* PS_Mondrian_Kicker  <- [No paragraph style]  [cond-light]  19 chars in 315 Broadway */
+.ps-mondrian-kicker {
+  font-family: var(--cond-light-family);
+  font-weight: var(--cond-light-weight);
+  --ch-medium: var(--cond-medium-weight);
+  --ch-semibold: var(--cond-semibold-weight);
+  font-size: 10pt;
+  line-height: 12pt;
+  letter-spacing: 0.4em;
+  text-transform: uppercase;
+  color: var(--om-navy);
+}
+/* PS_Mondrian_Numeral  <- [No paragraph style]  [display-bold]  3 chars in 315 Broadway */
+.ps-mondrian-numeral {
+  font-family: var(--display-bold-family);
+  font-weight: var(--display-bold-weight);
+  --ch-medium: var(--sans-medium-weight);
+  --ch-semibold: var(--sans-semibold-weight);
+  font-size: 64pt;
+  line-height: 62pt;
+  color: var(--om-navy-deep);
+}
+/* PS_Mondrian_Title  <- [No paragraph style]  [display-bold]  8 chars in 315 Broadway */
+.ps-mondrian-title {
+  font-family: var(--display-bold-family);
+  font-weight: var(--display-bold-weight);
+  --ch-medium: var(--sans-medium-weight);
+  --ch-semibold: var(--sans-semibold-weight);
+  font-size: 40pt;
+  line-height: 44pt;
+  letter-spacing: 0.01em;
+  text-transform: uppercase;
+  color: var(--om-navy-deep);
+}
+/* PS_Mondrian_Location  <- [No paragraph style]  [cond-light]  18 chars in 315 Broadway */
+.ps-mondrian-location {
+  font-family: var(--cond-light-family);
+  font-weight: var(--cond-light-weight);
+  --ch-medium: var(--cond-medium-weight);
+  --ch-semibold: var(--cond-semibold-weight);
+  font-size: 12pt;
+  line-height: 12pt;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--om-navy);
+}
+/* PS_Mondrian_Body  <- [No paragraph style]  [sans-light]  38 chars in 315 Broadway */
+.ps-mondrian-body {
+  font-family: var(--sans-light-family);
+  font-weight: var(--sans-light-weight);
+  --ch-medium: var(--sans-medium-weight);
+  --ch-semibold: var(--sans-semibold-weight);
+  font-size: 13pt;
+  line-height: 18pt;
+  color: var(--om-navy-deep);
+  margin-bottom: 6pt;
+}
+/* PS_Mondrian_Italic  <- PS_Mondrian_Body  [sans-light-italic]  17 chars in 315 Broadway */
+.ps-mondrian-italic {
+  font-family: var(--sans-light-italic-family);
+  font-weight: var(--sans-light-italic-weight);
+  --ch-medium: var(--sans-medium-weight);
+  --ch-semibold: var(--sans-semibold-weight);
+  font-style: italic;
+  font-size: 13pt;
+  line-height: 18pt;
+  color: var(--om-navy);
+  margin-bottom: 6pt;
+}
+/* PS_Legend_L  <- [No paragraph style]  [sans-book]  defined, unused in 315 Broadway */
+.ps-legend-l {
+  font-family: var(--sans-book-family);
+  font-weight: var(--sans-book-weight);
+  --ch-medium: var(--sans-medium-weight);
+  --ch-semibold: var(--sans-semibold-weight);
+  font-size: 10pt;
+  line-height: 14pt;
+  color: var(--om-navy-deep);
+}
+/* PS_Legend_Head_L  <- [No paragraph style]  [cond-semibold]  defined, unused in 315 Broadway */
+.ps-legend-head-l {
+  font-family: var(--cond-semibold-family);
+  font-weight: var(--cond-semibold-weight);
+  --ch-medium: var(--cond-medium-weight);
+  --ch-semibold: var(--cond-semibold-weight);
+  font-size: 10pt;
+  line-height: 13pt;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--om-navy);
+  margin-top: 8pt;
+  margin-bottom: 3pt;
+}
+/* PS_Overlay_Caption  <- [No paragraph style]  [cond-medium]  224 chars in 315 Broadway */
+.ps-overlay-caption {
+  font-family: var(--cond-medium-family);
+  font-weight: var(--cond-medium-weight);
+  --ch-medium: var(--cond-medium-weight);
+  --ch-semibold: var(--cond-semibold-weight);
+  font-size: 8pt;
+  line-height: 10pt;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--om-navy);
+}
+/* PS_Contact_Name_L  <- [No paragraph style]  [cond-semibold]  74 chars in 315 Broadway | AS SET: 50% at 10pt, not 14pt */
+.ps-contact-name-l {
+  font-family: var(--cond-semibold-family);
+  font-weight: var(--cond-semibold-weight);
+  --ch-medium: var(--cond-medium-weight);
+  --ch-semibold: var(--cond-semibold-weight);
+  font-size: 14pt;
+  line-height: 17pt;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--om-navy);
+  margin-bottom: 2pt;
+}
+/* PS_Contact_Detail_L  <- [No paragraph style]  [sans-light]  501 chars in 315 Broadway */
+.ps-contact-detail-l {
+  font-family: var(--sans-light-family);
+  font-weight: var(--sans-light-weight);
+  --ch-medium: var(--sans-medium-weight);
+  --ch-semibold: var(--sans-semibold-weight);
+  font-size: 9.5pt;
+  line-height: 13pt;
+  color: var(--om-navy-deep);
+}
+/* PS_Stack_Label_Navy  <- PS_Stack_Label  [cond-medium]  71 chars in 315 Broadway */
+.ps-stack-label-navy {
+  font-family: var(--cond-medium-family);
+  font-weight: var(--cond-medium-weight);
+  --ch-medium: var(--cond-medium-weight);
+  --ch-semibold: var(--cond-semibold-weight);
+  font-size: 8pt;
+  line-height: 10pt;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--om-navy);
+}
+/* PS_Divider_Place  <- [No paragraph style]  [cond-light]  51 chars in 315 Broadway */
+.ps-divider-place {
+  font-family: var(--cond-light-family);
+  font-weight: var(--cond-light-weight);
+  --ch-medium: var(--cond-medium-weight);
+  --ch-semibold: var(--cond-semibold-weight);
+  font-size: 12pt;
+  line-height: 14pt;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--om-white);
+}
+/* PS_TOC_Entry_Fit  <- PS_TOC_Entry  [sans-book]  74 chars in 315 Broadway */
+.ps-toc-entry-fit {
+  font-family: var(--sans-book-family);
+  font-weight: var(--sans-book-weight);
+  --ch-medium: var(--sans-medium-weight);
+  --ch-semibold: var(--sans-semibold-weight);
+  font-size: 20pt;
+  line-height: 12pt;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--om-navy);
+}
+/* PS_TOC_Page_Fit  <- PS_TOC_Page  [sans-light]  8 chars in 315 Broadway */
+.ps-toc-page-fit {
+  font-family: var(--sans-light-family);
+  font-weight: var(--sans-light-weight);
+  --ch-medium: var(--sans-medium-weight);
+  --ch-semibold: var(--sans-semibold-weight);
+  font-size: 20pt;
+  line-height: 12pt;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--om-charcoal);
+  text-align: right;
+  font-variant-numeric: tabular-nums lining-nums;
+}
+/* PS_Legend_Cat  <- [No paragraph style]  [cond-semibold]  59 chars in 315 Broadway */
+.ps-legend-cat {
+  font-family: var(--cond-semibold-family);
+  font-weight: var(--cond-semibold-weight);
+  --ch-medium: var(--cond-medium-weight);
+  --ch-semibold: var(--cond-semibold-weight);
+  font-size: 10pt;
+  line-height: 12pt;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--om-navy);
+}
+/* PS_Legend_Num  <- [No paragraph style]  [cond-semibold]  91 chars in 315 Broadway */
+.ps-legend-num {
+  font-family: var(--cond-semibold-family);
+  font-weight: var(--cond-semibold-weight);
+  --ch-medium: var(--cond-medium-weight);
+  --ch-semibold: var(--cond-semibold-weight);
+  font-size: 8.5pt;
+  line-height: 11pt;
+  color: var(--om-navy);
+  font-variant-numeric: tabular-nums lining-nums;
+}
+/* PS_Legend_Cell  <- [No paragraph style]  [sans-light]  1519 chars in 315 Broadway */
+.ps-legend-cell {
+  font-family: var(--sans-light-family);
+  font-weight: var(--sans-light-weight);
+  --ch-medium: var(--sans-medium-weight);
+  --ch-semibold: var(--sans-semibold-weight);
+  font-size: 8.5pt;
+  line-height: 11pt;
+  color: var(--om-navy-deep);
+}
+/* PS_Legend_Dist  <- [No paragraph style]  [sans-light]  363 chars in 315 Broadway */
+.ps-legend-dist {
+  font-family: var(--sans-light-family);
+  font-weight: var(--sans-light-weight);
+  --ch-medium: var(--sans-medium-weight);
+  --ch-semibold: var(--sans-semibold-weight);
+  font-size: 8.5pt;
+  line-height: 11pt;
+  color: var(--om-charcoal);
+  text-align: right;
+  font-variant-numeric: tabular-nums lining-nums;
+}
+
+
+/* ============================================================
+   Most Ingenious List — base styles
+   US Letter portrait, 612 x 792 pt. Print-first: sizes are in pt
+   so they map 1:1 to the InDesign original.
+   ============================================================ */
+
+@page{ size:8.5in 11in; margin:0 }
+
+*{ box-sizing:border-box }
+
+body{
+  margin:0;
+  background:var(--surface-page);
+  color:var(--text-body);
+  font-family:var(--sans-regular-family);
+  font-size:var(--fs-body);
+  font-weight:var(--sans-regular-weight);
+  line-height:var(--lh-body);
+  -webkit-font-smoothing:antialiased;
+}
+
+/* ---- page shell ---------------------------------------------------- */
+
+.ing-page{
+  position:relative;
+  width:var(--ing-page-w);
+  height:var(--ing-page-h);
+  padding:var(--pad-page-top) var(--pad-page-x) var(--pad-page-bottom);
+  overflow:hidden;
+  background:var(--surface-page);
+  page-break-after:always;
+  break-after:page;
+}
+.ing-page:last-child{ page-break-after:auto; break-after:auto }
+
+/* The crumpled-paper texture sits behind everything at low contrast.
+   Supply it as a background image on this element. */
+.ing-page__texture{
+  position:absolute; inset:0; z-index:0;
+  background:var(--ing-texture-light);
+  background-size:cover; background-position:center;
+  pointer-events:none;
+}
+.ing-page > *:not(.ing-page__texture){ position:relative; z-index:1 }
+
+/* ---- title ---------------------------------------------------------
+   "INGENIOUS" is navy, everything else orange. Never vary this. */
+
+.ing-title{
+  display:flex; align-items:center; gap:9pt;
+  font-family:var(--cond-semibold-family);
+  font-weight:var(--cond-semibold-weight);
+  font-size:var(--fs-title);
+  line-height:var(--lh-title);
+  letter-spacing:var(--tr-display);
+  text-transform:uppercase;
+  color:var(--text-title-rest);
+  margin:0;
+}
+.ing-title::before{
+  content:""; flex:0 0 auto;
+  width:var(--w-title-rule); height:var(--h-title-rule);
+  background:var(--accent);
+}
+.ing-title em{ font-style:normal; color:var(--text-title-key) }
+
+/* ---- lead paragraph ------------------------------------------------ */
+
+.ing-lead{
+  margin:var(--gap-title-lead) 0 var(--gap-lead-body);
+  text-align:justify;
+  hyphens:auto;
+}
+.ing-lead strong{ font-family:var(--sans-bold-family);font-weight:var(--sans-bold-weight)}
+
+/* ---- two-column body ---------------------------------------------- */
+
+.ing-cols{
+  display:grid;
+  grid-template-columns:var(--col-left) var(--col-right);
+  gap:var(--col-gap);
+  align-items:start;
+}
+
+/* ---- section heads (Key Challenges / Creative Solutions) ----------
+   Title case, not caps. Light weight. Short orange rule beneath. */
+
+.ing-section{
+  font-size:var(--fs-section);
+  font-family:var(--sans-regular-family);font-weight:var(--sans-regular-weight);
+  line-height:var(--lh-section);
+  color:var(--text-section);
+  margin:0 0 6pt;
+}
+.ing-section + .ing-section-rule{
+  width:var(--w-section-rule); height:var(--h-section-rule);
+  background:var(--text-section);
+  margin:0 0 9pt;
+}
+.ing-section-group + .ing-section-group{ margin-top:var(--gap-section) }
+
+/* ---- bullets ------------------------------------------------------- */
+
+.ing-bullets{ margin:0; padding:0; list-style:none }
+.ing-bullets li{
+  position:relative;
+  padding-left:10pt;
+  margin-bottom:var(--gap-bullet);
+  text-align:justify;
+  hyphens:auto;
+}
+.ing-bullets li::before{
+  content:"•";
+  position:absolute; left:0; top:0;
+}
+.ing-bullets li:last-child{ margin-bottom:0 }
+.ing-bullets strong{ font-family:var(--sans-bold-family);font-weight:var(--sans-bold-weight)}
+
+/* ---- photo + caption bar ------------------------------------------ */
+
+.ing-photo{ position:relative; margin:0 }
+.ing-photo img{ display:block; width:100%; height:auto }
+
+.ing-photo__caption{
+  height:var(--h-caption-bar);
+  display:flex; align-items:center; justify-content:center;
+  background:var(--accent);
+  color:var(--text-on-dark);
+  font-family:var(--cond-regular-family);
+  font-weight:var(--cond-regular-weight);
+  font-size:var(--fs-caption);
+  letter-spacing:var(--tr-display);
+  text-transform:uppercase;
+  margin-top:var(--gap-photo-caption);
+}
+
+/* ---- magenta date badge ------------------------------------------- */
+
+.ing-badge{
+  position:absolute; z-index:2;
+  top:calc(var(--d-badge) * -0.30); right:calc(var(--d-badge) * -0.16);
+  width:var(--d-badge); height:var(--d-badge);
+  border-radius:50%;
+  background:var(--accent-badge);
+  color:var(--text-on-dark);
+  font-family:var(--cond-semibold-family);
+  font-weight:var(--cond-semibold-weight);
+  font-size:var(--fs-badge);
+  line-height:1.02;
+  display:flex; flex-direction:column;
+  align-items:center; justify-content:center;
+  text-transform:uppercase;
+}
+
+/* ---- KEY DETAILS table -------------------------------------------- */
+
+.ing-details{ margin-top:var(--gap-caption-table) }
+.ing-details--flush{ margin-top:0 }   /* the Martinique page */
+
+.ing-details__head{
+  height:var(--h-table-head);
+  display:flex; align-items:center; justify-content:center;
+  background:var(--surface-dark);
+  color:var(--text-on-dark);
+  font-family:var(--cond-regular-family);
+  font-weight:var(--cond-regular-weight);
+  font-size:var(--fs-folio);
+  letter-spacing:var(--tr-tablehead);
+  text-transform:uppercase;
+}
+.ing-details table{
+  width:100%; border-collapse:collapse;
+  font-size:var(--fs-table);
+  line-height:var(--lh-table);
+}
+.ing-details tr{ background:var(--ing-row-a) }
+.ing-details tr:nth-child(even){ background:var(--ing-row-b) }
+.ing-details td{
+  height:var(--h-table-row);
+  padding:3pt 8pt;
+  border-bottom:0.5pt solid var(--border-hairline);
+  vertical-align:middle;
+}
+.ing-details td:first-child{ text-align:left }
+.ing-details td:last-child{ text-align:right }
+
+/* ---- folio -------------------------------------------------------- */
+
+.ing-folio{
+  position:absolute; z-index:2;
+  right:var(--pad-page-x); bottom:calc(var(--pad-page-bottom) * 0.4);
+  display:flex; align-items:stretch;
+}
+.ing-folio__num{
+  width:var(--sq-folio); height:var(--sq-folio);
+  background:var(--surface-dark);
+  color:var(--text-on-dark);
+  font-size:var(--fs-folio);
+  display:flex; align-items:center; justify-content:center;
+}
+.ing-folio__bar{
+  width:calc(var(--sq-folio) * 0.55);
+  background:var(--ing-orange-pale);
+}
+
+/* ---- footnote ----------------------------------------------------- */
+
+.ing-footnote{
+  font-size:8pt; line-height:1.3;
+  font-style:italic;
+  margin-top:6pt;
+}
+
+/* ---- executive summary (page 2) ----------------------------------- */
+
+.ing-exec{ font-family:var(--sans-regular-family);font-weight:var(--sans-regular-weight); font-size:var(--fs-exec-body) }
+.ing-exec__eyebrow{
+  font-family:var(--cond-regular-family);font-weight:var(--cond-regular-weight);
+  font-size:var(--fs-exec-eyebrow);
+  letter-spacing:var(--tr-eyebrow);
+  text-transform:uppercase;
+  color:var(--surface-dark);
+  margin:0 0 10pt;
+}
+.ing-exec__title{ font-size:var(--fs-exec-title); font-family:var(--sans-bold-family);font-weight:var(--sans-bold-weight); margin:0 0 8pt }
+.ing-exec h3{ font-size:var(--fs-exec-head); font-family:var(--sans-semibold-family);font-weight:var(--sans-semibold-weight); margin:10pt 0 3pt }
+.ing-exec p{ margin:0 0 6pt; text-align:justify; hyphens:auto }
+.ing-exec__closing{ font-family:var(--sans-medium-family);font-weight:var(--sans-medium-weight)}
+.ing-exec__captions{
+  display:grid; grid-template-columns:1fr 1fr; gap:var(--col-gap);
+  margin-top:8pt; font-size:8.5pt; line-height:1.3;
+}
+.ing-exec__captions figure{ margin:0 }
+.ing-exec__captions img{ display:block; width:100%; height:auto; margin-bottom:3pt }
+
+/* ---- photo placeholder ------------------------------------------- */
+
+.ing-photo__placeholder{
+  aspect-ratio:4 / 5;
+  display:flex; align-items:center; justify-content:center;
+  background:var(--ing-texture-warm);
+  color:#9A9694;
+  font-family:var(--cond-regular-family);font-weight:var(--cond-regular-weight);
+  font-size:10pt; letter-spacing:.14em; text-transform:uppercase;
+}
+.ing-photo--secondary{ margin-top:8pt }
+
+/* ---- award rosette (Martinique only) ----------------------------- */
+
+.ing-award{
+  position:absolute; z-index:3;
+  top:-6pt; left:-10pt;
+  width:64pt;
+  display:flex; flex-direction:column; align-items:center;
+}
+.ing-award__medallion{ width:100%; height:auto; display:block }
+.ing-award__ribbon{
+  width:74%;
+  margin-top:-4pt;
+  padding:4pt 3pt 7pt;
+  background:var(--surface-dark);
+  color:var(--text-on-dark);
+  font-family:var(--display-bold-family);font-weight:var(--display-bold-weight);
+  font-size:7.5pt; line-height:1.18;
+  text-align:center;
+  clip-path:polygon(0 0,100% 0,100% 100%,50% 86%,0 100%);
+}
+
+/* ---- cover ------------------------------------------------------- */
+
+.ing-cover{ padding:0 }
+.ing-cover__bg{ position:absolute; inset:0; z-index:0 }
+.ing-cover__bg img{ width:100%; height:100%; object-fit:cover; display:block; opacity:.28 }
+.ing-cover__frame{
+  position:absolute; z-index:2;
+  left:52pt; right:52pt; top:172pt; bottom:180pt;
+  border:1.5pt solid var(--surface-dark);
+}
+.ing-cover__frame--offset{
+  left:44pt; right:auto; width:296pt; top:180pt; bottom:172pt;
+  border-color:#4A4A4A;
+}
+.ing-cover__block{
+  position:absolute; z-index:3;
+  left:0; top:206pt; width:306pt; height:230pt;
+  background:var(--surface-dark);
+  display:flex; align-items:center; justify-content:center;
+}
+.ing-cover__block img{ width:70%; height:auto; display:block }
+.ing-cover__headline{
+  position:absolute; z-index:4;
+  left:322pt; top:238pt; width:230pt;
+  font-family:var(--display-bold-family);
+  font-weight:var(--display-bold-weight);
+  font-size:19pt; line-height:1.42;
+  letter-spacing:var(--tr-eyebrow);
+  text-transform:uppercase;
+  color:#6E7378;
+}
+.ing-cover__headline em{ font-style:normal; color:var(--surface-dark) }
+.ing-cover__stamp{
+  position:absolute; z-index:5;
+  left:150pt; top:430pt; width:280pt;
+  transform:rotate(-11deg);
+}
+.ing-cover__stamp img{ width:100%; height:auto; display:block }
+
+/* ---- unresolved-content marker -----------------------------------
+   Deliberately loud. Anything still awaiting Eric's copy must be
+   impossible to miss in a proof, and must never ship silently. */
+
+.needs{
+  background:#FFE8B0;
+  outline:1.5pt solid #C98A00;
+  color:#6B4A00;
+  font-family:var(--cond-regular-family);font-weight:var(--cond-regular-weight);
+  font-size:8.5pt; letter-spacing:.06em;
+  text-transform:uppercase;
+  padding:1pt 4pt;
+}

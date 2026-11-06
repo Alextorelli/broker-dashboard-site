@@ -1,0 +1,886 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="stylesheet" href="_ds/tag-marketing-collateral-069046ea-4c75-4349-b762-473bf109bd15/tokens/brand-colors.css">
+  <link rel="stylesheet" href="_ds/tag-marketing-collateral-069046ea-4c75-4349-b762-473bf109bd15/tokens/colors.css">
+  <link rel="stylesheet" href="_ds/tag-marketing-collateral-069046ea-4c75-4349-b762-473bf109bd15/tokens/fonts.css">
+  <link rel="stylesheet" href="_ds/tag-marketing-collateral-069046ea-4c75-4349-b762-473bf109bd15/tokens/typography.css">
+  <link rel="stylesheet" href="_ds/tag-marketing-collateral-069046ea-4c75-4349-b762-473bf109bd15/tokens/spacing.css">
+  <link rel="stylesheet" href="_ds/tag-marketing-collateral-069046ea-4c75-4349-b762-473bf109bd15/styles.css">
+  <link rel="stylesheet" href="components.css">
+  <link rel="stylesheet" href="https://use.typekit.net/qjp6ivx.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@400;500;600;700&amp;display=swap">
+  <script src="_ds/tag-marketing-collateral-069046ea-4c75-4349-b762-473bf109bd15/_ds_bundle.js"></script>
+  <style>
+    :root{
+      --sans:"source-code-pro","Source Code Pro",ui-monospace,Menlo,monospace;
+      --sans2:var(--sans);
+      --sans-light-weight:400;--sans-book-weight:400;--sans-regular-weight:400;--sans-medium-weight:400;--sans-semibold-weight:700;--sans-bold-weight:700;
+      --cond:"source-sans-3","Source Sans 3","source-sans-pro","Source Sans Pro","fira-sans",sans-serif;
+      --cond2:var(--cond);
+      --cond-ultralight-weight:300;--cond-light-weight:300;--cond-book-weight:400;--cond-regular-weight:400;--cond-medium-weight:500;--cond-semibold-weight:600;--cond-bold-weight:700;
+      --f-body:var(--sans);--f-display:var(--cond);--f-accent:var(--cond);
+    }
+    html:root{
+--bg:#131517;--panel:#1C1F22;--panel-alt:#1F2326;--fill:#26292C;--fill-2:#282C30;--fill-3:#3A3F44;
+--blue:#5AA6E0;--blue-deep:#37546E;--orange:#FF7F30;--red:#C75C57;--amber:#D4A24C;--green:#6AAE7F;
+--fg:#EDEFF1;--fg-2:#C3C9CE;--fg-3:#A8AEB4;--dim:#8C9296;--on-accent:#0F1113;
+--st1:rgba(90,166,224,.22);--st4:rgba(255,127,48,.13);
+--mm-navy:var(--fg);--mm-white:var(--panel);--tag-label-ink:var(--fg-3);--tag-value-ink:var(--fg);--tag-rule:var(--fill-3);--tag-rule-strong:var(--fg-3);--tag-emphasis:var(--orange);
+--mm-chart-axis:var(--fill-3);--mm-chart-reference:var(--fill-3);--mm-chart-leader:var(--dim);
+--mm-chart-series-1:var(--blue);--mm-chart-series-2:var(--blue-deep);--mm-chart-series-3:var(--fill-3);--mm-chart-emphasis:var(--orange);--mm-chart-navy-200:var(--blue-deep);
+--cond-regular-family:var(--sans);--cond-medium-family:var(--sans);--cond-bold-family:var(--sans);--cond-regular-weight:400;--cond-medium-weight:400;--cond-bold-weight:700;
+--tag-tr-label:.06em;--figure-bold-family:var(--sans);--figure-bold-weight:600;
+background:var(--bg);color-scheme:dark}
+    html:root[data-theme="light"]{
+--bg:#E9E5DD;--panel:#FAF9F6;--panel-alt:#F3F1EB;--fill:#E5E1D8;--fill-2:#DCD7CC;--fill-3:#C6C1B6;
+--blue:#2C6E9E;--blue-deep:#9DB9CD;--orange:#BF530F;--red:#A63D37;--amber:#8A6413;--green:#3C7B55;
+--fg:#191C1E;--fg-2:#2E3337;--fg-3:#474D52;--dim:#767B7F;--on-accent:#FFFFFF;
+--st1:rgba(44,110,158,.20);--st4:rgba(191,83,15,.13);color-scheme:light}
+    html,body{margin:0;background:var(--bg);color:var(--fg);font-family:var(--sans);-webkit-text-size-adjust:100%;-webkit-font-smoothing:antialiased}
+    *{box-sizing:border-box}
+    a{color:var(--blue);text-decoration:none} a:hover{color:var(--orange)}
+    button{font:inherit;color:inherit}
+    select,input{font:inherit}
+  </style>
+</helmet>
+<div style="height:{{ L.rootH }}; min-height:100vh; overflow:{{ L.rootOv }}; display:flex; flex-direction:{{ L.dir }}; align-items:stretch; font-size:13px; line-height:1.45; background:var(--bg);">
+  <aside style="position:{{ L.asidePos }}; top:0; flex:none; width:{{ L.asideW }}; height:{{ L.asideH }}; overflow-y:auto; z-index:5; background:var(--panel); color:var(--fg); border-radius:0 14px 14px 0; padding:28px 20px 24px; display:flex; flex-direction:column; gap:24px;">
+    <div style="display:flex; flex-direction:column; gap:8px;">
+      <span style="font-family:var(--sans); font-weight:600; font-size:20px; line-height:1.2; letter-spacing:.04em; text-transform:uppercase;">Market Dashboard</span>
+      <span style="font-family:var(--sans); font-weight:600; font-size:11px; letter-spacing:.1em; text-transform:uppercase; color:var(--dim);">The Anton Group · Internal</span>
+    </div>
+    <sc-if value="{{ ready }}" hint-placeholder-val="{{ false }}">
+      <div style="display:flex; flex-direction:column; gap:20px;">
+        <div style="display:flex; flex-direction:column; gap:8px;">
+          <span style="font-family:var(--sans); font-weight:600; font-size:11px; letter-spacing:.1em; text-transform:uppercase; color:var(--dim);">1 · Submarket</span>
+          <select onChange="{{ onSubmarket }}" style="width:100%; min-height:40px; padding:0 10px; border:1px solid var(--fill-3); border-radius:8px; font-size:13px; background:var(--fill); color:var(--fg);">
+            <sc-for list="{{ submarketGroups }}" as="g"><optgroup label="{{ g.name }}"><sc-for list="{{ g.items }}" as="p"><option value="{{ p.value }}" selected="{{ p.sel }}">{{ p.label }}</option></sc-for></optgroup></sc-for>
+          </select>
+        </div>
+        <div style="display:flex; flex-direction:column; gap:8px;">
+          <span style="font-family:var(--sans); font-weight:600; font-size:11px; letter-spacing:.1em; text-transform:uppercase; color:var(--dim);">2 · Building class</span>
+          <div style="display:flex; flex-wrap:wrap; gap:4px;">
+            <sc-for list="{{ classOptions }}" as="o" hint-placeholder-count="4">
+              <button onClick="{{ o.onPick }}" disabled="{{ o.disabled }}" title="{{ o.title }}" style="opacity:{{ o.opacity }}; cursor:{{ o.cursor }}; min-height:38px; padding:0 12px; border-radius:999px; border:1px solid {{ o.border }}; background:{{ o.bg }}; color:{{ o.fg }}; font-size:12.5px; text-align:left; user-select:none;">{{ o.label }}</button>
+            </sc-for>
+          </div>
+          <sc-if value="{{ classMulti }}"><span style="font-size:11.5px; line-height:1.45; color:var(--fg-3); text-wrap:pretty;">Hold Shift and click to select more than one.</span></sc-if>
+          <sc-if value="{{ classMulti }}"><sc-if value="{{ multiNoteOn }}"><span style="font-size:11.5px; line-height:1.45; color:var(--fg-2); text-wrap:pretty;">{{ multiNote }}</span></sc-if></sc-if>
+          <sc-if value="{{ classNoteOn }}"><span style="font-size:11.5px; line-height:1.45; color:var(--fg-3); text-wrap:pretty;">{{ classNote }}</span></sc-if>
+        </div>
+        <div style="display:flex; flex-direction:column; gap:8px;">
+          <span style="font-family:var(--sans); font-weight:600; font-size:11px; letter-spacing:.1em; text-transform:uppercase; color:var(--dim);">3 · {{ filter2Title }}</span>
+          <div style="display:flex; flex-wrap:wrap; gap:4px;">
+            <sc-for list="{{ starOptions }}" as="o" hint-placeholder-count="4">
+              <button onClick="{{ o.onPick }}" disabled="{{ o.disabled }}" title="{{ o.title }}" style="opacity:{{ o.opacity }}; cursor:{{ o.cursor }}; min-height:38px; padding:0 12px; border-radius:999px; border:1px solid {{ o.border }}; background:{{ o.bg }}; color:{{ o.fg }}; font-size:12.5px; text-align:left; user-select:none;">{{ o.label }}</button>
+            </sc-for>
+          </div>
+          <sc-if value="{{ starMulti }}"><span style="font-size:11.5px; line-height:1.45; color:var(--fg-3); text-wrap:pretty;">Hold Shift and click to select more than one.</span></sc-if>
+          <sc-if value="{{ starMulti }}"><sc-if value="{{ multiNoteOn }}"><span style="font-size:11.5px; line-height:1.45; color:var(--fg-2); text-wrap:pretty;">{{ multiNote }}</span></sc-if></sc-if>
+          <sc-if value="{{ starNoteOn }}"><span style="font-size:11.5px; line-height:1.45; color:var(--fg-3); text-wrap:pretty;">{{ starNote }}</span></sc-if>
+        </div>
+        <div style="display:flex; flex-direction:column; gap:8px;">
+          <span style="font-family:var(--sans); font-weight:600; font-size:11px; letter-spacing:.1em; text-transform:uppercase; color:var(--dim);">4 · Time period</span>
+          <label style="display:flex; flex-direction:column; gap:4px; font-size:11.5px; color:var(--fg-3);">As of · inventory, rates, rents
+            <select onChange="{{ onAsOf }}" style="width:100%; min-height:40px; padding:0 10px; border:1px solid var(--fill-3); border-radius:8px; font-size:13px; background:var(--fill); color:var(--fg);">
+              <sc-for list="{{ asOfOptions }}" as="p"><option value="{{ p.value }}" selected="{{ p.sel }}">{{ p.label }}</option></sc-for>
+            </select>
+          </label>
+          <span style="font-size:11.5px; color:var(--fg-3); margin-top:4px;">Window · activity</span>
+          <div style="display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1fr); gap:4px;">
+            <sc-for list="{{ windowOptions }}" as="o" hint-placeholder-count="4">
+              <button onClick="{{ o.onPick }}" style="min-height:38px; padding:0 12px; border-radius:999px; border:1px solid {{ o.border }}; background:{{ o.bg }}; color:{{ o.fg }}; cursor:pointer; font-size:12.5px; text-align:left; text-align:center; padding:0 8px; font-size:12px;">{{ o.label }}</button>
+            </sc-for>
+          </div>
+          <sc-if value="{{ isCY }}">
+            <select onChange="{{ onWinYear }}" style="width:100%; min-height:40px; padding:0 10px; border:1px solid var(--fill-3); border-radius:8px; font-size:13px; background:var(--fill); color:var(--fg);">
+              <sc-for list="{{ yearOptions }}" as="y"><option value="{{ y.value }}" selected="{{ y.sel }}">{{ y.label }}</option></sc-for>
+            </select>
+          </sc-if>
+          <sc-if value="{{ isCustom }}">
+            <div style="display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1fr); gap:6px;">
+              <label style="display:flex; flex-direction:column; gap:4px; font-size:11.5px; color:var(--fg-3);">From
+                <select onChange="{{ onWinFrom }}" style="width:100%; min-height:40px; padding:0 10px; border:1px solid var(--fill-3); border-radius:8px; font-size:13px; background:var(--fill); color:var(--fg);">
+                  <sc-for list="{{ fromOptions }}" as="p"><option value="{{ p.value }}" selected="{{ p.sel }}">{{ p.label }}</option></sc-for>
+                </select>
+              </label>
+              <label style="display:flex; flex-direction:column; gap:4px; font-size:11.5px; color:var(--fg-3);">To
+                <select onChange="{{ onWinTo }}" style="width:100%; min-height:40px; padding:0 10px; border:1px solid var(--fill-3); border-radius:8px; font-size:13px; background:var(--fill); color:var(--fg);">
+                  <sc-for list="{{ toOptions }}" as="p"><option value="{{ p.value }}" selected="{{ p.sel }}">{{ p.label }}</option></sc-for>
+                </select>
+              </label>
+            </div>
+          </sc-if>
+        </div>
+      </div>
+    </sc-if>
+    <div style="display:flex; flex-direction:column; gap:8px;">
+      <span style="font-family:var(--sans); font-weight:600; font-size:11px; letter-spacing:.1em; text-transform:uppercase; color:var(--dim);">Appearance</span>
+      <div style="display:flex; gap:3px; background:var(--fill); border-radius:999px; padding:3px;">
+        <sc-for list="{{ themes }}" as="th" hint-placeholder-count="2">
+          <button onClick="{{ th.onPick }}" style="flex:1; min-height:32px; border:0; border-radius:999px; background:{{ th.bg }}; color:{{ th.fg }}; cursor:pointer; font-family:var(--sans); font-size:11px; letter-spacing:.08em; text-transform:uppercase;">{{ th.label }}</button>
+        </sc-for>
+      </div>
+    </div>
+    <div style="margin-top:auto; font-size:11px; line-height:1.5; color:var(--dim);">{{ attribution }}<br>Data through {{ dataThrough }}</div>
+  </aside>
+  <main style="flex:1; min-width:0; height:{{ L.mainH }}; overflow:{{ L.mainOv }}; padding:{{ L.mainPad }}; display:flex; flex-direction:column; gap:12px;">
+    <sc-if value="{{ showError }}" hint-placeholder-val="{{ false }}">
+      <div style="background:var(--panel); padding:14px; border-top:3px solid var(--orange);">Could not load data: {{ error }}</div>
+    </sc-if>
+    <sc-if value="{{ loading }}" hint-placeholder-val="{{ true }}">
+      <div style="padding:32px 0; color:var(--dim); font-family:var(--sans); letter-spacing:.08em; text-transform:uppercase; font-size:12px;">Loading CoStar data…</div>
+    </sc-if>
+    <sc-if value="{{ ready }}" hint-placeholder-val="{{ false }}">
+      <section style="display:flex; flex-direction:column; gap:6px;">
+        <div role="tablist" aria-label="Asset type" style="display:flex; flex-wrap:wrap; align-items:flex-end; gap:4px 20px; border-bottom:1px solid var(--fill-3); margin-bottom:10px;">
+          <sc-for list="{{ assetOptions }}" as="o" hint-placeholder-count="4">
+            <button role="tab" aria-selected="{{ o.sel }}" onClick="{{ o.onPick }}" disabled="{{ o.disabled }}" title="{{ o.title }}" style="opacity:{{ o.opacity }}; cursor:{{ o.cursor }}; min-height:44px; padding:0 2px; margin-bottom:-1px; border:0; border-bottom:2px solid {{ o.line }}; background:none; color:{{ o.tabFg }}; font-family:var(--sans); font-weight:600; font-size:13px; letter-spacing:.08em; text-transform:uppercase; user-select:none;">{{ o.label }}</button>
+          </sc-for>
+          <span aria-hidden="true" style="align-self:center; width:1px; height:20px; background:var(--fill-3);"></span>
+          <button role="tab" aria-selected="{{ capTab.sel }}" onClick="{{ capTab.onPick }}" style="cursor:pointer; min-height:44px; padding:0 2px; margin-bottom:-1px; border:0; border-bottom:2px solid {{ capTab.line }}; background:none; color:{{ capTab.fg }}; font-family:var(--sans); font-weight:600; font-size:13px; letter-spacing:.08em; text-transform:uppercase; user-select:none;">Capital</button>
+          <span style="margin-left:auto; align-self:center; font-size:11.5px; color:var(--fg-3); max-width:420px; text-wrap:pretty;">CoStar draws each asset type's submarket separately, so Chelsea office and Chelsea multifamily cover different areas.</span>
+        </div>
+        <div style="display:flex; flex-wrap:wrap; align-items:center; gap:8px 12px;">
+          <h1 style="margin:0; font-family:var(--sans); font-weight:600; font-size:22px; line-height:1.15; color:var(--fg);">{{ contextLine }}</h1>
+          <span style="font-family:var(--sans); font-weight:600; font-size:11px; letter-spacing:.1em; text-transform:uppercase; color:var(--fg); background:var(--st1); padding:3px 8px; border-radius:4px;">Data through {{ dataThrough }}</span>
+          <sc-if value="{{ ctxHasNote }}" hint-placeholder-val="{{ false }}">
+            <button onClick="{{ ctxNoteTap }}" style="min-height:32px; padding:0 10px; border-radius:4px; border:1px solid var(--orange); background:var(--st4); color:var(--fg); cursor:pointer; font-family:var(--sans); font-weight:600; font-size:11px; letter-spacing:.08em; text-transform:uppercase;">Data note</button>
+          </sc-if>
+        </div>
+        <sc-if value="{{ ctxNoteOpen }}" hint-placeholder-val="{{ false }}">
+          <div style="font-size:12px; background:var(--panel); border:1px solid var(--st4); padding:8px 10px;">CoStar discrepancy, {{ asOfLabel }}: {{ ctxNote }}</div>
+        </sc-if>
+        <sc-if value="{{ noRowShow }}" hint-placeholder-val="{{ false }}">
+          <div style="font-size:12px; color:var(--fg-3);">CoStar reports no data for this selection at {{ asOfLabel }}. Every figure below shows as not reported.</div>
+        </sc-if>
+      </section>
+
+      <sc-if value="{{ isCostar }}" hint-placeholder-val="{{ true }}">
+      <div style="flex:1; min-height:{{ L.gridMinH }}; display:grid; grid-template-columns:{{ L.cols }}; grid-template-rows:{{ L.rows }}; gap:12px;">
+      <section id="stocks-flows" style="display:grid; grid-template-columns:{{ L.sfCols }}; gap:12px; min-height:0;">
+        <sc-for list="{{ panels }}" as="pn" hint-placeholder-count="2">
+          <div style="background:var(--panel); border-radius:14px; padding:16px 18px 10px; min-width:0; min-height:0; overflow:auto;">
+            <h2 style="margin:0 0 8px; display:flex; flex-wrap:wrap; gap:2px 8px; align-items:baseline;">
+              <span style="font-family:var(--sans); font-weight:700; font-size:16px; letter-spacing:.08em; text-transform:uppercase; color:var(--fg);">{{ pn.title }}</span>
+              <span style="font-family:var(--sans); font-weight:500; font-size:15px; color:var(--fg-3);">{{ pn.scope }}</span>
+            </h2>
+            <sc-for list="{{ pn.rows }}" as="r" hint-placeholder-count="5">
+              <div>
+                <div class="tag-facts__row" style="min-height:30px; padding:3px 0; align-items:center;">
+                  <div style="display:flex; align-items:center; gap:2px; min-width:0;">
+                    <span class="tag-facts__label" style="white-space:normal;">{{ r.label }}</span>
+                    <sc-if value="{{ r.hasCaveat }}" hint-placeholder-val="{{ false }}">
+                      <button onClick="{{ r.onTip }}" onMouseEnter="{{ r.onTipEnter }}" onMouseLeave="{{ r.onTipLeave }}" onFocus="{{ r.onTipEnter }}" onBlur="{{ r.onTipLeave }}" data-tip-btn="1" aria-label="About this figure" style="flex:0 0 auto; width:30px; height:30px; border:0; background:none; cursor:pointer; display:flex; align-items:center; justify-content:center;"><span style="width:16px; height:16px; border-radius:50%; border:1px solid var(--dim); color:var(--fg-3); font-family:var(--sans); font-style:italic; font-size:10.5px; line-height:14px; text-align:center;">i</span></button>
+                    </sc-if>
+                  </div>
+                  <div style="text-align:right;">
+                    <div class="tag-facts__value" style="font-size:14px;">{{ r.value }}</div>
+                    <sc-if value="{{ r.missing }}" hint-placeholder-val="{{ false }}">
+                      <div style="font-size:11px; color:var(--dim);">not reported</div>
+                    </sc-if>
+                  </div>
+                </div>
+              </div>
+            </sc-for>
+          </div>
+        </sc-for>
+      </section>
+
+      <section id="quote" style="display:grid; grid-template-columns:{{ L.tileCols }}; grid-template-rows:{{ L.tileRows }}; gap:12px; min-height:0;">
+        <sc-for list="{{ tiles }}" as="t" hint-placeholder-count="4">
+          <article style="background:var(--panel); border-radius:14px; box-shadow:inset 0 3px 0 var(--blue); padding:14px 16px 12px; display:flex; flex-direction:column; gap:4px; min-width:0; min-height:0; overflow:auto;">
+            <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:4px;">
+              <div class="tag-stat__label" style="margin:0; text-wrap:pretty;">{{ t.label }}</div>
+              <sc-if value="{{ t.hasCaveat }}" hint-placeholder-val="{{ false }}">
+                <button onClick="{{ t.onTip }}" onMouseEnter="{{ t.onTipEnter }}" onMouseLeave="{{ t.onTipLeave }}" onFocus="{{ t.onTipEnter }}" onBlur="{{ t.onTipLeave }}" data-tip-btn="1" aria-label="About this figure" style="flex:0 0 auto; width:30px; height:30px; margin:-6px -6px 0 0; border:0; background:none; cursor:pointer; display:flex; align-items:center; justify-content:center;"><span style="width:17px; height:17px; border-radius:50%; border:1px solid var(--dim); color:var(--fg-3); font-family:var(--sans); font-style:italic; font-size:11px; line-height:15px; text-align:center;">i</span></button>
+              </sc-if>
+            </div>
+            <div style="font-family:var(--sans); font-weight:600; font-size:30px; letter-spacing:-.02em; line-height:1.05; color:var(--fg); font-variant-numeric:tabular-nums lining-nums;">{{ t.value }}</div>
+            <sc-if value="{{ t.missing }}" hint-placeholder-val="{{ false }}">
+              <div style="font-size:11.5px; color:var(--dim);">not reported</div>
+            </sc-if>
+            <div style="font-size:11.5px; color:var(--fg-3);">{{ t.scope }}</div>
+            <sc-if value="{{ t.estimate }}" hint-placeholder-val="{{ false }}">
+              <div style="align-self:flex-start; font-family:var(--sans); font-weight:600; font-size:10.5px; letter-spacing:.1em; text-transform:uppercase; color:var(--fg); border:1px solid var(--fill-3); padding:1px 6px; border-radius:3px;">CoStar estimate</div>
+            </sc-if>
+            <div style="font-size:12px; color:var(--fg); border-top:1px solid var(--fill); padding-top:6px; margin-top:auto;">{{ t.change }}</div>
+            <button onClick="{{ t.onCopy }}" disabled="{{ t.copyDisabled }}" style="min-height:32px; border-radius:6px; border:1px solid var(--blue); background:{{ t.copyBg }}; color:{{ t.copyFg }}; cursor:pointer; font-family:var(--sans); font-weight:600; font-size:12px; letter-spacing:.1em; text-transform:uppercase;">{{ t.copyLabel }}</button>
+          </article>
+        </sc-for>
+      </section>
+
+      <section id="slices" style="background:var(--panel); border-radius:14px; padding:16px 18px; display:flex; flex-direction:column; gap:8px; min-width:0; min-height:0; overflow:auto;">
+        <h2 style="margin:0; display:flex; flex-wrap:wrap; gap:2px 8px; align-items:baseline;">
+          <span style="font-family:var(--sans); font-weight:700; font-size:16px; letter-spacing:.08em; text-transform:uppercase; color:var(--fg);">{{ sliceTitle }}</span>
+          <span style="font-family:var(--sans); font-weight:500; font-size:15px; color:var(--fg-3);">{{ sliceScope }}</span>
+        </h2>
+        <sc-if value="{{ noSlices }}"><div style="font-size:13px; line-height:1.5; color:var(--fg-3); padding:8px 0; text-wrap:pretty;">{{ noSlicesNote }}</div></sc-if>
+        <sc-if value="{{ hasSlices }}" hint-placeholder-val="{{ true }}">
+        <div style="overflow-x:auto;">
+          <table class="tag-table" style="min-width:420px; font-size:13px;">
+            <colgroup><col style="width:34%"><col><col><col></colgroup>
+            <thead>
+              <tr>
+                <sc-for list="{{ sliceHeads }}" as="hd">
+                  <th class="{{ hd.cls }}" style="vertical-align:bottom;">
+                    <span style="display:inline-flex; align-items:center; gap:0;">{{ hd.label }}
+                      <sc-if value="{{ hd.hasCaveat }}"><button onClick="{{ hd.onTip }}" onMouseEnter="{{ hd.onTipEnter }}" onMouseLeave="{{ hd.onTipLeave }}" onFocus="{{ hd.onTipEnter }}" onBlur="{{ hd.onTipLeave }}" data-tip-btn="1" aria-label="About this figure" style="width:26px; height:26px; border:0; background:none; cursor:pointer; display:inline-flex; align-items:center; justify-content:center; padding:0;"><span style="width:15px; height:15px; border-radius:50%; border:1px solid var(--dim); color:var(--fg-3); font-family:var(--sans); font-style:italic; font-size:10px; line-height:13px; text-align:center; text-transform:none;">i</span></button></sc-if>
+                    </span>
+                  </th>
+                </sc-for>
+              </tr>
+            </thead>
+            <tbody>
+              <sc-for list="{{ sliceRows }}" as="sr" hint-placeholder-count="3">
+                <tr>
+                  <td style="font-family:var(--sans); font-weight:400; font-size:12.5px;">
+                    <div style="display:flex; align-items:center; gap:6px; flex-wrap:wrap;">
+                      <span>{{ sr.label }}</span>
+                      <sc-if value="{{ sr.hasNote }}"><button onClick="{{ sr.onNote }}" aria-label="CoStar data note" style="min-width:28px; height:24px; padding:0 6px; border-radius:4px; border:1px solid var(--orange); background:var(--st4); cursor:pointer; font-family:var(--sans); font-weight:700; font-size:10.5px; letter-spacing:.06em;">NOTE</button></sc-if>
+                    </div>
+                    <sc-if value="{{ sr.noteOpen }}"><div style="margin-top:4px; font-size:11px; line-height:1.4; color:var(--fg-3); white-space:normal;">{{ sr.note }}</div></sc-if>
+                  </td>
+                  <sc-for list="{{ sr.cells }}" as="cl">
+                    <td class="tag-table__col--num" style="font-size:13px;">{{ cl.value }}<sc-if value="{{ cl.missing }}"><div style="font-family:var(--sans); font-weight:400; font-size:10.5px; color:var(--dim);">not reported</div></sc-if></td>
+                  </sc-for>
+                </tr>
+              </sc-for>
+            </tbody>
+          </table>
+        </div>
+        <div style="font-size:11.5px; color:var(--fg-3); text-wrap:pretty;">{{ sliceFoot }}</div>
+        </sc-if>
+      </section>
+
+      <section id="trend" style="background:var(--panel); border-radius:14px; padding:16px 18px; display:flex; flex-direction:column; gap:8px; min-width:0; min-height:{{ L.trendMinH }}; overflow:hidden;">
+        <div style="display:flex; flex-wrap:wrap; justify-content:space-between; align-items:flex-end; gap:10px;">
+          <h2 style="margin:0; display:flex; flex-direction:column; gap:2px;">
+            <span style="font-family:var(--sans); font-weight:700; font-size:16px; letter-spacing:.08em; text-transform:uppercase; color:var(--fg);">Trend</span>
+            <span style="font-family:var(--sans); font-weight:500; font-size:15px; color:var(--fg-3);">{{ trendScope }}</span>
+          </h2>
+          <div style="display:flex; flex-wrap:wrap; gap:6px; align-items:center;">
+            <select onChange="{{ onTrendMetric }}" style="min-height:40px; padding:0 8px; border:1px solid var(--fill-3); border-radius:6px; background:var(--panel); font-size:13px; max-width:100%;">
+              <sc-for list="{{ trendOptions }}" as="o"><option value="{{ o.value }}" selected="{{ o.sel }}">{{ o.label }}</option></sc-for>
+            </select>
+            <sc-if value="{{ trendIsFlow }}" hint-placeholder-val="{{ false }}">
+              <div style="display:flex; border:1px solid var(--blue); border-radius:6px; overflow:hidden;">
+                <sc-for list="{{ trendModes }}" as="m">
+                  <button onClick="{{ m.onPick }}" style="min-height:38px; padding:0 12px; border:0; background:{{ m.bg }}; color:{{ m.fg }}; cursor:pointer; font-family:var(--sans); font-weight:600; font-size:12px; letter-spacing:.08em; text-transform:uppercase;">{{ m.label }}</button>
+                </sc-for>
+              </div>
+            </sc-if>
+            <sc-if value="{{ trendHasCaveat }}" hint-placeholder-val="{{ false }}">
+              <button onClick="{{ trendTipTap }}" onMouseEnter="{{ trendTipEnter }}" onMouseLeave="{{ trendTipLeave }}" onFocus="{{ trendTipEnter }}" onBlur="{{ trendTipLeave }}" data-tip-btn="1" aria-label="About this figure" style="width:36px; height:36px; border:0; background:none; cursor:pointer; display:flex; align-items:center; justify-content:center;"><span style="width:17px; height:17px; border-radius:50%; border:1px solid var(--dim); color:var(--fg-3); font-family:var(--sans); font-style:italic; font-size:11px; line-height:15px; text-align:center;">i</span></button>
+            </sc-if>
+          </div>
+        </div>
+        <div style="display:flex; align-items:baseline; gap:8px; flex-wrap:wrap;">
+          <span style="font-family:var(--sans); font-weight:600; font-size:12px; letter-spacing:.08em; text-transform:uppercase; color:var(--dim);">{{ readoutLabel }}</span>
+          <span style="font-family:var(--sans); font-weight:var(--figure-bold-weight); font-size:20px; color:var(--fg);">{{ readoutValue }}</span>
+        </div>
+        <div id="trend-chart-box" style="position:relative; flex:1; min-height:{{ L.chartMinH }}; width:100%; min-width:0; overflow:hidden;">
+          <sc-if value="{{ chartEmpty }}" hint-placeholder-val="{{ false }}">
+            <div style="position:absolute; inset:0; display:flex; align-items:center; justify-content:center; color:var(--dim);">— not reported for this selection</div>
+          </sc-if>
+          <sc-if value="{{ chartHas }}" hint-placeholder-val="{{ true }}">
+            <svg class="tag-chart" width="{{ chartW }}" height="{{ chartH }}" viewBox="{{ chartViewBox }}" style="position:absolute; left:0; top:0; display:block; touch-action:manipulation;">
+              <sc-for list="{{ yTicks }}" as="tk">
+                <line class="tag-chart__reference" x1="{{ tk.x1 }}" x2="{{ tk.x2 }}" y1="{{ tk.y }}" y2="{{ tk.y }}"></line>
+              </sc-for>
+              {{ chartLabels }}
+              <line class="tag-chart__axis" x1="{{ axis.x1 }}" x2="{{ axis.x2 }}" y1="{{ axis.y }}" y2="{{ axis.y }}"></line>
+              <sc-for list="{{ bars }}" as="b">
+                <rect class="{{ b.cls }}" x="{{ b.x }}" y="{{ b.y }}" width="{{ b.w }}" height="{{ b.h }}"></rect>
+              </sc-for>
+              <sc-if value="{{ isLine }}">
+                <path d="{{ linePath }}" fill="none" stroke="var(--blue)" stroke-width="2" stroke-linejoin="round"></path>
+              </sc-if>
+              <sc-if value="{{ hasPickDot }}">
+                <line class="tag-chart__leader" x1="{{ pickDot.x }}" x2="{{ pickDot.x }}" y1="{{ pickDot.top }}" y2="{{ pickDot.bottom }}" stroke-dasharray="2 2"></line>
+                <circle cx="{{ pickDot.x }}" cy="{{ pickDot.y }}" r="4.5" fill="var(--orange)" stroke="var(--panel)" stroke-width="1.5"></circle>
+              </sc-if>
+              <sc-for list="{{ hits }}" as="h">
+                <rect x="{{ h.x }}" y="0" width="{{ h.w }}" height="{{ chartH }}" fill="transparent" onClick="{{ h.onPick }}" onMouseEnter="{{ h.onPick }}" style="cursor:pointer;"></rect>
+              </sc-for>
+            </svg>
+          </sc-if>
+        </div>
+        <sc-if value="{{ hasPartialNote }}" hint-placeholder-val="{{ false }}">
+          <div style="font-size:11.5px; color:var(--fg-3);">{{ partialNote }}</div>
+        </sc-if>
+      </section>
+      
+
+      
+
+      
+
+      
+
+      
+      </div>
+      </sc-if>
+      <sc-if value="{{ isCapital }}" hint-placeholder-val="{{ false }}">
+        <section id="capital" style="display:flex; flex-direction:column; gap:12px; min-width:0;">
+          <sc-if value="{{ capNotLoaded }}">
+            <div style="font-size:12px; line-height:1.5; background:var(--panel); border:1px solid var(--st4); border-radius:8px; padding:10px 12px; color:var(--fg-2); text-wrap:pretty;">The loaded fixture has no capital_markets block, so every figure shows as not loaded. Rebuild it with <span style="color:var(--fg);">build_fixture.py --markets</span> and replace the upload; nothing else changes.</div>
+          </sc-if>
+          <div style="display:grid; grid-template-columns:{{ L.capCols }}; grid-auto-flow:{{ L.capFlow }}; grid-auto-columns:{{ L.capAuto }}; overflow-x:{{ L.capOv }}; gap:12px; padding-bottom:2px;">
+            <sc-for list="{{ capTiles }}" as="t" hint-placeholder-count="7">
+              <article style="opacity:{{ t.opacity }}; background:var(--panel); border-radius:14px; box-shadow:inset 0 3px 0 {{ t.bar }}; padding:14px 14px 12px; display:flex; flex-direction:column; gap:4px; min-width:0;">
+                <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:4px;">
+                  <div class="tag-stat__label" style="margin:0; text-wrap:pretty;">{{ t.label }}</div>
+                  <button onClick="{{ t.onTip }}" onMouseEnter="{{ t.onTipEnter }}" onMouseLeave="{{ t.onTipLeave }}" onFocus="{{ t.onTipEnter }}" onBlur="{{ t.onTipLeave }}" data-tip-btn="1" aria-label="Source and definition" style="flex:0 0 auto; width:30px; height:30px; margin:-6px -6px 0 0; border:0; background:none; cursor:pointer; display:flex; align-items:center; justify-content:center;"><span style="width:17px; height:17px; border-radius:50%; border:1px solid var(--dim); color:var(--fg-3); font-family:var(--sans); font-style:italic; font-size:11px; line-height:15px; text-align:center;">i</span></button>
+                </div>
+                <div style="font-family:var(--sans); font-weight:600; font-size:26px; letter-spacing:-.02em; line-height:1.05; color:var(--fg); font-variant-numeric:tabular-nums lining-nums;">{{ t.value }}</div>
+                <sc-if value="{{ t.hasSub }}"><div style="font-size:11.5px; color:var(--fg-2);">{{ t.sub }}</div></sc-if>
+                <div style="font-size:11.5px; color:var(--fg-3);">{{ t.dateLine }}</div>
+                <sc-if value="{{ t.follows }}">
+                  <div style="display:flex; flex-wrap:wrap; gap:4px;">
+                    <span style="font-family:var(--sans); font-weight:600; font-size:10.5px; letter-spacing:.1em; text-transform:uppercase; color:var(--fg); border:1px solid var(--fill-3); padding:1px 6px; border-radius:3px;">CoStar estimate</span>
+                    <span style="font-family:var(--sans); font-weight:600; font-size:10.5px; letter-spacing:.1em; text-transform:uppercase; color:var(--fg); background:var(--st1); padding:1px 6px; border-radius:3px;">Follows filters</span>
+                  </div>
+                  <div style="font-size:11px; color:var(--fg-3); text-wrap:pretty;">{{ t.scope }}</div>
+                </sc-if>
+                <div style="font-size:12px; color:var(--fg); border-top:1px solid var(--fill); padding-top:6px; margin-top:auto;">{{ t.change }}</div>
+                <button onClick="{{ t.onCopy }}" disabled="{{ t.copyDisabled }}" style="min-height:32px; border-radius:6px; border:1px solid var(--blue); background:{{ t.copyBg }}; color:{{ t.copyFg }}; cursor:pointer; font-family:var(--sans); font-weight:600; font-size:12px; letter-spacing:.1em; text-transform:uppercase;">{{ t.copyLabel }}</button>
+              </article>
+            </sc-for>
+          </div>
+          <div style="font-size:11.5px; color:var(--fg-3); max-width:760px; text-wrap:pretty;">Each figure carries its own date; cadences differ. Only the cap rate spread follows the submarket, asset type and As of filters. Change is against the same date a year earlier. A greyed figure is older than twice its cadence.</div>
+        </section>
+      </sc-if>
+    </sc-if>
+
+  </main>
+  <sc-if value="{{ tipShow }}" hint-placeholder-val="{{ false }}">
+    <div role="tooltip" style="position:fixed; left:{{ tipX }}px; top:{{ tipY }}px; transform:{{ tipTransform }}; z-index:50; width:320px; max-width:calc(100vw - 16px); background:var(--fill-2); border:1px solid var(--fill-3); border-radius:8px; box-shadow:0 8px 24px rgba(0,0,0,.35); padding:10px 12px; display:flex; flex-direction:column; gap:6px; pointer-events:none;">
+      <span style="font-weight:600; font-size:12px; color:var(--fg);">{{ tipTitle }}</span>
+      <span style="font-size:12px; line-height:1.45; color:var(--fg-2); text-wrap:pretty;">{{ tipDef }}</span>
+      <span style="font-size:10.5px; letter-spacing:.06em; text-transform:uppercase; color:var(--dim);">{{ tipFieldLine }}</span>
+      <sc-if value="{{ tipHasCaveat }}" hint-placeholder-val="{{ false }}">
+        <span style="font-size:11.5px; line-height:1.45; color:var(--fg-3); border-top:1px solid var(--fill-3); padding-top:6px; text-wrap:pretty;">{{ tipCaveat }}</span>
+      </sc-if>
+    </div>
+  </sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;defaultSubmarket&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;Soho&quot;,&quot;Chelsea&quot;,&quot;Grand Central&quot;,&quot;Lower West Side&quot;],&quot;default&quot;:&quot;Soho&quot;,&quot;tsType&quot;:&quot;string&quot;}}">
+const MINUS = '\u2212';
+const ASSET_LABEL = { office: 'Office', retail: 'Retail', industrial: 'Industrial', multifamily: 'Multifamily' };
+const CFG = {
+  commercial: {
+    tiles: ['vacancy_rate', 'market_asking_rent_psf', 'net_absorption_sf', 'sales_volume_usd'],
+    stocks: ['inventory_sf', 'inventory_bldgs', 'vacant_sf', 'available_sf', 'under_construction_sf'],
+    flows: ['leasing_sf', 'net_absorption_sf', 'deliveries_sf', 'net_deliveries_sf', 'construction_starts_sf', 'sales_volume_usd', 'sales_deals', 'sold_sf'],
+    trend: ['vacancy_rate', 'availability_rate', 'market_asking_rent_psf', 'net_absorption_sf', 'leasing_sf', 'deliveries_sf', 'sales_volume_usd'],
+    slice: ['vacancy_rate', 'availability_rate', 'market_asking_rent_psf'],
+  },
+  multifamily: {
+    tiles: ['vacancy_rate', 'asking_rent_unit', 'absorption_units', 'sales_volume_usd'],
+    stocks: ['inventory_units', 'inventory_bldgs', 'under_construction_units'],
+    flows: ['absorption_units', 'sales_volume_usd', 'sales_deals'],
+    trend: ['vacancy_rate', 'asking_rent_unit', 'absorption_units', 'sales_volume_usd'],
+    slice: ['vacancy_rate', 'availability_rate', 'asking_rent_unit'],
+  },
+};
+const SHORT = { vacancy_rate: 'Vacancy', availability_rate: 'Availability', market_asking_rent_psf: 'Market asking rent', asking_rent_unit: 'Asking rent / unit' };
+const PHRASE = { vacancy_rate: 'vacancy', market_asking_rent_psf: 'market asking rent, a CoStar estimate,', asking_rent_unit: 'asking rent per unit', net_absorption_sf: 'net absorption', absorption_units: 'net absorption', sales_volume_usd: 'sales volume' };
+const PER_UNIT_USD = new Set(['asking_rent_unit', 'market_sale_price_per_unit']);
+const fp = p => p ? p.slice(0, 4) + ' ' + p.slice(4) : '';
+const cap = s => s.charAt(0).toUpperCase() + s.slice(1);
+const GROUP = { office: 'Building class', multifamily: 'Star rating', retail: 'Property type', industrial: 'Property type' };
+const CLASS_SEGS = ['all', 'class a', 'class b', 'class c'];
+const STAR_SEGS = ['all', '4 & 5 star', '3 star', '1 & 2 star'];
+const TYPE_SEGS = { retail: ['all', 'general retail', 'neighborhood center', 'mall'], industrial: ['all', 'logistics', 'flex', 'specialized'] };
+const DEFS = {
+  inventory_sf: ['Inventory SF', 'Inventory SF (Off, Ret, Ind) or Inventory Units (MF)'],
+  inventory_bldgs: ['Existing Buildings', 'Total buildings of current selected property type with building status of Existing or Under Renovation'],
+  inventory_units: ['Inventory Units', 'Total Unit Count for Existing and Under Renovated buildings'],
+  vacant_sf: ['Vacant SF Total', 'Current total vacant SF that is either available or not available'],
+  available_sf: ['Available SF Total', 'Total Available SF of current selected property type'],
+  under_construction_sf: ['Under Construction SF', 'Under Construction SF'],
+  under_construction_units: ['Under Construction Units', 'Multi-Family Unit Count that are Under Construction during that time period'],
+  vacancy_rate: ['Vacancy Rate', 'Vacancy = Vacant SF/Total Inv SF (Off, Ret, Ind) or Vacant Units/Total Inv Units (MF)'],
+  availability_rate: ['Availability Rate', 'Total current available SF/Total Bldg SF of current selected property type'],
+  market_asking_rent_psf: ['Market Asking Rent/SF', 'Modeled Asking Rent/SF for all properties in geography'],
+  asking_rent_unit: ['Market Asking Rent/Unit', 'Modeled Multi-Family Asking Rent/Unit for all properties in geography'],
+  market_cap_rate: ['Market Cap Rate', 'Modeled Cap Rate for all properties in geography'],
+  market_sale_price_psf: ['Market Sale Price Per SF', 'Unsmoothed Modeled Sale Price/SF for all properties in geography'],
+  market_sale_price_per_unit: ['Market Sale Price Per Unit', 'Unsmoothed Modeled Multi-Family Sale Price/Unit for all properties in geography'],
+  net_absorption_sf: ['Net Absorption SF', 'Net Absorption is the change in demand for a rolling 3-month value'],
+  leasing_sf: ['Leasing SF Total', 'Total Lease Comp SF Signed during that period'],
+  deliveries_sf: ['Gross Delivered SF', "Total Gross SF delivered (changed from Under Construction to Existing) and doesn't include demolished SF in calculation"],
+  net_deliveries_sf: ['Net Delivered SF', 'Net Delivered SF (Gross Delivered SF Less Demolished SF)'],
+  construction_starts_sf: ['Construction Starts SF', 'Total square footage of buildings that started construction'],
+  sales_volume_usd: ['Total Sales Volume', 'Total Sales Volume of actual transactions and includes allocated prices for portfolio properties'],
+  sales_deals: ['Total Sales Transactions', 'Total count of actual sales comp transactions, including sales with and without a price'],
+  sold_sf: ['Sold Building SF', 'Total Building SF of all the building that sold for the given property type during the quarter or year. Does not require a sale price to be included.'],
+  absorption_units: ['Absorption Units', 'Multi-Family Absorption is the change in unit demand for a rolling 3-month value'],
+};
+const segLabel = s => s.includes('+') ? s.split('+').map(segLabel).join(' + ') : s === 'all' ? 'All' : s.startsWith('class') ? s.replace(/\b[a-c]\b|^class/g, x => x === 'class' ? 'Class' : x.toUpperCase()) : cap(s);
+const segOrder = list => list;
+const num = n => Math.round(n).toLocaleString('en-US');
+function abbr(a) {
+  if (a >= 1e9) return (a / 1e9).toFixed(1) + 'B';
+  if (a >= 1e6) return a >= 1e8 ? Math.round(a / 1e6) + 'M' : (a / 1e6).toFixed(1) + 'M';
+  if (a >= 1e3) return a >= 1e5 ? Math.round(a / 1e3) + 'K' : (a / 1e3).toFixed(1) + 'K';
+  return num(a);
+}
+function fmt(metrics, id, v) {
+  if (v == null || Number.isNaN(v)) return null;
+  const unit = metrics[id] ? metrics[id].unit : '';
+  const neg = v < 0, a = Math.abs(v);
+  let s;
+  if (unit === 'pct') s = a.toFixed(1) + '%';
+  else if (unit === 'SF') s = abbr(a) + ' SF';
+  else if (unit === 'usd_psf') s = '$' + num(a) + '/SF';
+  else if (unit === 'usd') s = PER_UNIT_USD.has(id) ? '$' + num(a) : '$' + abbr(a);
+  else if (unit === 'units') s = num(a) + ' units';
+  else s = num(a);
+  return (neg && Math.round(a * 10) !== 0 ? MINUS : '') + s;
+}
+function fmtAxis(metrics, id, v, step) {
+  const unit = metrics[id] ? metrics[id].unit : '';
+  const neg = v < 0, a = Math.abs(v);
+  let s;
+  if (unit === 'pct') s = a.toFixed(Number.isInteger(step) ? 0 : 1) + '%';
+  else if (unit === 'usd_psf' || PER_UNIT_USD.has(id)) s = '$' + (a >= 1e4 ? abbr(a) : num(a));
+  else if (unit === 'usd') s = '$' + abbr(a);
+  else s = abbr(a);
+  return (neg ? MINUS : '') + s;
+}
+function niceStep(raw) {
+  const p = Math.pow(10, Math.floor(Math.log10(raw || 1)));
+  const f = raw / p;
+  return (f <= 1 ? 1 : f <= 2 ? 2 : f <= 2.5 ? 2.5 : f <= 5 ? 5 : 10) * p;
+}
+
+class Component extends DCLogic {
+  state = {
+    submarket: this.props.defaultSubmarket ?? 'Soho', asset_type: 'office', view: 'costar', markets: null, segment: 'all', as_of: null, win: { type: 't12' },
+    data: null, error: null, sheet: null, subQuery: '', tip: null, copied: null,
+    trendMetric: 'vacancy_rate', trendMode: 'quarter', pick: null, chartW: 600,
+    tipBox: null,
+    theme: (() => { try { return localStorage.getItem('tag-market-theme') || 'dark'; } catch (e) { return 'dark'; } })(),
+  };
+
+  componentDidMount() { this._onResize = () => this.setState({ vw: window.innerWidth, vh: window.innerHeight }); window.addEventListener('resize', this._onResize); this._onResize(); this.refresh({}); this.applyTheme(); this._poll = setInterval(() => this.watchChart(), 400);
+    this._docDown = e => { if (this.state.tipBox && !(e.target.closest && e.target.closest('[data-tip-btn]'))) this.setState({ tipBox: null }); };
+    this._onScroll = () => { if (this.state.tipBox) this.setState({ tipBox: null }); };
+    document.addEventListener('mousedown', this._docDown); document.addEventListener('touchstart', this._docDown); window.addEventListener('scroll', this._onScroll, true); }
+  placeTip(key, mid, el, pinned) {
+    const r = el.getBoundingClientRect(), vw = window.innerWidth, vh = window.innerHeight, W = Math.min(320, vw - 16);
+    const x = Math.max(8, Math.min(r.left + r.width / 2 - W / 2, vw - W - 8)), below = r.bottom + 200 < vh;
+    this.setState({ tipBox: { key, mid, x: Math.round(x), y: Math.round(below ? r.bottom + 6 : r.top - 6), up: !below, pinned } });
+  }
+  hoverTip(key, mid, el) { const t = this.state.tipBox; if (t && t.pinned) return; this.placeTip(key, mid, el, false); }
+  unhoverTip(key) { const t = this.state.tipBox; if (t && !t.pinned && t.key === key) this.setState({ tipBox: null }); }
+  pinTip(key, mid, el) { const t = this.state.tipBox; if (t && t.pinned && t.key === key) this.setState({ tipBox: null }); else this.placeTip(key, mid, el, true); }
+  componentDidUpdate() { this.watchChart(); this.applyTheme(); }
+  applyTheme() { document.documentElement.dataset.theme = this.state.theme; }
+  setTheme(t) { try { localStorage.setItem('tag-market-theme', t); } catch (e) {} this.setState({ theme: t }); }
+  watchChart() {
+    const el = document.getElementById('trend-chart-box');
+    if (!el) return;
+    const cw = Math.round(el.clientWidth), ch = Math.round(el.clientHeight);
+    if ((cw > 0 && Math.abs(cw - this.state.chartW) > 2) || (ch > 0 && Math.abs(ch - (this.state.chartHt || 0)) > 2)) this.setState({ chartW: cw, chartHt: ch });
+    if (el === this._chartEl) return;
+    if (!this._ro) this._ro = new ResizeObserver(es => {
+      const w = Math.round(es[0].contentRect.width), hh = Math.round(es[0].contentRect.height);
+      if (w > 0 && (Math.abs(w - this.state.chartW) > 2 || Math.abs(hh - (this.state.chartHt || 0)) > 2)) this.setState({ chartW: w, chartHt: hh });
+    });
+    this._ro.disconnect(); this._chartEl = el; this._ro.observe(el);
+  }
+  componentWillUnmount() { window.removeEventListener('resize', this._onResize); document.removeEventListener('mousedown', this._docDown); document.removeEventListener('touchstart', this._docDown); window.removeEventListener('scroll', this._onScroll, true); if (this._ro) this._ro.disconnect(); clearTimeout(this._ct); clearInterval(this._poll); }
+
+  chartRef = (el) => {
+    if (!el || el === this._chartEl) return;
+    if (!this._ro) this._ro = new ResizeObserver(es => {
+      const w = Math.round(es[0].contentRect.width), hh = Math.round(es[0].contentRect.height);
+      if (w > 0 && (Math.abs(w - this.state.chartW) > 2 || Math.abs(hh - (this.state.chartHt || 0)) > 2)) this.setState({ chartW: w, chartHt: hh });
+    });
+    this._ro.disconnect(); this._chartEl = el; this._ro.observe(el);
+  };
+
+  async refresh(patch) {
+    const s = this.state;
+    const p = { submarket: s.submarket, asset_type: s.asset_type, segment: s.segment, as_of: s.as_of, window: s.win, ...patch };
+    const id = this._req = (this._req || 0) + 1;
+    try {
+      if (!this._mod) this._mod = import(new URL('market-data.js', document.baseURI).href);
+      const { getData, getMarkets } = await this._mod;
+      const data = await getData(p);
+      const markets = await getMarkets({ as_of: data.params.as_of, cap_rate: data.row ? data.row.market_cap_rate : null, cap_rate_year_ago: data.rowYearAgo ? data.rowYearAgo.market_cap_rate : null });
+      if (id !== this._req) return;
+      const r = data.params;
+      const trend = CFG[r.asset_type === 'multifamily' ? 'multifamily' : 'commercial'].trend;
+      this.setState(st => ({
+        data, markets, error: null, submarket: r.submarket, asset_type: r.asset_type, segment: r.segment, as_of: r.as_of, win: r.window,
+        trendMetric: trend.includes(st.trendMetric) ? st.trendMetric : trend[0], pick: null,
+      }));
+    } catch (e) { this.setState({ error: String((e && e.message) || e) }); }
+  }
+
+  copy(key, text) {
+    const done = () => { this.setState({ copied: key }); clearTimeout(this._ct); this._ct = setTimeout(() => this.setState({ copied: null }), 1800); };
+    const fallback = () => {
+      const ta = document.createElement('textarea'); ta.value = text; ta.style.position = 'fixed'; ta.style.opacity = '0';
+      document.body.appendChild(ta); ta.select(); try { document.execCommand('copy'); } catch (e) {} ta.remove(); done();
+    };
+    if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(text).then(done, fallback); else fallback();
+  }
+
+  toggleTip(id) { this.setState(s => ({ tip: s.tip === id ? null : id })); }
+
+  renderVals() {
+    const s = this.state, d = s.data;
+    const vw = s.vw || 1440, vh = s.vh || 900;
+    const fit = vw >= 1180 && vh >= 680, narrow = vw < 760, mid = !fit && vw >= 1000;
+    const L = {
+      rootH: fit ? '100vh' : 'auto', rootOv: fit ? 'hidden' : 'visible', dir: narrow ? 'column' : 'row',
+      asidePos: narrow ? 'static' : 'sticky', asideW: narrow ? 'auto' : vw < 1000 ? '232px' : '272px', asideH: narrow ? 'auto' : '100vh',
+      mainH: fit ? '100vh' : 'auto', mainOv: fit ? 'auto' : 'visible', mainPad: narrow ? '14px 14px 24px' : '18px 24px 24px',
+      gridMinH: fit ? '560px' : '0', cols: mid || fit ? 'minmax(0,1fr) minmax(0,1fr)' : 'minmax(0,1fr)', rows: fit ? 'minmax(0,1fr) minmax(0,1fr)' : 'auto',
+      tileCols: narrow ? 'minmax(0,1fr)' : 'minmax(0,1fr) minmax(0,1fr)', tileRows: fit ? 'minmax(0,1fr) minmax(0,1fr)' : 'auto',
+      capCols: narrow ? 'none' : vw >= 1300 ? 'repeat(7,minmax(0,1fr))' : 'repeat(auto-fill,minmax(190px,1fr))', capFlow: narrow ? 'column' : 'row', capAuto: narrow ? 'minmax(200px,72%)' : 'auto', capOv: narrow ? 'auto' : 'visible',
+      sfCols: narrow ? 'minmax(0,1fr)' : 'minmax(0,1fr) minmax(0,1fr)', chartMinH: fit ? '120px' : '260px', trendMinH: fit ? '0' : '360px',
+    };
+    const base = {
+      L,
+      themes: [['dark', 'Dark'], ['light', 'Light']].map(([k, l]) => ({ label: l, onPick: () => this.setTheme(k), bg: s.theme === k ? 'var(--blue)' : 'transparent', fg: s.theme === k ? 'var(--on-accent)' : 'var(--fg-3)' })),
+      attribution: d ? d.meta.attribution : '', dataThrough: d ? fp(d.meta.data_through) : '',
+      loading: !d && !s.error, ready: !!d, showError: !!s.error, error: s.error || '', chartRef: this.chartRef,
+    };
+    if (!d) return { ...base, chips: [], sheetOpen: false, tipShow: false };
+    const M = d.metrics, isMF = d.params.asset_type === 'multifamily', cfg = CFG[isMF ? 'multifamily' : 'commercial'];
+    const asOfLabel = fp(d.params.as_of), yaLabel = fp(d.yearAgo), w = d.window;
+    const row = d.row || {}, ya = d.rowYearAgo || {};
+    const tip = (key, mid) => ({ hasCaveat: true, onTip: e => this.pinTip(key, mid, e.currentTarget), onTipEnter: e => this.hoverTip(key, mid, e.currentTarget), onTipLeave: () => this.unhoverTip(key) });
+    const caveatOf = (id) => (M[id] && M[id].caveat) || '';
+
+    // filters
+    const winShort = { t12: 'Trailing 12 mo', cy: 'Calendar ' + (w.year ?? ''), ytd: 'Year to date', custom: fp(w.from) + '–' + fp(w.to) }[w.type];
+    const chipDefs = [
+      ['submarket', 'Submarket', d.params.submarket],
+      ['asset', 'Asset type', ASSET_LABEL[d.params.asset_type]],
+      ['slice', GROUP[d.params.asset_type], segLabel(d.params.segment, d.params.asset_type)],
+      ['asof', 'As of', asOfLabel],
+      ['window', 'Window', winShort],
+    ];
+    const chips = chipDefs.map(([k, label, value]) => ({
+      label, value, bg: s.sheet === k ? 'var(--panel)' : 'transparent', fg: s.sheet === k ? 'var(--blue)' : 'var(--panel)',
+      onTap: () => this.setState(st => ({ sheet: st.sheet === k ? null : k, subQuery: '' })),
+    }));
+    const opt = (label, selected, onPick) => ({
+      label, onPick, bg: selected ? 'var(--blue)' : 'var(--panel)', fg: selected ? 'var(--panel)' : 'var(--mm-navy-near-black)',
+      border: selected ? 'var(--blue)' : 'var(--fill-3)',
+    });
+    const q = s.subQuery.trim().toLowerCase();
+    const subMatches = d.submarkets.filter(x => x.toLowerCase().includes(q));
+    let sheetOptions = [], sheetTitle = '';
+    if (s.sheet === 'submarket') {
+      sheetTitle = 'Submarket';
+      sheetOptions = subMatches.map(x => opt(x, x === d.params.submarket, () => { this.setState({ sheet: null }); this.refresh({ submarket: x }); }));
+    } else if (s.sheet === 'asset') {
+      sheetTitle = 'Asset type · ' + d.params.submarket;
+      sheetOptions = d.assetTypes.map(a => opt(ASSET_LABEL[a], a === d.params.asset_type, () => { this.setState({ sheet: null }); this.refresh({ asset_type: a, segment: 'all' }); }));
+    } else if (s.sheet === 'slice') {
+      sheetTitle = GROUP[d.params.asset_type];
+      sheetOptions = ['all', ...d.slices].map(g => opt(segLabel(g, d.params.asset_type), g === d.params.segment, () => { this.setState({ sheet: null }); this.refresh({ segment: g }); }));
+    } else if (s.sheet === 'asof') {
+      sheetTitle = 'As of';
+    } else if (s.sheet === 'window') {
+      sheetTitle = 'Window for flows';
+      sheetOptions = [['t12', 'Trailing 12 months'], ['cy', 'Calendar year'], ['ytd', 'Year to date'], ['custom', 'Custom range']]
+        .map(([t, l]) => opt(l, w.type === t, () => this.refresh({ window: { ...w, type: t } })));
+    }
+    const dk = (label, selected, onPick) => ({ label, onPick, bg: selected ? 'var(--blue)' : 'transparent', fg: selected ? 'var(--on-accent)' : 'var(--fg-2)', border: selected ? 'var(--blue)' : 'var(--fill-3)' });
+    const submarketOptions = subMatches.map(x => dk(x, x === d.params.submarket, () => { this.setState({ subQuery: '' }); this.refresh({ submarket: x }); }));
+    const assetOptions = Object.keys(ASSET_LABEL).map(a => {
+      const ok = d.assetTypes.includes(a);
+      const on = a === d.params.asset_type && s.view !== 'capital';
+      return { ...dk(ASSET_LABEL[a], on, ok ? () => { this.setState({ view: 'costar' }); if (a !== d.params.asset_type) this.refresh({ asset_type: a, segment: 'all' }); } : () => {}),
+        disabled: !ok, opacity: ok ? 1 : 0.35, cursor: ok ? 'pointer' : 'not-allowed',
+        sel: on, line: on ? 'var(--blue)' : 'transparent', tabFg: on ? 'var(--fg)' : 'var(--fg-3)',
+        title: ok ? '' : `CoStar has no ${ASSET_LABEL[a].toLowerCase()} submarket for ${d.params.submarket}` };
+    });
+    const isOffice = d.params.asset_type === 'office';
+    const sel = d.selection || [];
+    const pickSeg = (g, e) => {
+      if (!e || !e.shiftKey || g === 'all') return this.refresh({ segment: g });
+      const next = sel.includes(g) ? sel.filter(x => x !== g) : [...sel, g];
+      this.refresh({ segment: next.length ? next.join('+') : 'all' });
+    };
+    const filterOpts = (segs, active, offTitle) => segs.map(g => {
+      const ok = active && (g === 'all' || d.slices.includes(g));
+      const on = active && (g === 'all' ? !sel.length : sel.includes(g));
+      return { ...dk(segLabel(g), on, ok ? e => pickSeg(g, e) : () => {}),
+        disabled: !ok, opacity: ok ? 1 : 0.35, cursor: ok ? 'pointer' : 'not-allowed', title: ok ? '' : (active ? 'Not in the data for this submarket' : offTitle) };
+    });
+    const classOptions = filterOpts(CLASS_SEGS, isOffice, 'Building class applies to office only');
+    const starOptions = filterOpts(TYPE_SEGS[d.params.asset_type] || STAR_SEGS, !isOffice, 'Office uses building class');
+    const assetLc = ASSET_LABEL[d.params.asset_type].toLowerCase();
+    const missNote = d.breakdownInData ? `No ${GROUP[d.params.asset_type].toLowerCase()} figures for ${d.params.submarket} ${assetLc} in this data.` : `This data carries no ${GROUP[d.params.asset_type].toLowerCase()} figures for ${assetLc} in any submarket.`;
+    const multiNote = d.combined ? 'Combined: SF, counts and sales are summed; vacancy and availability are recalculated from the summed SF. Modeled rents, prices and cap rates cannot be combined and are left blank.'
+      : d.comboSource ? `Uses CoStar's own ${segLabel(d.comboSource)} figures.` : '';
+    const canMulti = d.slices.length > 1;
+    const classNote = isOffice ? (d.slices.length ? '' : missNote) : 'Office only.';
+    const starNote = isOffice ? 'Multifamily uses star rating; retail and industrial use property type.' : (d.slices.length ? '' : missNote);
+    const windowOptions = [['t12', 'Trailing 12 mo'], ['cy', 'Calendar year'], ['ytd', 'Year to date'], ['custom', 'Custom']].map(([t, l]) => dk(l, w.type === t, () => this.refresh({ window: { ...w, type: t } })));
+    const periodOptionsDesc = d.periods.slice().reverse().map(p => ({ value: p, label: fp(p) }));
+
+    // tiles
+    const scopeName = (() => {
+      const sub = d.params.submarket, a = d.params.asset_type, g = d.params.segment;
+      if (g === 'all') return `${sub} ${a}`;
+      if (g.startsWith('class') || g.includes('+')) return `${sub} ${segLabel(g)} ${a}`;
+      return g.includes(a) ? `${sub} ${g}` : `${sub} ${g} ${a}`;
+    })();
+    const tiles = cfg.tiles.map(id => {
+      const m = M[id], isFlow = m.measure_type === 'flow';
+      const cur = isFlow ? d.flows[id].current : row[id];
+      const prior = isFlow ? d.flows[id].prior : ya[id];
+      const value = fmt(M, id, cur);
+      let change, sentence = null;
+      const lead = `${cap(scopeName)} ${PHRASE[id] || m.label.toLowerCase()}`;
+      if (m.measure_type === 'rate') {
+        if (cur != null && prior != null) {
+          const dlt = Math.round(cur * 10) / 10 - Math.round(prior * 10) / 10;
+          const pts = Math.abs(dlt).toFixed(1);
+          const dir = Math.abs(dlt) < 0.05 ? null : dlt < 0 ? 'down' : 'up';
+          change = dir ? `${cap(dir)} ${pts} pts from ${yaLabel}` : `Unchanged from ${yaLabel}`;
+          sentence = `${lead} was ${value} at ${asOfLabel}, ${dir ? `${dir} ${pts} points from ${yaLabel}` : `unchanged from ${yaLabel}`}. Source: CoStar.`;
+        } else {
+          change = `${yaLabel}: — not reported`;
+          if (value) sentence = `${lead} was ${value} at ${asOfLabel}. Source: CoStar.`;
+        }
+      } else if (m.measure_type === 'price') {
+        if (cur != null && prior != null && prior !== 0) {
+          const pct = (cur / prior - 1) * 100, pa = Math.abs(pct).toFixed(1);
+          const dir = Math.abs(pct) < 0.05 ? null : pct < 0 ? 'down' : 'up';
+          change = dir ? `${cap(dir)} ${pa}% from ${yaLabel}` : `Unchanged from ${yaLabel}`;
+          sentence = `${lead} was ${value} at ${asOfLabel}, ${dir ? `${dir} ${pa}% from ${yaLabel}` : `unchanged from ${yaLabel}`}. Source: CoStar.`;
+        } else {
+          change = `${yaLabel}: — not reported`;
+          if (value) sentence = `${lead} was ${value} at ${asOfLabel}. Source: CoStar.`;
+        }
+      } else {
+        const pv = fmt(M, id, prior);
+        change = `Year earlier: ${pv || '— not reported'}`;
+        if (value) sentence = pv
+          ? `${lead} was ${value} ${w.phrase}, compared with ${pv} ${w.priorPhrase}. Source: CoStar.`
+          : `${lead} was ${value} ${w.phrase}. Source: CoStar.`;
+      }
+      const key = 'tile:' + id, copied = s.copied === key;
+      return {
+        label: id === 'market_asking_rent_psf' ? 'Market asking rent' : m.label,
+        value: value || '—', missing: !value,
+        scope: isFlow ? w.label : `at ${asOfLabel}`,
+        estimate: id === 'market_asking_rent_psf',
+        change, ...tip(key, id),
+        copyDisabled: !sentence, copyLabel: copied ? 'Copied' : sentence ? 'Copy sentence' : 'Nothing to copy',
+        copyBg: copied ? 'var(--blue)' : 'var(--panel)', copyFg: copied ? 'var(--on-accent)' : 'var(--blue)',
+        onCopy: () => sentence && this.copy(key, sentence),
+      };
+    });
+
+    // capital
+    const isCapital = s.view === 'capital', mk = s.markets;
+    const MON = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+    const fd = (x, long) => !x ? '' : /^\d{4}Q\d$/.test(x) ? fp(x) : /^\d{4}-\d{2}$/.test(x) ? MON[+x.slice(5) - 1] + ' ' + x.slice(0, 4)
+      : MON[+x.slice(5, 7) - 1] + ' ' + (+x.slice(8, 10)) + (long ? ', ' + x.slice(0, 4) : '');
+    const PREP = { daily: 'on', monthly: 'in', quarterly: 'at' };
+    const LEAD = { treasury_10y: 'The 10-year Treasury', sofr_30d_avg: '30-day average SOFR', curve_10y2y: 'The 10-year less 2-year Treasury spread', cmbs_delinq_office: 'The national office CMBS delinquency rate', bank_cre_delinq: 'The bank CRE loan delinquency rate, all banks,' };
+    const MISS = { not_loaded: 'Not loaded in this fixture', no_treasury: '10-year quarter average not loaded', no_cap_rate: '\u2014, not reported', not_reported: 'not reported' };
+    const r10 = v => Math.round(v / 10) * 10;
+    const capTiles = (mk ? mk.items : []).map(m => {
+      const isSpread = m.key === 'cap_spread_10y', has = m.value != null;
+      const v = isSpread && has ? r10(m.value) : m.value;
+      const pv = m.prior_year_value == null ? null : isSpread ? r10(m.prior_year_value) : m.prior_year_value;
+      const sgn = x => (x < 0 ? MINUS : m.key === 'curve_10y2y' && x > 0 ? '+' : '') + num(Math.abs(x));
+      let value = '\u2014';
+      if (has) value = m.unit === 'pct' ? v.toFixed(2) + '%' : m.unit === 'bps' ? sgn(v) + ' bps' : num(v);
+      const sub = m.key === 'nyc_cmbs_ss' && has && m.of_loans ? `${(v / m.of_loans * 100).toFixed(1)}% of ${num(m.of_loans)} loans` : '';
+      let dl = null, unitW = '';
+      if (has && pv != null) { dl = m.unit === 'pct' ? Math.round((v - pv) * 100) : Math.round(v - pv); unitW = m.unit === 'count' ? (Math.abs(dl) === 1 ? 'loan' : 'loans') : 'bps'; }
+      const dir = dl == null ? null : dl === 0 ? 'unchanged' : dl > 0 ? 'up' : 'down';
+      const chgShort = dl == null ? 'Year earlier: \u2014 not reported' : dir === 'unchanged' ? 'Unchanged from a year earlier' : `${cap(dir)} ${num(Math.abs(dl))} ${unitW} from a year earlier`;
+      const chgS = dir === 'unchanged' ? 'unchanged from a year earlier' : dl != null ? `${dir} ${num(Math.abs(dl))} ${unitW} from a year earlier` : '';
+      const dShort = isSpread ? asOfLabel : fd(m.date), dLong = isSpread ? asOfLabel : fd(m.date, true);
+      let sentence = null;
+      if (has && isSpread) sentence = `${cap(scopeName)} cap rates sat about ${num(Math.abs(v))} bps ${v < 0 ? 'under' : 'over'} the 10-year at ${asOfLabel}. Source: CoStar estimate, U.S. Treasury.`;
+      else if (has && m.key === 'nyc_cmbs_ss') sentence = `${num(v)}${m.of_loans ? ' of ' + num(m.of_loans) : ''} NYC CMBS loans${sub ? ' (' + sub.split('%')[0] + '%)' : ''} were in special servicing at ${dLong}${chgS ? ', ' + chgS : ''}. Source: Trepp.`;
+      else if (has) sentence = `${LEAD[m.key] || m.label} was ${value} ${PREP[m.cadence] || 'at'} ${dLong}${chgS ? ', ' + chgS : ''}. Source: ${m.source}.`;
+      const key = 'cm:' + m.key, copied = s.copied === key;
+      return {
+        label: m.label, value, hasSub: !!sub, sub,
+        dateLine: !m.date && !isSpread ? MISS[m.missingReason] || 'not reported' : !has ? (MISS[m.missingReason] || 'not reported') + ' \u00b7 ' + dShort : m.stale ? 'Last reported ' + dLong : dShort,
+        follows: isSpread, scope: `${cap(scopeName)}, ${asOfLabel}`,
+        opacity: m.stale ? 0.55 : 1, bar: m.stale ? 'var(--fill-3)' : isSpread ? 'var(--orange)' : 'var(--blue)',
+        change: has ? chgShort : '\u2014',
+        ...tip(key, key),
+        copyDisabled: !sentence, copyLabel: copied ? 'Copied' : sentence ? 'Copy sentence' : 'Nothing to copy',
+        copyBg: copied ? 'var(--blue)' : 'var(--panel)', copyFg: copied ? 'var(--on-accent)' : 'var(--blue)',
+        onCopy: () => sentence && this.copy(key, sentence),
+      };
+    });
+
+    // panels
+    const factRow = (id, v, prefix) => {
+      const val = fmt(M, id, v), key = prefix + ':' + id;
+      return { label: M[id].label, value: val || '—', missing: !val, ...tip(key, id) };
+    };
+    const panels = [
+      { title: 'Inventory', scope: `at ${asOfLabel}`, rows: cfg.stocks.map(id => factRow(id, row[id], 'stock')) },
+      { title: 'Market activity', scope: w.label, rows: cfg.flows.map(id => factRow(id, d.flows[id] ? d.flows[id].current : null, 'flow')) },
+    ];
+
+    // trend
+    const tm = cfg.trend.includes(s.trendMetric) ? s.trendMetric : cfg.trend[0];
+    const tMeta = M[tm], tFlow = tMeta.measure_type === 'flow';
+    const annual = tFlow && s.trendMode === 'year';
+    let pts;
+    if (!annual) {
+      pts = d.series.map(x => ({ label: fp(x.period), short: x.period.slice(0, 4), q: +x.period.slice(5), v: x.row && x.row[tm] != null ? x.row[tm] : null, partial: false }));
+    } else {
+      const byY = new Map();
+      d.series.forEach(x => {
+        const y = x.period.slice(0, 4);
+        if (!byY.has(y)) byY.set(y, { n: 0, sum: 0, miss: false, lastQ: 0 });
+        const o = byY.get(y); o.n++; o.lastQ = +x.period.slice(5);
+        if (!x.row || x.row[tm] == null) o.miss = true; else o.sum += x.row[tm];
+      });
+      pts = [...byY.entries()].map(([y, o]) => ({
+        label: o.n === 4 ? y : (o.lastQ === 1 ? `${y} Q1` : `${y} Q1–Q${o.lastQ}`), short: y, q: 1,
+        v: o.miss ? null : o.sum, partial: o.n < 4,
+      }));
+    }
+    const n = pts.length, W = Math.max(280, s.chartW), H = Math.max(120, s.chartHt || 240);
+    const padL = 50, padR = 6, padT = 10, padB = 24;
+    const vals = pts.map(p => p.v).filter(v => v != null);
+    const chartHas = vals.length > 0;
+    let lo = Math.min(...vals), hi = Math.max(...vals);
+    if (tFlow) { lo = Math.min(0, lo); hi = Math.max(0, hi); }
+    if (hi === lo) { hi = hi + 1; lo = tFlow ? lo : lo - 1; }
+    const step = niceStep((hi - lo) / 4);
+    const y0 = Math.floor(lo / step) * step, y1 = Math.ceil(hi / step) * step;
+    const yOf = v => padT + (y1 - v) / (y1 - y0) * (H - padT - padB);
+    const bw = (W - padL - padR) / Math.max(1, n);
+    const xOf = i => padL + (i + 0.5) * bw;
+    const yTicks = [];
+    if (chartHas) for (let v = y0; v <= y1 + step / 2; v += step) {
+      yTicks.push({ y: yOf(v), x1: padL, x2: W - padR, tx: padL - 6, ty: yOf(v) + 4, label: fmtAxis(M, tm, Math.abs(v) < step / 1e6 ? 0 : v, step) });
+    }
+    const lastIdx = (() => { for (let i = n - 1; i >= 0; i--) if (pts[i].v != null) return i; return n - 1; })();
+    const pick = s.pick != null && s.pick < n ? s.pick : lastIdx;
+    const zeroY = tFlow ? yOf(0) : H - padB;
+    const bars = tFlow && chartHas ? pts.map((p, i) => p.v == null ? null : {
+      x: padL + i * bw + bw * 0.14, w: Math.max(1, bw * 0.72), y: Math.min(yOf(p.v), zeroY), h: Math.max(0.5, Math.abs(yOf(p.v) - zeroY)),
+      cls: i === pick ? 'tag-chart__bar--emphasis' : p.partial ? 'tag-chart__bar--2' : 'tag-chart__bar',
+    }).filter(Boolean) : [];
+    let linePath = '';
+    if (!tFlow && chartHas) { let pen = false; pts.forEach((p, i) => { if (p.v == null) { pen = false; return; } linePath += (pen ? 'L' : 'M') + xOf(i).toFixed(1) + ' ' + yOf(p.v).toFixed(1); pen = true; }); }
+    const pickP = pts[pick];
+    const hasPickDot = !tFlow && chartHas && pickP && pickP.v != null;
+    const yrStep = annual ? (W < 480 ? 2 : 1) : (W < 480 ? 3 : W < 760 ? 2 : 1);
+    const xLabels = [];
+    pts.forEach((p, i) => {
+      const yr = +p.short;
+      if ((annual || p.q === 1) && (yr - 2016) % yrStep === 0) xLabels.push({ x: annual ? xOf(i) : padL + i * bw + (annual ? 0 : bw * 2), y: H - 6, label: String(yr) });
+    });
+    const hits = pts.map((p, i) => ({ x: padL + i * bw, w: bw, onPick: () => this.setState({ pick: i }) }));
+    const unitWord = annual ? 'per calendar year' : tFlow ? 'per quarter' : 'at each quarter';
+    const partialP = annual ? pts.find(p => p.partial) : null;
+
+    // slices
+    const sliceHeads = [{ label: GROUP[d.params.asset_type], cls: '', hasCaveat: false }].concat(cfg.slice.map(id => ({
+      label: SHORT[id] || M[id].label, cls: 'tag-table__col--num', ...tip('th:' + id, id),
+    })));
+        const sliceRows = segOrder(d.sliceRows, d.params.asset_type).map(x => {
+      const r = x.row || {}, nk = 'note:' + x.segment;
+      return {
+        label: segLabel(x.segment, d.params.asset_type), hasNote: !!r.note, note: r.note || '', noteOpen: s.tip === nk, onNote: () => this.toggleTip(nk),
+        cells: cfg.slice.map(id => { const v = fmt(M, id, r[id]); return { value: v || '—', missing: !v }; }),
+      };
+    });
+
+    return {
+      ...base,
+      submarketGroups: d.boroughs.map(g => ({ name: g.name || 'Submarkets', items: g.submarkets.map(x => ({ value: x, label: x, sel: x === d.params.submarket })) })),
+      noSlices: !d.slices.length, hasSlices: !!d.slices.length,
+      noSlicesNote: `No ${GROUP[d.params.asset_type].toLowerCase()} figures for ${d.params.submarket} ${ASSET_LABEL[d.params.asset_type].toLowerCase()} in this data. Only the All figure is shown above.`, onSubmarket: e => this.refresh({ submarket: e.target.value }),
+      submarketOptions, assetOptions, classOptions, starOptions, classNote, starNote, classNoteOn: !!classNote, starNoteOn: !!starNote,
+      filter2Title: isOffice ? 'Star rating' : GROUP[d.params.asset_type], classMulti: isOffice && canMulti, starMulti: !isOffice && canMulti, multiNote, multiNoteOn: !!multiNote, windowOptions, isCY: w.type === 'cy', isCustom: w.type === 'custom',
+      chips, sheetOpen: !!s.sheet, sheetTitle, sheetOptions, closeSheet: () => this.setState({ sheet: null }),
+      sheetIsSubmarket: s.sheet === 'submarket', sheetIsAsset: s.sheet === 'asset', sheetIsAsOf: s.sheet === 'asof',
+      sheetIsCY: s.sheet === 'window' && w.type === 'cy', sheetIsCustom: s.sheet === 'window' && w.type === 'custom',
+      subQuery: s.subQuery, noSubMatch: subMatches.length === 0,
+      onSubQuery: e => this.setState({ subQuery: e.target.value }),
+      onSubKey: e => { if (e.key === 'Enter' && subMatches[0]) { this.setState({ subQuery: '' }); this.refresh({ submarket: subMatches[0] }); } },
+      asOfOptions: periodOptionsDesc.map(p => ({ ...p, sel: p.value === d.params.as_of })), fromOptions: periodOptionsDesc.map(p => ({ ...p, sel: p.value === w.from })), toOptions: periodOptionsDesc.map(p => ({ ...p, sel: p.value === w.to })), onAsOf: e => this.refresh({ as_of: e.target.value }),
+      winYear: String(w.year ?? ''), yearOptions: w.years.slice().reverse().map(y => ({ value: String(y), label: String(y), sel: y === w.year })),
+      onWinYear: e => this.refresh({ window: { ...w, type: 'cy', year: +e.target.value } }),
+      winFrom: w.from, winTo: w.to,
+      onWinFrom: e => this.refresh({ window: { ...w, type: 'custom', from: e.target.value } }),
+      onWinTo: e => this.refresh({ window: { ...w, type: 'custom', to: e.target.value } }),
+
+      contextLine: isCapital ? `Capital markets · cap rate spread for ${d.params.submarket} ${ASSET_LABEL[d.params.asset_type].toLowerCase()} · as of ${asOfLabel}` : `${d.params.submarket} · ${ASSET_LABEL[d.params.asset_type]} · ${segLabel(d.params.segment, d.params.asset_type)} · as of ${asOfLabel}`,
+      asOfLabel, ctxHasNote: !!row.note, ctxNote: row.note || '', ctxNoteOpen: s.tip === 'ctx', ctxNoteTap: () => this.toggleTip('ctx'),
+      noRow: !d.row, noRowShow: !d.row && !isCapital, isCapital, isCostar: !isCapital, capTiles, capNotLoaded: !!mk && !mk.loaded,
+      capTab: { sel: isCapital, line: isCapital ? 'var(--blue)' : 'transparent', fg: isCapital ? 'var(--fg)' : 'var(--fg-3)', onPick: () => this.setState({ view: 'capital', tipBox: null }) },
+      tiles, panels,
+
+      trendMetric: tm, trendOptions: cfg.trend.map(id => ({ value: id, sel: id === tm, label: id === 'market_asking_rent_psf' ? 'Market asking rent (CoStar estimate)' : M[id].label })),
+      onTrendMetric: e => this.setState({ trendMetric: e.target.value, pick: null }),
+      trendIsFlow: tFlow,
+      trendModes: [['quarter', 'By quarter'], ['year', 'By year']].map(([k, l]) => ({
+        label: l, bg: s.trendMode === k ? 'var(--blue)' : 'var(--panel)', fg: s.trendMode === k ? 'var(--on-accent)' : 'var(--blue)',
+        onPick: () => this.setState({ trendMode: k, pick: null }),
+      })),
+      trendScope: `${tm === 'market_asking_rent_psf' ? 'Market asking rent (CoStar estimate)' : tMeta.label}, ${unitWord}, ${fp(d.series[0].period)} to ${asOfLabel}`,
+      trendHasCaveat: true, ...(() => { const t = tip('trend', tm); return { trendTipTap: t.onTip, trendTipEnter: t.onTipEnter, trendTipLeave: t.onTipLeave }; })(),
+      readoutLabel: pickP ? pickP.label : '', readoutValue: pickP ? (fmt(M, tm, pickP.v) || '— not reported') : '',
+      chartHas, chartEmpty: !chartHas, chartW: W, chartH: H, chartViewBox: `0 0 ${W} ${H}`,
+      yTicks, axis: { x1: padL, x2: W - padR, y: zeroY }, bars, isLine: !tFlow && chartHas, linePath,
+      hasPickDot, pickDot: hasPickDot ? { x: xOf(pick), y: yOf(pickP.v), top: padT, bottom: H - padB } : { x: 0, y: 0, top: 0, bottom: 0 },
+      hits, chartLabels: [
+        ...yTicks.map((t, i) => React.createElement('text', { key: 'y' + i, className: 'tag-chart__label', x: t.tx, y: t.ty, textAnchor: 'end', style: { letterSpacing: 0, textTransform: 'none' } }, t.label)),
+        ...xLabels.map((t, i) => React.createElement('text', { key: 'x' + i, className: 'tag-chart__label', x: t.x, y: t.y, textAnchor: 'middle', style: { letterSpacing: '.02em' } }, t.label)),
+      ],
+      hasPartialNote: !!partialP, partialNote: partialP ? `${partialP.label} covers part of the year only, shown lighter.` : '',
+
+      groupLabel: GROUP[d.params.asset_type], sliceTitle: 'By ' + GROUP[d.params.asset_type].toLowerCase(),
+      sliceFoot: (d.params.asset_type === 'office' ? 'CoStar building class, which is assigned separately from star rating. ' : '') + 'Each row is its own CoStar figure. Rows are not summed or averaged; All is the only total.',
+      sliceScope: `${d.params.submarket} ${ASSET_LABEL[d.params.asset_type].toLowerCase()}, at ${asOfLabel}`,
+      sliceHeads, sliceRows,
+      ...(() => {
+        const t = s.tipBox;
+        if (t && t.mid.startsWith('cm:') && mk) {
+          const c = mk.items.find(x => 'cm:' + x.key === t.mid);
+          if (c) return { tipShow: true, tipX: t.x, tipY: t.y, tipTransform: t.up ? 'translateY(-100%)' : 'none', tipTitle: c.label, tipDef: c.def,
+            tipFieldLine: `Source · ${c.source} · ${c.series_id} · ${c.cadence}`, tipHasCaveat: !!c.caveat, tipCaveat: c.caveat || '' };
+        }
+        const m = t && M[t.mid];
+        if (!m) return { tipShow: false };
+        const df = DEFS[t.mid] || [m.label, ''];
+        return { tipShow: true, tipX: t.x, tipY: t.y, tipTransform: t.up ? 'translateY(-100%)' : 'none',
+          tipTitle: t.mid === 'market_asking_rent_psf' ? 'Market asking rent' : m.label, tipFieldLine: 'CoStar field · ' + df[0], tipDef: df[1] || 'No CoStar definition supplied.',
+          tipHasCaveat: !!caveatOf(t.mid), tipCaveat: caveatOf(t.mid) };
+      })(),
+    };
+  }
+}
+</script>
+</body>
+</html>

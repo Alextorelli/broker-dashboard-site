@@ -1,0 +1,36 @@
+:root{
+  /* ---- Print grid, derived from frame positions in the May 2023 export ----
+     Measured off the 110dpi render (935 x 1210 px for a 612 x 792 pt page,
+     so 1pt = 1.528px) and rounded to the nearest half point.                 */
+
+  --pad-page-x:36pt; /* @kind spacing */         /* left/right margin */
+  --pad-page-top:26pt; /* @kind spacing */
+  --pad-page-bottom:30pt; /* @kind spacing */
+
+  /* Deal page is a two-column layout: photo stack left, copy right. */
+  --col-left:266pt; /* @kind spacing */          /* photo + caption bar + KEY DETAILS table */
+  --col-right:262pt; /* @kind spacing */         /* Key Challenges / Creative Solutions     */
+  --col-gap:14pt; /* @kind spacing */
+
+  --gap-title-lead:9pt; /* @kind spacing */      /* title rule -> lead paragraph */
+  --gap-lead-body:16pt; /* @kind spacing */      /* lead paragraph -> two-column area */
+  --gap-section:13pt; /* @kind spacing */        /* between Key Challenges and Creative Solutions */
+  --gap-bullet:7pt; /* @kind spacing */          /* between bullets */
+  --gap-photo-caption:0pt; /* @kind spacing */   /* caption bar sits flush to the photo */
+  --gap-caption-table:8pt; /* @kind spacing */   /* orange caption bar -> navy KEY DETAILS bar.
+                                NOTE: on the Martinique page this is 0 — the
+                                bars are flush. Original is inconsistent.     */
+
+  --h-caption-bar:19pt; /* @kind spacing */      /* orange property-name bar */
+  --h-table-head:16pt; /* @kind spacing */       /* navy KEY DETAILS bar */
+  --h-table-row:20pt; /* @kind spacing */
+  --w-title-rule:5pt; /* @kind spacing */        /* the orange vertical bar left of the title */
+  --h-title-rule:26pt; /* @kind spacing */
+  --d-badge:44pt; /* @kind spacing */            /* magenta date circle diameter */
+  --w-section-rule:38pt; /* @kind spacing */     /* short orange underline under section heads */
+  --h-section-rule:2pt; /* @kind spacing */
+  --sq-folio:20pt; /* @kind spacing */           /* navy page-number square */
+
+  --radius-none:0; /* @kind radius */           /* the original uses no rounded corners anywhere
+                                except the circular badge and the CLOSED stamp */
+}

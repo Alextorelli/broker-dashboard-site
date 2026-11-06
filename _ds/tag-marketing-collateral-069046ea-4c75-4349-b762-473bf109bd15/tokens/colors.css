@@ -1,0 +1,48 @@
+:root{
+  /* ---- Most Ingenious List palette ----
+     Sampled from the May 2023 InDesign export (list_may.pdf) at 110dpi and
+     counted by pixel frequency, NOT eyeballed. See _provenance.md.
+
+     NOTE these are the DECK's colours, deliberately reproduced. They are close
+     to but NOT identical to the official Marcus & Millichap brand values
+     (PANTONE 295 C #002956 navy / PANTONE 1575 C #FF7F30 orange). Reproducing
+     the 2023 piece faithfully was an explicit decision (Alex, 2026-08-14).
+     If this system is ever reused for a NEW piece rather than this reprint,
+     switch to the corporate values above.                                   */
+
+  --ing-navy:#002E5C;              /* titles, KEY DETAILS bar, page number   */
+  --ing-navy-434:#002D5B;          /* the 434 page's near-miss navy — do not use */
+
+  /* The deck carries three oranges. Keeping all three preserves the original,
+     but they are almost certainly drift rather than intent.                  */
+  --ing-orange:#F7934E;            /* dominant: title remainder, caption bars */
+  --ing-orange-head:#F57E37;       /* section headings (Key Challenges etc.)  */
+  --ing-orange-pale:#F3A067;       /* the small bar beside the page number    */
+
+  --ing-magenta:#EC008C;           /* date badge. OFF-BRAND — flagged.        */
+
+  --ing-ink:#231F20;               /* body copy — rich black, not pure black  */
+  --ing-paper:#FFFFFF;
+  --ing-texture-warm:#E7E4E3;      /* the crumpled-paper background tone      */
+  --ing-texture-light:#FAF9F9;
+
+  --ing-row-a:#EDEBEB;             /* KEY DETAILS table rows. The original    */
+  --ing-row-b:#EBE9E9;             /* "alternating" rows differ by ~2/255,    */
+                                   /* i.e. effectively flat. Kept verbatim.   */
+  --ing-rule:#D8D5D4;
+
+  /* ---- Semantic aliases ---- */
+  --surface-page:var(--ing-paper);
+  --surface-dark:var(--ing-navy);
+  --surface-table:var(--ing-row-a);
+
+  --text-body:var(--ing-ink);
+  --text-on-dark:#FFFFFF;
+  --text-title-key:var(--ing-navy);      /* the word INGENIOUS is always navy */
+  --text-title-rest:var(--ing-orange);   /* ...and the rest always orange     */
+  --text-section:var(--ing-orange-head);
+
+  --accent:var(--ing-orange);
+  --accent-badge:var(--ing-magenta);
+  --border-hairline:var(--ing-rule);
+}

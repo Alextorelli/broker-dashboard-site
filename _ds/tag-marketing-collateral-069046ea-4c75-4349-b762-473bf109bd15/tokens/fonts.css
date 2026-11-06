@@ -1,0 +1,19 @@
+/* ---- Font roles ----
+   Every face is served by Adobe Fonts web project qjp6ivx, imported at the top
+   of styles.css. The face pairs (--sans-light-family / --sans-light-weight etc.)
+   and role tokens (--f-body, --f-display, --f-accent, --f-serif, --f-figure)
+   are defined in styles.css, merged from uploads/tag-type.css.
+
+   The self-hosted Arboria, Oswald, Frank Ruhl Libre and Roboto faces were
+   retired 2026-09-26. The --font-* names below are kept so existing
+   Most Ingenious List rules keep resolving; they point at the new roles.
+   Never set a numeric font-weight: always use a --<face>-weight token. */
+
+:root{
+  --font-body:var(--f-body); /* @kind font */      /* Fira Sans */
+  --font-exec:var(--f-body); /* @kind font */      /* Fira Sans */
+  --font-display:var(--f-display); /* @kind font */ /* Fira Sans Condensed */
+  --font-cond:var(--f-display); /* @kind font */    /* Fira Sans Condensed */
+  --font-serif:var(--f-serif); /* @kind font */     /* Essonnes Headline */
+  --font-data:var(--f-figure); /* @kind font */     /* Source Serif Pro */
+}

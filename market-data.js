@@ -37,10 +37,8 @@ async function api(path, retried = false) {
 let cache = null;
 const rowCache = new Map();
 async function loadAll() {
-  let [meta, metrics, availability, cmMetrics, cmLatest, ustAvg, cmBench] = await Promise.all([
-    ...['meta', 'metrics', 'availability', 'cm_metrics', 'cm_latest', 'ust_10y_quarter_avg'].map(v => api('/' + v)),
-    api('/cm_bench').catch(() => []),   // optional: older databases have no cm_bench view
-  ]);
+  let [meta, metrics, availability, cmMetrics, cmLatest, ustAvg] = await Promise.all(
+    ['meta', 'metrics', 'availability', 'cm_metrics', 'cm_latest', 'ust_10y_quarter_avg'].map(v => api('/' + v)));
   // The views return nothing unless the signed-in user's verified email is on the approved list (schema/dash_api.sql).
   if (!meta.length) {
     await getToken({ force: true, message: 'This account is not on the approved list. Ask Alex for access, or sign in with an approved email.' });
@@ -54,7 +52,6 @@ async function loadAll() {
       metrics: Object.fromEntries(cmMetrics.map(({ key, series_id, sort, ...m }) => [key, series_id ? { ...m, series_id } : m])),
       latest: Object.fromEntries(cmLatest.map(({ key, ...m }) => [key, m])),
       ust_10y_quarter_avg: Object.fromEntries(ustAvg.map(r => [r.period, r.value])),
-      bench: Object.fromEntries(cmBench.map(({ key, ...b }) => [key, b])),
     },
   };
   for (const a of availability) {
@@ -152,7 +149,7 @@ function dateEnd(d) {
   return new Date(d + 'T00:00:00Z');
 }
 // cap_series: the selection's quarterly cap rates, [{ period, cap_rate }], oldest first, ending at as_of. It gives the
-// cap rate spread a history and a five-year benchmark; the other metrics take theirs from the database.
+// cap rate chart its history; the other charts load theirs with getMarketHistory.
 export async function getMarkets({ as_of, cap_rate, cap_rate_year_ago, cap_series = [], today = new Date() } = {}) {
   const fx = await load();
   const cm = fx.capital_markets || null;
@@ -163,15 +160,8 @@ export async function getMarkets({ as_of, cap_rate, cap_rate_year_ago, cap_serie
   const qavg = (cm && cm.ust_10y_quarter_avg) || {};
   as_of = as_of || fx.meta.data_through;
   const ya = ql(qi(as_of) - 4);
-  const spreadHistory = cap_series.map(x => ({ date: x.period, value: x.cap_rate != null && qavg[x.period] != null ? (x.cap_rate - qavg[x.period]) * 100 : null }))
-    .filter(x => x.value != null);
-  const last20 = spreadHistory.filter(x => qi(x.date) > qi(as_of) - 20 && qi(x.date) <= qi(as_of)).map(x => x.value);
-  let spreadBench = null;
-  if (last20.length >= 4) {
-    const v = [...last20].sort((a, b) => a - b), cur = last20[last20.length - 1], n = v.length;
-    const med = n % 2 ? v[(n - 1) / 2] : (v[n / 2 - 1] + v[n / 2]) / 2;
-    spreadBench = { low_5y: v[0], median_5y: med, high_5y: v[n - 1], pct_rank_5y: v.filter(x => x <= cur).length / n, n_5y: n };
-  }
+  // The selection's cap rate beside the 10-year's quarterly mean, for the cap rate chart.
+  const capHistory = cap_series.map(x => ({ period: x.period, cap_rate: x.cap_rate, ust: qavg[x.period] ?? null }));
   const items = defs.map(m => {
     let o;
     if (m.key === 'cap_spread_10y') {
@@ -191,20 +181,19 @@ export async function getMarkets({ as_of, cap_rate, cap_rate_year_ago, cap_serie
       const allow = m.cadence === 'daily' ? 4 : lag * 2; // daily: two business days, allowing a weekend
       stale = (today - dateEnd(o.date)) / 864e5 > allow + (m.cadence === 'daily' ? 0 : lag);
     }
-    const bench = m.key === 'cap_spread_10y' ? spreadBench : ((cm && cm.bench) || {})[m.key] || null;
-    return { ...m, ...o, stale, bench };
+    return { ...m, ...o, stale };
   });
-  return { loaded: !!cm, asOf: as_of, yearAgo: ya, items, spreadHistory };
+  return { loaded: !!cm, asOf: as_of, yearAgo: ya, items, capHistory };
 }
 
 // History for one metric's chart: [{ date: 'YYYY-MM-DD', value }], oldest first, from `years` before today.
-// Daily series come as one point a week. Throws if the database has no history view yet; the page says so.
+// Daily series come as one point a week; of_loans only for nyc_cmbs_ss. Throws if the database has no history view yet; the page says so.
 const histCache = new Map();
 export async function getMarketHistory(key, { years = 5, today = new Date() } = {}) {
   const from = new Date(Date.UTC(today.getUTCFullYear() - years, today.getUTCMonth(), today.getUTCDate())).toISOString().slice(0, 10);
   const ck = key + '|' + from;
   if (!histCache.has(ck)) {
-    const q = '/cm_history?key=eq.' + encodeURIComponent(key) + '&date=gte.' + from + '&order=date.asc&select=date,value';
+    const q = '/cm_history?key=eq.' + encodeURIComponent(key) + '&date=gte.' + from + '&order=date.asc&select=date,value,of_loans';
     histCache.set(ck, api(q).catch(e => { histCache.delete(ck); throw e; }));
   }
   return histCache.get(ck);

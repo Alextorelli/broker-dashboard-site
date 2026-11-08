@@ -348,7 +348,16 @@ background:var(--bg);color-scheme:dark}
           <div style="flex:1; min-height:0; display:grid; grid-template-columns:{{ L.capCols }}; grid-template-rows:{{ L.capRows }}; gap:12px;">
             <sc-for list="{{ cmCards }}" as="c" hint-placeholder-count="7">
               <article style="grid-column:{{ c.span }}; background:var(--panel); border-radius:14px; box-shadow:inset 0 3px 0 {{ c.bar }}; padding:12px 14px 8px; display:flex; flex-direction:column; gap:4px; min-width:0; min-height:0; overflow:hidden;">
-                <h2 style="margin:0; font-family:var(--sans); font-weight:700; font-size:13px; letter-spacing:.08em; text-transform:uppercase; color:var(--fg);">{{ c.title }}</h2>
+                <div style="display:flex; align-items:center; justify-content:space-between; gap:8px; min-width:0;">
+                  <h2 style="margin:0; font-family:var(--sans); font-weight:700; font-size:13px; letter-spacing:.08em; text-transform:uppercase; color:var(--fg); min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">{{ c.title }}</h2>
+                  <sc-if value="{{ c.hasLooks }}">
+                    <div role="group" aria-label="Lookback" style="display:flex; gap:2px; flex-shrink:0; padding:2px; border-radius:999px; background:var(--fill);">
+                      <sc-for list="{{ c.looks }}" as="o">
+                        <button onClick="{{ o.onPick }}" title="{{ o.hint }}" aria-pressed="{{ o.on }}" style="min-height:22px; padding:0 8px; border-radius:999px; border:0; cursor:pointer; font-family:var(--sans); font-size:10.5px; font-weight:600; letter-spacing:.04em; background:{{ o.bg }}; color:{{ o.fg }};">{{ o.label }}</button>
+                      </sc-for>
+                    </div>
+                  </sc-if>
+                </div>
                 {{ c.legend }}
                 <div data-cm-box="{{ c.id }}" style="position:relative; flex:1; min-height:{{ L.cmChartH }}; width:100%; min-width:0;">{{ c.chart }}</div>
                 <div title="{{ c.foot }}" style="font-size:10.5px; line-height:1.35; color:var(--dim); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">{{ c.foot }}</div>
@@ -443,6 +452,10 @@ function cmRangeOf(d, today = new Date()) {
   return { from, to, label, key: from + '|' + to };
 }
 const num = n => Math.round(n).toLocaleString('en-US');
+// Capital series with few observations (quarterly or monthly). Their charts get their own lookback control.
+const CM_SPARSE = new Set(['sloos_cre_nonres', 'sloos_cre_mf', 'sloos_cre_constr', 'bank_cre_loans', 'bank_cre_loans_small', 'bank_cre_delinq', 'cmbs_delinq_office', 'nyc_cmbs_ss']);
+const CM_SPARSE_FROM = '2015-01-01';
+const CM_LOOKS = [['period', 'Period', 'Follow the time period at left'], ['3y', '3Y', 'Three years to the end of the period'], ['5y', '5Y', 'Five years to the end of the period'], ['max', 'Max', 'All history to the end of the period']];
 function abbr(a) {
   if (a >= 1e9) return (a / 1e9).toFixed(1) + 'B';
   if (a >= 1e6) return a >= 1e8 ? Math.round(a / 1e6) + 'M' : (a / 1e6).toFixed(1) + 'M';
@@ -483,7 +496,7 @@ class Component extends DCLogic {
     submarket: this.props.defaultSubmarket ?? 'Soho', asset_type: 'office', view: 'costar', markets: null, segment: 'all', as_of: null, win: { type: 't12' },
     data: null, error: null, sheet: null, subQuery: '', tip: null, copied: null,
     trendMetric: 'vacancy_rate', trendMode: 'quarter', pick: null, chartW: 600,
-    cmHist: null, cmHover: null, cmSizes: {},
+    cmHist: null, cmHover: null, cmSizes: {}, cmLook: {},
     tipBox: null,
     theme: (() => { try { return localStorage.getItem('tag-market-theme') || 'dark'; } catch (e) { return 'dark'; } })(),
   };
@@ -517,7 +530,9 @@ class Component extends DCLogic {
     try {
       if (!this._mod) this._mod = import(new URL('market-data.js', document.baseURI).href);
       const { getMarketHistory } = await this._mod;
-      const got = await Promise.all(KEYS.map(k => getMarketHistory(k, { from: iso(rg.from - 366 * 864e5), to: iso(rg.to) })));
+      // Quarterly and monthly series are small: load them from 2015 so each chart's own lookback (3Y, 5Y, Max) can
+      // reach past the sidebar's period. Daily series load the period only.
+      const got = await Promise.all(KEYS.map(k => getMarketHistory(k, { from: CM_SPARSE.has(k) ? CM_SPARSE_FROM : iso(rg.from - 366 * 864e5), to: iso(rg.to) })));
       if (cmRangeOf(this.state.data).key === rg.key) this.setState({ cmHist: { key: rg.key, status: 'ok', rows: Object.fromEntries(KEYS.map((k, i) => [k, got[i]])) } });
     } catch (e) {
       if (cmRangeOf(this.state.data).key === rg.key) this.setState({ cmHist: { key: rg.key, status: 'error', rows: {} } });
@@ -828,13 +843,21 @@ class Component extends DCLogic {
     const cmStatus = !cmH ? 'loading' : cmH.status;
     const emptyMsg = (id, msg) => React.createElement('div', { style: { position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', textAlign: 'center', padding: '0 12px', color: 'var(--dim)', fontSize: 12.5 } },
       cmStatus === 'loading' ? 'Loading…' : cmStatus === 'error' ? 'Not loaded yet: the database needs the Capital update (export_pg.py --rates-only).' : msg);
+    // opts.look: this chart has its own lookback (CM_LOOKS), defaulting to opts.look; 'period' follows the sidebar.
     const card = (id, title, series, unit, opts = {}) => {
+      const look = opts.look ? (s.cmLook || {})[id] || opts.look : 'period';
+      if (look !== 'period') {
+        const yrs = look === '3y' ? 3 : look === '5y' ? 5 : 0, to = rg.to, from = yrs ? Date.UTC(new Date(to).getUTCFullYear() - yrs, new Date(to).getUTCMonth(), new Date(to).getUTCDate()) : -Infinity;
+        series = series.map(x => ({ ...x, p: x.full.filter(p => p.t >= from && p.t <= to) }));
+      }
       const c = chart(id, series, unit, opts);
-      return { id, title, span: opts.span || 'auto', bar: opts.bar || 'var(--blue)', legend: legend(id, series, unit, opts.extra || []),
+      const looks = opts.look ? CM_LOOKS.map(([v, label, hint]) => ({ label, hint, on: v === look, bg: v === look ? 'var(--fill-3)' : 'transparent', fg: v === look ? 'var(--fg)' : 'var(--fg-3)',
+        onPick: () => this.setState({ cmLook: { ...(s.cmLook || {}), [id]: v }, cmHover: null }) })) : [];
+      const extra = typeof opts.extra === 'function' ? opts.extra(series) : opts.extra || [];
+      return { id, title, span: opts.span || 'auto', bar: opts.bar || 'var(--blue)', legend: legend(id, series, unit, extra), looks, hasLooks: looks.length > 0,
         chart: c || emptyMsg(id, opts.empty || '— not reported for this range'), foot: opts.foot || '' };
     };
 
-    const nycS = ser('nyc_cmbs_ss', 'Loans', C[1], 'monthly'), nycLast = nycS.p[nycS.p.length - 1];
     const cmCards = [
       card('rates', 'Treasury yields and SOFR', [
         ser('treasury_10y', '10-yr', C[0], 'daily'), ser('treasury_5y', '5-yr', C[1], 'daily'), ser('sofr_30d_avg', '30-day SOFR', C[2], 'daily'),
@@ -843,22 +866,22 @@ class Component extends DCLogic {
         { zero: true, foot: 'U.S. Treasury. Below zero, the curve is inverted. Weekly.' }),
       card('tight', 'Banks tightening CRE standards', [
         ser('sloos_cre_nonres', 'Office, retail, ind.', C[0], 'quarterly'), ser('sloos_cre_mf', 'Multifamily', C[1], 'quarterly'), ser('sloos_cre_constr', 'Construction', C[2], 'quarterly'),
-      ], 'netpct', { zero: true, foot: 'Fed Senior Loan Officer Survey: net share of banks tightening. Above zero, more banks tightened than eased.' }),
+      ], 'netpct', { zero: true, look: '5y', foot: 'Fed Senior Loan Officer Survey: net share of banks tightening. Above zero, more banks tightened than eased.' }),
       card('loans', 'Bank CRE loan growth, y/y', [
         ser('bank_cre_loans', 'All banks', C[0], 'monthly', growth('bank_cre_loans')), ser('bank_cre_loans_small', 'Small banks', C[1], 'monthly', growth('bank_cre_loans_small')),
-      ], 'growth', { zero: true, foot: 'Federal Reserve H.8: CRE loans held by commercial banks, change from a year earlier. Small banks: outside the 25 largest.' }),
+      ], 'growth', { zero: true, look: '3y', foot: 'Federal Reserve H.8: CRE loans held by commercial banks, change from a year earlier. Small banks: outside the 25 largest.' }),
       card('delinq', 'CRE delinquency', [
         ser('bank_cre_delinq', 'Banks', C[0], 'quarterly'), ser('cmbs_delinq_office', 'CMBS office', C[1], 'monthly'),
-      ], 'pct', { span: L.capSpan, bar: 'var(--red)', foot: 'Banks: Federal Reserve Board, quarterly. CMBS office: Trepp, national, entered monthly by hand.' }),
-      card('ss', 'NYC CMBS in special servicing', [nycS], 'count',
-        { bars: true, bar: 'var(--red)', empty: 'No months entered for this period (cm_enter.py)',
-          extra: nycLast && nycLast.of ? [{ name: 'Share', value: (nycLast.v / nycLast.of * 100).toFixed(1) + '%', note: 'of ' + num(nycLast.of) + ' NYC loans' }] : [],
+      ], 'pct', { span: L.capSpan, bar: 'var(--red)', look: '5y', foot: 'Banks: Federal Reserve Board, quarterly. CMBS office: Trepp, national, entered monthly by hand.' }),
+      card('ss', 'NYC CMBS in special servicing', [ser('nyc_cmbs_ss', 'Loans', C[1], 'monthly')], 'count',
+        { bars: true, bar: 'var(--red)', look: 'max', empty: 'No months entered for this lookback (cm_enter.py)',
+          extra: ([x]) => { const l = x.p[x.p.length - 1]; return l && l.of ? [{ name: 'Share', value: (l.v / l.of * 100).toFixed(1) + '%', note: 'of ' + num(l.of) + ' NYC loans' }] : []; },
           foot: 'Trepp loan listing via AIPI, entered monthly by hand. How NYC is scoped is unconfirmed.' }),
     ];
     const capView = {
       cmCards,
       cmRangeLabel: rg.label,
-      cmNote: 'Set by the time period at left; Custom reaches back to 2016. Hover a chart to read any date. Each chart shows its latest reading in the period.',
+      cmNote: 'Rates follow the time period at left. Quarterly and monthly charts have their own lookback (Period follows the sidebar; 3Y, 5Y and Max run to its end). Hover a chart to read any date.',
     };
 
     // panels

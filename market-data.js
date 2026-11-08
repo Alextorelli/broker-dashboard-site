@@ -37,8 +37,8 @@ async function api(path, retried = false) {
 let cache = null;
 const rowCache = new Map();
 async function loadAll() {
-  let [meta, metrics, availability, cmMetrics, cmLatest, ustAvg] = await Promise.all(
-    ['meta', 'metrics', 'availability', 'cm_metrics', 'cm_latest', 'ust_10y_quarter_avg'].map(v => api('/' + v)));
+  let [meta, metrics, availability, cmMetrics, cmLatest] = await Promise.all(
+    ['meta', 'metrics', 'availability', 'cm_metrics', 'cm_latest'].map(v => api('/' + v)));
   // The views return nothing unless the signed-in user's verified email is on the approved list (schema/dash_api.sql).
   if (!meta.length) {
     await getToken({ force: true, message: 'This account is not on the approved list. Ask Alex for access, or sign in with an approved email.' });
@@ -51,7 +51,6 @@ async function loadAll() {
       // Null series_id means manual or derived: drop it so CM_DEFAULT's description stands.
       metrics: Object.fromEntries(cmMetrics.map(({ key, series_id, sort, ...m }) => [key, series_id ? { ...m, series_id } : m])),
       latest: Object.fromEntries(cmLatest.map(({ key, ...m }) => [key, m])),
-      ust_10y_quarter_avg: Object.fromEntries(ustAvg.map(r => [r.period, r.value])),
     },
   };
   for (const a of availability) {
@@ -133,14 +132,11 @@ const CM_DEFAULT = [
   { key: 'cmbs_delinq_office', grp: 'distress', label: 'CMBS delinquency, office', unit: 'pct', cadence: 'monthly', source: 'Trepp', series_id: 'TREPP_CMBS_DELINQ_OFFICE', def: 'Trepp monthly published CMBS delinquency rate for office loans, national. Entered by hand each month (cm_enter.py).', caveat: 'Whether brokers may quote this to clients is unconfirmed.' },
   { key: 'nyc_cmbs_ss', grp: 'distress', label: 'NYC CMBS in special servicing', unit: 'count', cadence: 'monthly', source: 'Trepp', series_id: 'Trepp loan listing (AIPI)', def: 'Count of NYC loans with special-servicing status over all NYC loans in the listing, at the listing date. Entered by hand each month (cm_enter.py).', caveat: 'How AIPI scopes NYC and matches loans to a borough is unconfirmed. Quoting to clients and license scope are open items.' },
   { key: 'bank_cre_delinq', grp: 'distress', label: 'Bank CRE delinquency', unit: 'pct', cadence: 'quarterly', source: 'Federal Reserve Board', series_id: 'DRCRELEXFACBS', def: 'Delinquency rate on commercial real estate loans excluding farmland, all banks.', caveat: 'The prior dashboard used DRSREACBN, which includes residential loans. This uses the CRE-only series.' },
-  // Pricing
-  { key: 'cap_spread_10y', grp: 'pricing', label: 'Cap rate spread over 10-yr', unit: 'bps', cadence: 'quarterly', source: 'CoStar estimate, U.S. Treasury', series_id: 'market_cap_rate − DGS10 quarter avg', derived: true, def: 'CoStar market cap rate for the selection less the mean of the daily 10-year over the same quarter.', caveat: 'The one labeled exception to the no-averaging rule: the 10-year side is a quarterly mean. Follows the submarket, asset type and time period filters.' },
 ];
 export const CM_GROUPS = [
   { key: 'cost', label: 'Cost of debt' },
   { key: 'credit', label: 'Credit availability' },
   { key: 'distress', label: 'Distress' },
-  { key: 'pricing', label: 'Pricing' },
 ];
 const CADENCE_DAYS = { daily: 1, monthly: 31, quarterly: 92 };
 function dateEnd(d) {
@@ -148,52 +144,37 @@ function dateEnd(d) {
   if (/^\d{4}-\d{2}$/.test(d)) { const [y, m] = d.split('-').map(Number); return new Date(Date.UTC(y, m, 0)); }
   return new Date(d + 'T00:00:00Z');
 }
-// cap_series: the selection's quarterly cap rates, [{ period, cap_rate }], oldest first, ending at as_of. It gives the
-// cap rate chart its history; the other charts load theirs with getMarketHistory.
-export async function getMarkets({ as_of, cap_rate, cap_rate_year_ago, cap_series = [], today = new Date() } = {}) {
+// The latest value of each Capital metric, with its value a year earlier and whether it is stale. The page now
+// charts history (getMarketHistory); this stays for anything that needs the latest figures alone (AIPI).
+export async function getMarkets({ today = new Date() } = {}) {
   const fx = await load();
   const cm = fx.capital_markets || null;
   const metaByKey = {};
   if (cm && cm.metrics) for (const [k, v] of Object.entries(cm.metrics)) metaByKey[k] = v;
-  const defs = CM_DEFAULT.map(d => ({ ...d, ...(metaByKey[d.key] || {}), key: d.key, def: d.def, caveat: d.caveat, derived: d.derived }));
+  const defs = CM_DEFAULT.map(d => ({ ...d, ...(metaByKey[d.key] || {}), key: d.key, def: d.def, caveat: d.caveat }));
   const latest = (cm && cm.latest) || {};
-  const qavg = (cm && cm.ust_10y_quarter_avg) || {};
-  as_of = as_of || fx.meta.data_through;
-  const ya = ql(qi(as_of) - 4);
-  // The selection's cap rate beside the 10-year's quarterly mean, for the cap rate chart.
-  const capHistory = cap_series.map(x => ({ period: x.period, cap_rate: x.cap_rate, ust: qavg[x.period] ?? null }));
   const items = defs.map(m => {
-    let o;
-    if (m.key === 'cap_spread_10y') {
-      const t = qavg[as_of], ty = qavg[ya];
-      o = {
-        value: cap_rate != null && t != null ? (cap_rate - t) * 100 : null, date: as_of,
-        prior_year_value: cap_rate_year_ago != null && ty != null ? (cap_rate_year_ago - ty) * 100 : null, prior_year_date: ya,
-        missingReason: !cm ? 'not_loaded' : t == null ? 'no_treasury' : cap_rate == null ? 'no_cap_rate' : null,
-      };
-    } else {
-      const l = latest[m.key];
-      o = l ? { ...l, missingReason: l.value == null ? 'not_reported' : null } : { value: null, date: null, missingReason: 'not_loaded' };
-    }
+    const l = latest[m.key];
+    const o = l ? { ...l, missingReason: l.value == null ? 'not_reported' : null } : { value: null, date: null, missingReason: 'not_loaded' };
     let stale = false;
-    if (o.date && !m.derived) {
+    if (o.date) {
       const lag = CADENCE_DAYS[m.cadence] || 1;
       const allow = m.cadence === 'daily' ? 4 : lag * 2; // daily: two business days, allowing a weekend
       stale = (today - dateEnd(o.date)) / 864e5 > allow + (m.cadence === 'daily' ? 0 : lag);
     }
     return { ...m, ...o, stale };
   });
-  return { loaded: !!cm, asOf: as_of, yearAgo: ya, items, capHistory };
+  return { loaded: !!cm, items };
 }
 
-// History for one metric's chart: [{ date: 'YYYY-MM-DD', value }], oldest first, from `years` before today.
-// Daily series come as one point a week; of_loans only for nyc_cmbs_ss. Throws if the database has no history view yet; the page says so.
+// History for one metric's chart: [{ date: 'YYYY-MM-DD', value, of_loans }], oldest first, between two ISO dates.
+// Daily series come as one point a week; of_loans only for nyc_cmbs_ss. Throws if the database has no history view
+// yet; the page says so.
 const histCache = new Map();
-export async function getMarketHistory(key, { years = 5, today = new Date() } = {}) {
-  const from = new Date(Date.UTC(today.getUTCFullYear() - years, today.getUTCMonth(), today.getUTCDate())).toISOString().slice(0, 10);
-  const ck = key + '|' + from;
+export async function getMarketHistory(key, { from, to }) {
+  const ck = key + '|' + from + '|' + to;
   if (!histCache.has(ck)) {
-    const q = '/cm_history?key=eq.' + encodeURIComponent(key) + '&date=gte.' + from + '&order=date.asc&select=date,value,of_loans';
+    const q = '/cm_history?key=eq.' + encodeURIComponent(key) + '&date=gte.' + from + '&date=lte.' + to + '&order=date.asc&select=date,value,of_loans';
     histCache.set(ck, api(q).catch(e => { histCache.delete(ck); throw e; }));
   }
   return histCache.get(ck);

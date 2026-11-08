@@ -60,6 +60,7 @@ background:var(--bg);color-scheme:dark}
     </div>
     <sc-if value="{{ ready }}" hint-placeholder-val="{{ false }}">
       <div style="display:flex; flex-direction:column; gap:20px;">
+        <sc-if value="{{ isCostar }}" hint-placeholder-val="{{ true }}">
         <div style="display:flex; flex-direction:column; gap:8px;">
           <span style="font-family:var(--sans); font-weight:600; font-size:11px; letter-spacing:.1em; text-transform:uppercase; color:var(--dim);">1 · Submarket</span>
           <select onChange="{{ onSubmarket }}" style="width:100%; min-height:40px; padding:0 10px; border:1px solid var(--fill-3); border-radius:8px; font-size:13px; background:var(--fill); color:var(--fg);">
@@ -88,13 +89,16 @@ background:var(--bg);color-scheme:dark}
           <sc-if value="{{ starMulti }}"><sc-if value="{{ multiNoteOn }}"><span style="font-size:11.5px; line-height:1.45; color:var(--fg-2); text-wrap:pretty;">{{ multiNote }}</span></sc-if></sc-if>
           <sc-if value="{{ starNoteOn }}"><span style="font-size:11.5px; line-height:1.45; color:var(--fg-3); text-wrap:pretty;">{{ starNote }}</span></sc-if>
         </div>
+        </sc-if>
         <div style="display:flex; flex-direction:column; gap:8px;">
-          <span style="font-family:var(--sans); font-weight:600; font-size:11px; letter-spacing:.1em; text-transform:uppercase; color:var(--dim);">4 · Time period</span>
+          <span style="font-family:var(--sans); font-weight:600; font-size:11px; letter-spacing:.1em; text-transform:uppercase; color:var(--dim);">{{ timeTitle }}</span>
+          <sc-if value="{{ isCostar }}" hint-placeholder-val="{{ true }}">
           <div style="display:flex; flex-direction:column; gap:4px; font-size:11.5px; color:var(--fg-3);">As of · inventory, rates, rents
             <div aria-live="polite" style="min-height:40px; display:flex; align-items:center; padding:0 10px; border:1px solid var(--fill-3); border-radius:8px; font-size:13px; background:var(--fill); color:var(--fg-2); opacity:.75;">{{ asOfLabel }}</div>
             <span style="font-size:11px; line-height:1.45; color:var(--fg-3); text-wrap:pretty;">{{ asOfNote }}</span>
           </div>
-          <span style="font-size:11.5px; color:var(--fg-3); margin-top:4px;">Window · activity</span>
+          </sc-if>
+          <span style="font-size:11.5px; color:var(--fg-3); margin-top:4px;">{{ winTitle }}</span>
           <div style="display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1fr); gap:4px;">
             <sc-for list="{{ windowOptions }}" as="o" hint-placeholder-count="4">
               <button onClick="{{ o.onPick }}" style="min-height:38px; padding:0 12px; border-radius:999px; border:1px solid {{ o.border }}; background:{{ o.bg }}; color:{{ o.fg }}; cursor:pointer; font-size:12.5px; text-align:left; text-align:center; padding:0 8px; font-size:12px;">{{ o.label }}</button>
@@ -151,7 +155,12 @@ background:var(--bg);color-scheme:dark}
         </div>
         <div style="display:flex; flex-wrap:wrap; align-items:center; gap:8px 12px;">
           <h1 style="margin:0; font-family:var(--sans); font-weight:600; font-size:22px; line-height:1.15; color:var(--fg);">{{ contextLine }}</h1>
+          <sc-if value="{{ isCostar }}" hint-placeholder-val="{{ true }}">
           <span style="font-family:var(--sans); font-weight:600; font-size:11px; letter-spacing:.1em; text-transform:uppercase; color:var(--fg); background:var(--st1); padding:3px 8px; border-radius:4px;">Data through {{ dataThrough }}</span>
+          </sc-if>
+          <sc-if value="{{ isCapital }}" hint-placeholder-val="{{ false }}">
+          <span style="font-family:var(--sans); font-weight:600; font-size:11px; letter-spacing:.1em; text-transform:uppercase; color:var(--fg); background:var(--st1); padding:3px 8px; border-radius:4px;">{{ cmRangeLabel }}</span>
+          </sc-if>
           <sc-if value="{{ ctxHasNote }}" hint-placeholder-val="{{ false }}">
             <button onClick="{{ ctxNoteTap }}" style="min-height:32px; padding:0 10px; border-radius:4px; border:1px solid var(--orange); background:var(--st4); color:var(--fg); cursor:pointer; font-family:var(--sans); font-weight:600; font-size:11px; letter-spacing:.08em; text-transform:uppercase;">Data note</button>
           </sc-if>
@@ -332,11 +341,6 @@ background:var(--bg);color-scheme:dark}
       <sc-if value="{{ isCapital }}" hint-placeholder-val="{{ false }}">
         <section id="capital" style="flex:1; min-height:{{ L.capMinH }}; display:flex; flex-direction:column; gap:10px; min-width:0;">
           <div style="display:flex; flex-wrap:wrap; align-items:center; gap:8px 14px;">
-            <div role="group" aria-label="Chart range" style="display:flex; border:1px solid var(--blue); border-radius:6px; overflow:hidden;">
-              <sc-for list="{{ cmRanges }}" as="r">
-                <button onClick="{{ r.onPick }}" aria-pressed="{{ r.sel }}" style="min-height:32px; padding:0 14px; border:0; background:{{ r.bg }}; color:{{ r.fg }}; cursor:pointer; font-family:var(--sans); font-weight:600; font-size:12px; letter-spacing:.08em;">{{ r.label }}</button>
-              </sc-for>
-            </div>
             <span style="font-size:11.5px; color:var(--fg-3); text-wrap:pretty;">{{ cmNote }}</span>
           </div>
           <div style="flex:1; min-height:0; display:grid; grid-template-columns:{{ L.capCols }}; grid-template-rows:{{ L.capRows }}; gap:12px;">
@@ -424,7 +428,18 @@ const segOrder = list => list;
 const qIdx = p => (+p.slice(0, 4)) * 4 + (+p.slice(5)) - 1;
 const qStart = p => Date.UTC(+p.slice(0, 4), (+p.slice(5) - 1) * 3, 1);
 const qOf = date => date.slice(0, 4) + 'Q' + (Math.floor((+date.slice(5, 7) - 1) / 3) + 1);
-const asOfQ = d => d.params.as_of;
+// The Capital tab's chart range from the sidebar's time period, in UTC milliseconds. Rates are daily, so trailing
+// 12 months and year to date run to today, not to CoStar's last quarter.
+function cmRangeOf(d, today = new Date()) {
+  const w = d.window, day = 864e5, end = Date.UTC(today.getUTCFullYear(), today.getUTCMonth(), today.getUTCDate());
+  const M = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'], dl = t => { const x = new Date(t); return `${M[x.getUTCMonth()]} ${x.getUTCDate()}, ${x.getUTCFullYear()}`; };
+  let from, to, label;
+  if (w.type === 'ytd') { from = Date.UTC(today.getUTCFullYear(), 0, 1); to = end; label = `${today.getUTCFullYear()} year to date`; }
+  else if (w.type === 'cy') { from = Date.UTC(w.year, 0, 1); to = Date.UTC(w.year, 11, 31); label = `Calendar year ${w.year}`; }
+  else if (w.type === 'custom') { from = qStart(w.from); to = Math.min(end, Date.UTC(+w.to.slice(0, 4), (+w.to.slice(5)) * 3, 0)); label = w.from === w.to ? fp(w.from) : `${fp(w.from)} to ${fp(w.to)}`; }
+  else { from = Date.UTC(today.getUTCFullYear() - 1, today.getUTCMonth(), today.getUTCDate()); to = end; label = `Trailing 12 months to ${dl(end)}`; }
+  return { from, to, label, key: from + '|' + to };
+}
 const num = n => Math.round(n).toLocaleString('en-US');
 function abbr(a) {
   if (a >= 1e9) return (a / 1e9).toFixed(1) + 'B';
@@ -466,7 +481,7 @@ class Component extends DCLogic {
     submarket: this.props.defaultSubmarket ?? 'Soho', asset_type: 'office', view: 'costar', markets: null, segment: 'all', as_of: null, win: { type: 't12' },
     data: null, error: null, sheet: null, subQuery: '', tip: null, copied: null,
     trendMetric: 'vacancy_rate', trendMode: 'quarter', pick: null, chartW: 600,
-    cmYears: 5, cmHist: null, cmHover: null, cmSizes: {},
+    cmHist: null, cmHover: null, cmSizes: {},
     tipBox: null,
     theme: (() => { try { return localStorage.getItem('tag-market-theme') || 'dark'; } catch (e) { return 'dark'; } })(),
   };
@@ -483,25 +498,27 @@ class Component extends DCLogic {
   hoverTip(key, mid, el) { const t = this.state.tipBox; if (t && t.pinned) return; this.placeTip(key, mid, el, false); }
   unhoverTip(key) { const t = this.state.tipBox; if (t && !t.pinned && t.key === key) this.setState({ tipBox: null }); }
   pinTip(key, mid, el) { const t = this.state.tipBox; if (t && t.pinned && t.key === key) this.setState({ tipBox: null }); else this.placeTip(key, mid, el, true); }
-  componentDidUpdate() { this.watchChart(); this.applyTheme(); }
+  componentDidUpdate() { this.watchChart(); this.applyTheme(); this.loadCm(); }
   applyTheme() { document.documentElement.dataset.theme = this.state.theme; }
   setTheme(t) { try { localStorage.setItem('tag-market-theme', t); } catch (e) {} this.setState({ theme: t }); }
-  // Capital tab: load every chart's history for the chosen range, in parallel. Loan growth needs a year more
-  // history than it shows. The cap rate chart needs no load: getMarkets gives the selection's own quarters.
-  async loadCm(years = this.state.cmYears || 5) {
-    this.setState({ cmYears: years, cmHover: null });
-    const cur = this.state.cmHist;
-    if (cur && cur.years === years && cur.status === 'ok') return;
-    this.setState({ cmHist: { years, status: 'loading', rows: {} } });
+  // Capital tab: load every chart's history for the sidebar's time period, from a year before it (for the
+  // year-earlier change and loan growth) to its end. Runs again whenever the period changes.
+  async loadCm() {
+    const d = this.state.data;
+    if (!d || this.state.view !== 'capital') return;
+    const rg = cmRangeOf(d), cur = this.state.cmHist;
+    if (cur && cur.key === rg.key) return;
+    this.setState({ cmHist: { key: rg.key, status: 'loading', rows: {} }, cmHover: null });
     const KEYS = ['treasury_10y', 'treasury_5y', 'sofr_30d_avg', 'curve_10y2y', 'sloos_cre_nonres', 'sloos_cre_mf', 'sloos_cre_constr',
       'bank_cre_loans', 'bank_cre_loans_small', 'bank_cre_delinq', 'cmbs_delinq_office', 'nyc_cmbs_ss'];
+    const iso = t => new Date(t).toISOString().slice(0, 10);
     try {
       if (!this._mod) this._mod = import(new URL('market-data.js', document.baseURI).href);
       const { getMarketHistory } = await this._mod;
-      const got = await Promise.all(KEYS.map(k => getMarketHistory(k, { years: k.startsWith('bank_cre_loans') ? years + 1 : years })));
-      if (this.state.cmYears === years) this.setState({ cmHist: { years, status: 'ok', rows: Object.fromEntries(KEYS.map((k, i) => [k, got[i]])) } });
+      const got = await Promise.all(KEYS.map(k => getMarketHistory(k, { from: iso(rg.from - 366 * 864e5), to: iso(rg.to) })));
+      if (cmRangeOf(this.state.data).key === rg.key) this.setState({ cmHist: { key: rg.key, status: 'ok', rows: Object.fromEntries(KEYS.map((k, i) => [k, got[i]])) } });
     } catch (e) {
-      if (this.state.cmYears === years) this.setState({ cmHist: { years, status: 'error', rows: {} } });
+      if (cmRangeOf(this.state.data).key === rg.key) this.setState({ cmHist: { key: rg.key, status: 'error', rows: {} } });
     }
   }
   watchChart() {
@@ -540,15 +557,13 @@ class Component extends DCLogic {
     const id = this._req = (this._req || 0) + 1;
     try {
       if (!this._mod) this._mod = import(new URL('market-data.js', document.baseURI).href);
-      const { getData, getMarkets } = await this._mod;
+      const { getData } = await this._mod;
       const data = await getData(p);
-      const markets = await getMarkets({ as_of: data.params.as_of, cap_rate: data.row ? data.row.market_cap_rate : null, cap_rate_year_ago: data.rowYearAgo ? data.rowYearAgo.market_cap_rate : null,
-        cap_series: data.series.map(x => ({ period: x.period, cap_rate: x.row ? x.row.market_cap_rate : null })) });
       if (id !== this._req) return;
       const r = data.params;
       const trend = CFG[r.asset_type === 'multifamily' ? 'multifamily' : 'commercial'].trend;
       this.setState(st => ({
-        data, markets, error: null, submarket: r.submarket, asset_type: r.asset_type, segment: r.segment, as_of: r.as_of, win: r.window,
+        data, error: null, submarket: r.submarket, asset_type: r.asset_type, segment: r.segment, as_of: r.as_of, win: r.window,
         trendMetric: trend.includes(st.trendMetric) ? st.trendMetric : trend[0], pick: null,
       }));
     } catch (e) { this.setState({ error: String((e && e.message) || e) }); }
@@ -718,18 +733,18 @@ class Component extends DCLogic {
       };
     });
 
-    // capital: seven charts, one range control. Values come from the history views; the year-earlier change in
-    // each legend comes from cm_latest via getMarkets.
-    const isCapital = s.view === 'capital', mk = s.markets;
+    // capital: six charts over the sidebar's time period (no geographic filters apply). Values and each legend's
+    // year-earlier change come from the history view, loaded a year before the range so the change is always there.
+    const isCapital = s.view === 'capital';
     const MON = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
-    const years = s.cmYears || 5;
-    const cmH = s.cmHist && s.cmHist.years === years ? s.cmHist : null;
+    const rg = cmRangeOf(d);
+    const cmH = s.cmHist && s.cmHist.key === rg.key ? s.cmHist : null;
     const rowsOf = k => (cmH && cmH.rows[k]) || [];
     const tOf = date => Date.parse(date + 'T00:00:00Z');
-    const now = Date.now(), cutT = Date.UTC(new Date().getUTCFullYear() - years, new Date().getUTCMonth(), new Date().getUTCDate());
-    const cmPts = (k, cad) => rowsOf(k).filter(r => r.value != null).map(r => ({ t: tOf(r.date), v: r.value, of: r.of_loans, cad })).filter(p => p.t >= cutT);
+    const inRange = p => p.t >= rg.from && p.t <= rg.to;
+    const cmAll = (k, cad) => rowsOf(k).filter(r => r.value != null).map(r => ({ t: tOf(r.date), v: r.value, of: r.of_loans, cad }));
+    const ser = (key, name, color, cad, full) => { full = full || cmAll(key, cad); return { key, name, color, full, p: full.filter(inRange) }; };
     const dLabel = (t, cad) => { const d = new Date(t); return cad === 'quarterly' ? `${d.getUTCFullYear()} Q${Math.floor(d.getUTCMonth() / 3) + 1}` : cad === 'monthly' ? `${MON[d.getUTCMonth()]} ${d.getUTCFullYear()}` : `${MON[d.getUTCMonth()]} ${d.getUTCDate()}, ${d.getUTCFullYear()}`; };
-    const item = k => (mk ? mk.items.find(m => m.key === k) : null) || {};
     const fmtV = (unit, v) => v == null ? '—' : unit === 'pct' ? v.toFixed(2) + '%' : unit === 'bps' ? (v < 0 ? MINUS : v > 0 ? '+' : '') + num(Math.abs(v)) + ' bps'
       : unit === 'netpct' ? (v < 0 ? MINUS : v > 0 ? '+' : '') + Math.abs(v).toFixed(1) + '%' : unit === 'growth' ? (v < 0 ? MINUS : v > 0 ? '+' : '') + Math.abs(v).toFixed(1) + '%' : num(v);
     const chg = (unit, v, pv) => {
@@ -743,7 +758,7 @@ class Component extends DCLogic {
     // Year-over-year growth from monthly loan balances: each month against the same month a year earlier.
     const growth = k => { const all = rowsOf(k).filter(r => r.value != null), by = new Map(all.map(r => [r.date.slice(0, 7), r.value]));
       return all.map(r => { const d = new Date(tOf(r.date)); const pk = `${d.getUTCFullYear() - 1}-${r.date.slice(5, 7)}`; const pv = by.get(pk);
-        return pv ? { t: tOf(r.date), v: (r.value / pv - 1) * 100, cad: 'monthly' } : null; }).filter(p => p && p.t >= cutT); };
+        return pv ? { t: tOf(r.date), v: (r.value / pv - 1) * 100, cad: 'monthly' } : null; }).filter(Boolean); };
     const C = ['var(--blue)', 'var(--orange)', 'var(--green)'];
     const hv = s.cmHover;
     const at = (p, t) => { let best = null; for (const x of p) { if (x.t <= t + 3 * 864e5) best = x; else break; } return best; };
@@ -769,7 +784,7 @@ class Component extends DCLogic {
         kids.push(E('text', { key: 'gl' + i, className: 'tag-chart__label', x: pl - 5, y: y + 3.5, textAnchor: 'end', style: { letterSpacing: 0, textTransform: 'none' } }, axisFmt(unit, vv, step)));
       }
       const yA = new Date(t0).getUTCFullYear(), yB = new Date(t1).getUTCFullYear();
-      if (years === 1) {
+      if (t1 - t0 <= 400 * 864e5) {
         for (let m = 0; m <= 12; m += 3) { const d = new Date(t1); d.setUTCMonth(d.getUTCMonth() - m, 1); const t = d.getTime(); if (t >= t0 && t <= t1 && xOf(t) > pl + 14) kids.push(E('text', { key: 'xm' + m, className: 'tag-chart__label', x: xOf(t), y: Hh - 4, textAnchor: xOf(t) > W - 24 ? 'end' : 'middle' }, MON[d.getUTCMonth()])); }
       } else {
         const ys = Math.max(1, Math.ceil((yB - yA + 1) / Math.max(2, Math.floor((W - pl) / 42))));
@@ -791,11 +806,12 @@ class Component extends DCLogic {
     const legend = (id, series, unit, extra = []) => {
       const E = React.createElement, hov = hv && hv.id === id;
       const rows = series.map((x, i) => {
-        const p = hov ? at(x.p, hv.t) : null, m = x.key ? item(x.key) : {};
-        const v = hov ? (p ? p.v : null) : x.latest !== undefined ? x.latest : m.value != null ? m.value : x.p.length ? x.p[x.p.length - 1].v : null;
-        const when = hov ? (p ? dLabel(p.t, x.p[0] && x.p[0].cad) : '') : x.when || (m.date ? fdShort(m.date) : x.p.length ? dLabel(x.p[x.p.length - 1].t, x.p[0].cad) : '');
-        const c = hov ? '' : x.change !== undefined ? x.change : chg(unit, m.value, m.prior_year_value);
-        return E('span', { key: i, style: { display: 'inline-flex', flexWrap: 'wrap', alignItems: 'baseline', columnGap: 5, opacity: m.stale && !hov ? 0.6 : 1 } },
+        // The range's last point, or the hovered one; its change against the last point a year before it.
+        const p = hov ? at(x.p, hv.t) : x.p[x.p.length - 1] || null;
+        const prior = p ? at(x.full, p.t - 365 * 864e5) : null;
+        const v = p ? p.v : null, when = p ? dLabel(p.t, p.cad) : '';
+        const c = p && prior && p.t - prior.t > 300 * 864e5 ? chg(unit, v, prior.v) : '';
+        return E('span', { key: i, style: { display: 'inline-flex', flexWrap: 'wrap', alignItems: 'baseline', columnGap: 5 } },
           E('span', { style: { width: 10, height: 3, borderRadius: 2, background: x.color, alignSelf: 'center' } }),
           E('span', { style: { color: 'var(--fg-3)', fontSize: 11.5, whiteSpace: 'nowrap' } }, x.name),
           E('b', { style: { color: 'var(--fg)', fontSize: 14, fontWeight: 600, fontVariantNumeric: 'tabular-nums' } }, x.fmt ? x.fmt(v) : fmtV(unit, v)),
@@ -816,54 +832,31 @@ class Component extends DCLogic {
         chart: c || emptyMsg(id, opts.empty || '— not reported for this range'), foot: opts.foot || '' };
     };
 
-    // cap rate vs the 10-year, for the selection, quarterly to the As of quarter
-    const capQ = ((mk && mk.capHistory) || []).filter(x => qIdx(x.period) > qIdx(d.params.as_of) - years * 4 && qIdx(x.period) <= qIdx(d.params.as_of));
-    const capPts = capQ.filter(x => x.cap_rate != null).map(x => ({ t: qStart(x.period), v: x.cap_rate, cad: 'quarterly' }));
-    const ustPts = capQ.filter(x => x.ust != null).map(x => ({ t: qStart(x.period), v: x.ust, cad: 'quarterly' }));
-    const sp = item('cap_spread_10y');
-    const hovCap = hv && hv.id === 'cap' ? capQ.find(x => Math.abs(qStart(x.period) - hv.t) < 46 * 864e5) : null;
-    const spreadAt = hovCap ? (hovCap.cap_rate != null && hovCap.ust != null ? (hovCap.cap_rate - hovCap.ust) * 100 : null) : sp.value;
-    const r10 = v => Math.round(v / 10) * 10;
-    const spreadTxt = spreadAt == null ? '—' : `${spreadAt < 0 ? MINUS : ''}${num(Math.abs(r10(spreadAt)))} bps`;
-    const spreadChg = !hovCap && sp.value != null && sp.prior_year_value != null ? chg('bps', r10(sp.value), r10(sp.prior_year_value)) : '';
-
-    const nyc = cmPts('nyc_cmbs_ss', 'monthly'), nycLast = nyc[nyc.length - 1];
+    const nycS = ser('nyc_cmbs_ss', 'Loans', C[1], 'monthly'), nycLast = nycS.p[nycS.p.length - 1];
     const cmCards = [
       card('rates', 'Treasury yields and SOFR', [
-        { key: 'treasury_10y', name: '10-yr', color: C[0], p: cmPts('treasury_10y', 'daily') },
-        { key: 'treasury_5y', name: '5-yr', color: C[1], p: cmPts('treasury_5y', 'daily') },
-        { key: 'sofr_30d_avg', name: '30-day SOFR', color: C[2], p: cmPts('sofr_30d_avg', 'daily') },
+        ser('treasury_10y', '10-yr', C[0], 'daily'), ser('treasury_5y', '5-yr', C[1], 'daily'), ser('sofr_30d_avg', '30-day SOFR', C[2], 'daily'),
       ], 'pct', { span: L.capSpan, foot: 'U.S. Treasury constant-maturity yields; SOFR 30-day average, NY Fed. Weekly: last reading of each week.' }),
-      card('curve', '10-yr less 2-yr', [{ key: 'curve_10y2y', name: 'Spread', color: C[0], p: cmPts('curve_10y2y', 'daily') }], 'bps',
+      card('curve', '10-yr less 2-yr', [ser('curve_10y2y', 'Spread', C[0], 'daily')], 'bps',
         { zero: true, foot: 'U.S. Treasury. Below zero, the curve is inverted. Weekly.' }),
-      card('cap', `Cap rate vs 10-yr · ${scopeName}`, [
-        { name: 'Cap rate', color: 'var(--orange)', p: capPts, latest: hovCap ? undefined : (row.market_cap_rate ?? null), when: asOfLabel, change: '' },
-        { name: '10-yr, qtr avg', color: C[0], p: ustPts, latest: hovCap ? undefined : (capQ.length ? capQ[capQ.length - 1].ust : null), when: asOfLabel, change: '' },
-      ], 'pct', { bar: 'var(--orange)', extra: [{ name: 'Spread', value: spreadTxt, note: spreadChg }], empty: '— no CoStar cap rate for this selection',
-        foot: 'CoStar market cap rate (estimate) for the selection; 10-yr is the quarter’s mean of daily yields. Follows the filters.' }),
       card('tight', 'Banks tightening CRE standards', [
-        { key: 'sloos_cre_nonres', name: 'Office, retail, ind.', color: C[0], p: cmPts('sloos_cre_nonres', 'quarterly') },
-        { key: 'sloos_cre_mf', name: 'Multifamily', color: C[1], p: cmPts('sloos_cre_mf', 'quarterly') },
-        { key: 'sloos_cre_constr', name: 'Construction', color: C[2], p: cmPts('sloos_cre_constr', 'quarterly') },
+        ser('sloos_cre_nonres', 'Office, retail, ind.', C[0], 'quarterly'), ser('sloos_cre_mf', 'Multifamily', C[1], 'quarterly'), ser('sloos_cre_constr', 'Construction', C[2], 'quarterly'),
       ], 'netpct', { zero: true, foot: 'Fed Senior Loan Officer Survey: net share of banks tightening. Above zero, more banks tightened than eased.' }),
       card('loans', 'Bank CRE loan growth, y/y', [
-        { key: 'bank_cre_loans', name: 'All banks', color: C[0], p: growth('bank_cre_loans') },
-        { key: 'bank_cre_loans_small', name: 'Small banks', color: C[1], p: growth('bank_cre_loans_small') },
-      ].map(x => ({ ...x, change: '', when: x.p.length ? dLabel(x.p[x.p.length - 1].t, 'monthly') : '', latest: x.p.length ? x.p[x.p.length - 1].v : null, key: undefined })), 'growth',
-        { zero: true, foot: 'Federal Reserve H.8: CRE loans held by commercial banks, change from a year earlier. Small banks: outside the 25 largest.' }),
+        ser('bank_cre_loans', 'All banks', C[0], 'monthly', growth('bank_cre_loans')), ser('bank_cre_loans_small', 'Small banks', C[1], 'monthly', growth('bank_cre_loans_small')),
+      ], 'growth', { zero: true, foot: 'Federal Reserve H.8: CRE loans held by commercial banks, change from a year earlier. Small banks: outside the 25 largest.' }),
       card('delinq', 'CRE delinquency', [
-        { key: 'bank_cre_delinq', name: 'Banks', color: C[0], p: cmPts('bank_cre_delinq', 'quarterly') },
-        { key: 'cmbs_delinq_office', name: 'CMBS office', color: C[1], p: cmPts('cmbs_delinq_office', 'monthly') },
-      ], 'pct', { bar: 'var(--red)', foot: 'Banks: Federal Reserve Board, quarterly. CMBS office: Trepp, national, entered monthly by hand.' }),
-      card('ss', 'NYC CMBS in special servicing', [{ key: 'nyc_cmbs_ss', name: 'Loans', color: C[1], p: nyc }], 'count',
-        { bars: true, bar: 'var(--red)', empty: 'No months entered yet (cm_enter.py)',
+        ser('bank_cre_delinq', 'Banks', C[0], 'quarterly'), ser('cmbs_delinq_office', 'CMBS office', C[1], 'monthly'),
+      ], 'pct', { span: L.capSpan, bar: 'var(--red)', foot: 'Banks: Federal Reserve Board, quarterly. CMBS office: Trepp, national, entered monthly by hand.' }),
+      card('ss', 'NYC CMBS in special servicing', [nycS], 'count',
+        { bars: true, bar: 'var(--red)', empty: 'No months entered for this period (cm_enter.py)',
           extra: nycLast && nycLast.of ? [{ name: 'Share', value: (nycLast.v / nycLast.of * 100).toFixed(1) + '%', note: 'of ' + num(nycLast.of) + ' NYC loans' }] : [],
           foot: 'Trepp loan listing via AIPI, entered monthly by hand. How NYC is scoped is unconfirmed.' }),
     ];
     const capView = {
       cmCards,
-      cmRanges: [1, 5, 10].map(y => ({ label: y + 'Y', sel: y === years, bg: y === years ? 'var(--blue)' : 'var(--panel)', fg: y === years ? 'var(--on-accent)' : 'var(--blue)', onPick: () => this.loadCm(y) })),
-      cmNote: 'Hover a chart to read any date. Each chart shows its own latest date. Only the cap rate chart follows the filters.',
+      cmRangeLabel: rg.label,
+      cmNote: 'Set by the time period at left; Custom reaches back to 2016. Hover a chart to read any date. Each chart shows its latest reading in the period.',
     };
 
     // panels
@@ -966,10 +959,11 @@ class Component extends DCLogic {
       onWinFrom: e => this.refresh({ window: { ...w, type: 'custom', from: e.target.value } }),
       onWinTo: e => this.refresh({ window: { ...w, type: 'custom', to: e.target.value } }),
 
-      contextLine: isCapital ? `Capital markets · cap rate spread for ${d.params.submarket} ${ASSET_LABEL[d.params.asset_type].toLowerCase()} · as of ${asOfLabel}` : `${d.params.submarket} · ${ASSET_LABEL[d.params.asset_type]} · ${segLabel(d.params.segment, d.params.asset_type)} · as of ${asOfLabel}`,
+      contextLine: isCapital ? 'Capital markets' : `${d.params.submarket} · ${ASSET_LABEL[d.params.asset_type]} · ${segLabel(d.params.segment, d.params.asset_type)} · as of ${asOfLabel}`,
       asOfLabel, ctxHasNote: !!row.note, ctxNote: row.note || '', ctxNoteOpen: s.tip === 'ctx', ctxNoteTap: () => this.toggleTip('ctx'),
-      noRow: !d.row, noRowShow: !d.row && !isCapital, isCapital, isCostar: !isCapital, ...capView, capNotLoaded: !!mk && (!mk.loaded || !mk.items.some(m => m.value != null)),
-      capTab: { sel: isCapital, line: isCapital ? 'var(--blue)' : 'transparent', fg: isCapital ? 'var(--fg)' : 'var(--fg-3)', onPick: () => { this.setState({ view: 'capital', tipBox: null }); this.loadCm(this.state.cmYears || 5); } },
+      noRow: !d.row, noRowShow: !d.row && !isCapital, isCapital, isCostar: !isCapital, ...capView,
+      timeTitle: isCapital ? 'Time period' : '4 · Time period', winTitle: isCapital ? 'Chart range' : 'Window · activity',
+      capTab: { sel: isCapital, line: isCapital ? 'var(--blue)' : 'transparent', fg: isCapital ? 'var(--fg)' : 'var(--fg-3)', onPick: () => { this.setState({ view: 'capital', tipBox: null }); } },
       tiles, panels,
 
       trendMetric: tm, trendOptions: cfg.trend.map(id => ({ value: id, sel: id === tm, label: id === 'market_asking_rent_psf' ? 'Market asking rent (CoStar estimate)' : M[id].label })),
@@ -997,11 +991,6 @@ class Component extends DCLogic {
       sliceHeads, sliceRows,
       ...(() => {
         const t = s.tipBox;
-        if (t && t.mid.startsWith('cm:') && mk) {
-          const c = mk.items.find(x => 'cm:' + x.key === t.mid);
-          if (c) return { tipShow: true, tipX: t.x, tipY: t.y, tipTransform: t.up ? 'translateY(-100%)' : 'none', tipTitle: c.label, tipDef: c.def,
-            tipFieldLine: `Source · ${c.source} · ${c.series_id} · ${c.cadence}`, tipHasCaveat: !!c.caveat, tipCaveat: c.caveat || '' };
-        }
         const m = t && M[t.mid];
         if (!m) return { tipShow: false };
         const df = DEFS[t.mid] || [m.label, ''];

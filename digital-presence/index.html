@@ -1,0 +1,1122 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Digital Presence — The Anton Group</title>
+<style>
+/* Digital Presence dashboard.
+ *
+ * An internal instrument, not a marketing page: scanned, not read. So the
+ * type is small and dense, the numbers are tabular, and colour is reserved for
+ * state (overdue, off-target) rather than decoration.
+ *
+ * Palette is a cool slate with a single brass accent — deliberately not the
+ * site's #1300ef, so nobody mistakes this for a client-facing surface.
+ */
+
+:root {
+  color-scheme: light;
+
+  --bg:        #f4f5f7;
+  --surface:   #ffffff;
+  --ink:       #1b1f24;
+  --ink-soft:  #5b6470;
+  --ink-faint: #8b95a3;
+  --line:      #dfe3e8;
+  --line-firm: #c3cad4;
+
+  --accent:    #8a6a3c;
+  --good:      #2f6d4f;
+  --warn:      #9a6b12;
+  --warn-bg:   #fdf4e0;
+  --bad:       #a3402c;
+  --bad-bg:    #fbeae6;
+
+  --series-a:  #33507a;   /* impressions */
+  --series-b:  #8a6a3c;   /* followers   */
+  --band:      #e8edf4;   /* target band */
+
+  --radius: 8px;
+  --shadow: 0 1px 2px rgba(27, 31, 36, .05), 0 4px 14px -8px rgba(27, 31, 36, .18);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+    --bg:        #14171b;
+    --surface:   #1c2027;
+    --ink:       #e6e9ee;
+    --ink-soft:  #a4adba;
+    --ink-faint: #74808f;
+    --line:      #2b313a;
+    --line-firm: #3c444f;
+    --accent:    #cfa96a;
+    --good:      #6cc394;
+    --warn:      #d9a83f;
+    --warn-bg:   #33280f;
+    --bad:       #e08a74;
+    --bad-bg:    #3a231d;
+    --series-a:  #7fa3d6;
+    --series-b:  #cfa96a;
+    --band:      #232a33;
+    --shadow: 0 1px 2px rgba(0,0,0,.4), 0 6px 20px -10px rgba(0,0,0,.6);
+  }
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font: 400 14px/1.5 ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ---------- masthead ---------- */
+
+.masthead {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  align-items: flex-end;
+  justify-content: space-between;
+  padding: 28px 28px 20px;
+  border-bottom: 1px solid var(--line);
+}
+.eyebrow {
+  margin: 0 0 4px;
+  font-size: 11px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+h1 { margin: 0; font-size: 24px; font-weight: 600; letter-spacing: -.01em; }
+.masthead-meta { display: flex; align-items: center; gap: 10px; }
+.masthead-meta label {
+  font-size: 11px; letter-spacing: .08em; text-transform: uppercase;
+  color: var(--ink-faint);
+}
+select {
+  font: inherit;
+  padding: 5px 8px;
+  color: var(--ink);
+  background: var(--surface);
+  border: 1px solid var(--line-firm);
+  border-radius: 6px;
+}
+select:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
+
+.muted { color: var(--ink-faint); font-size: 12px; margin: 0; }
+
+/* ---------- banners ---------- */
+
+.banner {
+  margin: 16px 28px 0;
+  padding: 12px 14px;
+  border-radius: var(--radius);
+  border: 1px solid;
+  font-size: 13px;
+}
+.banner-error { background: var(--bad-bg);  border-color: var(--bad);  color: var(--bad); }
+.banner-warn  { background: var(--warn-bg); border-color: var(--warn); color: var(--warn); }
+
+/* ---------- freshness strip ----------
+   Sits above everything. If the import is stale, that fact outranks every
+   number below it. */
+
+.strip {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 28px;
+  align-items: baseline;
+  margin: 0;
+  padding: 12px 16px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-left: 3px solid var(--good);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  font-size: 13px;
+}
+.tip {
+  display: flex;
+  gap: 10px;
+  align-items: baseline;
+  margin: 10px 0 0;
+  padding: 8px 12px;
+  border-left: 3px solid var(--accent);
+  background: var(--bg);
+  border-radius: 0 var(--radius) var(--radius) 0;
+  font-size: 13px;
+  color: var(--ink);
+}
+.tip-label { font-size: 11px; letter-spacing: .06em; text-transform: uppercase; color: var(--accent); white-space: nowrap; }
+.tip-src { color: var(--ink-faint); }
+.strip.is-overdue { border-left-color: var(--warn); background: var(--warn-bg); }
+.strip b { font-variant-numeric: tabular-nums; }
+
+/* ---------- tiles ---------- */
+
+main { padding: 20px 28px 40px; display: grid; gap: 20px; }
+
+.tiles {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+  gap: 14px;
+}
+.tile {
+  padding: 14px 16px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+}
+.tile-label {
+  margin: 0 0 6px;
+  font-size: 11px; letter-spacing: .07em; text-transform: uppercase;
+  color: var(--ink-faint);
+}
+.tile-value {
+  margin: 0;
+  font-size: 28px; font-weight: 600; line-height: 1.1;
+  font-variant-numeric: tabular-nums;
+}
+.tile-sub { margin: 6px 0 0; font-size: 12px; color: var(--ink-soft); }
+.tile.is-warn  .tile-value { color: var(--warn); }
+.tile.is-bad   .tile-value { color: var(--bad); }
+.tile.is-good  .tile-value { color: var(--good); }
+
+/* ---------- platform sections ----------
+   Every number on this page belongs to exactly one platform, and the page must
+   say which without the reader having to infer it. Platforms are the top-level
+   grouping; charts live inside one. Nothing is ever blended across them —
+   platforms count impressions differently and a combined total would be
+   meaningless. */
+
+.platform {
+  display: grid;
+  gap: 14px;
+  padding-top: 4px;
+}
+.platform + .platform {
+  margin-top: 14px;
+  padding-top: 26px;
+  border-top: 1px solid var(--line-firm);
+}
+.platform-head {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 20px;
+  align-items: flex-end;
+  justify-content: space-between;
+}
+.platform-id { display: flex; align-items: center; gap: 12px; }
+.platform-id h2 {
+  margin: 0;
+  font-size: 19px; font-weight: 600; letter-spacing: -.01em;
+  display: flex; align-items: center; gap: 9px;
+}
+.platform-sub { margin: 2px 0 0; font-size: 12.5px; color: var(--ink-soft); }
+.platform-source { margin: 0; font-size: 12px; color: var(--ink-soft); text-align: right; }
+
+/* A mark rather than a logo — no trademark use, and it survives both themes. */
+.platform-mark {
+  flex: none;
+  width: 34px; height: 34px;
+  display: grid; place-items: center;
+  border-radius: 7px;
+  font-size: 15px; font-weight: 700; line-height: 1;
+  color: var(--surface);
+}
+.platform-mark-li  { background: #0a66c2; font-family: Georgia, serif; }
+.platform-mark-web { background: var(--series-a); }
+.platform-mark-ig  { background: linear-gradient(135deg, #b8318d, #e9603f); }
+
+/* A staged platform is visibly not-yet rather than broken or empty. */
+.platform-staged .platform-mark { background: var(--line-firm); color: var(--ink-faint); }
+.platform-staged .panel { border-style: dashed; box-shadow: none; }
+
+
+/* ---------- panels ---------- */
+
+.panel {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 18px 20px 20px;
+}
+.panel-head { margin-bottom: 14px; }
+.panel-head h3 {
+  margin: 0 0 4px;
+  font-size: 15px; font-weight: 600;
+  display: flex; align-items: center; gap: 8px;
+}
+.panel-note {
+  margin: 0;
+  font-size: 12.5px; line-height: 1.5;
+  color: var(--ink-soft);
+  max-width: 78ch;
+}
+.panel-staged { border-style: dashed; box-shadow: none; }
+.pill {
+  font-size: 10px; letter-spacing: .06em; text-transform: uppercase;
+  padding: 2px 7px; border-radius: 999px;
+  background: var(--band); color: var(--ink-soft); font-weight: 600;
+}
+/* Must follow .pill — same specificity, so source order decides. */
+.pill-li    { background: #0a66c2; color: #fff; }
+.pill-burst { background: #2f6d6a; color: #fff; }
+
+.chart { width: 100%; overflow-x: auto; }
+.chart svg { display: block; width: 100%; height: auto; }
+
+/* ---------- table ---------- */
+
+.table-scroll { overflow-x: auto; }
+table { width: 100%; border-collapse: collapse; font-size: 13px; }
+th, td {
+  padding: 8px 10px;
+  text-align: left;
+  border-bottom: 1px solid var(--line);
+  vertical-align: top;
+}
+th {
+  font-size: 11px; letter-spacing: .06em; text-transform: uppercase;
+  color: var(--ink-faint); font-weight: 600;
+  border-bottom: 1px solid var(--line-firm);
+  white-space: nowrap;
+}
+td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+tbody tr:last-child td { border-bottom: none; }
+.post-text {
+  display: block;
+  max-width: 46ch;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: var(--ink-soft);
+}
+
+/* ---------- chart internals ---------- */
+
+.axis text  { font-size: 10px; fill: var(--ink-faint); }
+.axis line, .axis path { stroke: var(--line); }
+.gridline   { stroke: var(--line); stroke-dasharray: 2 3; }
+.bar        { fill: var(--series-a); }
+.bar.below  { fill: var(--line-firm); }
+.target-band{ fill: var(--band); }
+.series-a   { stroke: var(--series-a); fill: none; stroke-width: 2; }
+.series-b   { stroke: var(--series-b); fill: none; stroke-width: 2; }
+.dot-a      { fill: var(--series-a); }
+.dot-b      { fill: var(--series-b); }
+.bar-followers { fill: var(--series-a); }
+.bar-visitors  { fill: var(--series-b); }
+.chart-legend {
+  display: flex; flex-wrap: wrap; gap: 14px;
+  margin: 10px 0 0; padding: 0; list-style: none;
+  font-size: 12px; color: var(--ink-soft);
+}
+.chart-legend li { display: flex; align-items: center; gap: 6px; }
+.swatch { width: 10px; height: 10px; border-radius: 2px; flex: none; }
+
+footer { padding: 0 28px 32px; }
+footer p { max-width: 90ch; }
+code {
+  font: 12px/1 ui-monospace, "Cascadia Code", Consolas, monospace;
+  background: var(--band); padding: 1px 4px; border-radius: 3px;
+}
+
+@media (max-width: 620px) {
+  .masthead, .strip, .banner { margin-inline: 0; padding-inline: 16px; }
+  main { padding: 16px; }
+  footer { padding: 0 16px 24px; }
+}
+
+@media print {
+  body { background: #fff; }
+  .panel, .tile, .strip { box-shadow: none; border-color: #bbb; }
+  .masthead-meta select { display: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * { animation: none !important; transition: none !important; }
+}
+
+</style>
+<script>
+/* The page asks /api/metrics?range=... as before. The data now comes from the Data API behind sign-in (auth.js). */
+(function () {
+  const real = window.fetch ? window.fetch.bind(window) : null;
+  const API_URL = 'https://ep-plain-king-bdcfq2ot.apirest.c-8.us-east-2.aws.neon.tech/market_data/rest/v1';
+  const auth = import('./auth.js');
+  async function metrics(key, retried) {
+    const { getToken } = await auth;
+    const token = await getToken({ force: !!retried });
+    const res = await real(API_URL + '/digital_presence?select=payload&range=eq.' + encodeURIComponent(key),
+      { headers: { Authorization: 'Bearer ' + token, 'Accept-Profile': 'dash_api' } });
+    if (res.status === 401 && !retried) return metrics(key, true);
+    if (!res.ok) throw new Error('Data API ' + res.status);
+    const rows = await res.json();
+    if (!rows.length) {
+      // Signed in but not on the approved list: the view returns nothing.
+      await getToken({ force: true, message: 'This account is not on the approved list. Ask the dashboard owner for access, or sign in with an approved email.' });
+      return metrics(key, true);
+    }
+    return new Response(JSON.stringify(rows[0].payload), { status: 200, headers: { 'Content-Type': 'application/json' } });
+  }
+  window.fetch = function (input, init) {
+    const url = String((input && input.url) || input || '');
+    if (url.indexOf('/api/metrics') !== -1) {
+      const m = url.match(/range=([^&]+)/);
+      return metrics(m ? decodeURIComponent(m[1]) : '365d');
+    }
+    return real ? real(input, init) : Promise.reject(new Error('offline'));
+  };
+}());
+</script>
+</head>
+<body>
+
+<header class="masthead">
+  <div>
+    <p class="eyebrow">The Anton Group</p>
+    <h1>Digital Presence</h1>
+  </div>
+  <div class="masthead-meta">
+    <label for="range">Window</label>
+    <select id="range" aria-label="Time window">
+      <option value="365d" selected>Last 365 days</option>
+      <option value="90d">Last 90 days</option>
+      <option value="all">All data</option>
+    </select>
+    <p id="generated" class="muted"></p>
+  </div>
+</header>
+
+<noscript>
+  <div class="banner banner-warn">
+    This page reads live data and needs JavaScript enabled.
+  </div>
+</noscript>
+
+<div id="error" class="banner banner-error" hidden></div>
+
+<main>
+
+  <!-- ================= LINKEDIN ================= -->
+  <section class="platform" aria-labelledby="li-heading">
+
+    <div class="platform-head">
+      <div class="platform-id">
+        <span class="platform-mark platform-mark-li" aria-hidden="true">in</span>
+        <div>
+          <h2 id="li-heading">LinkedIn</h2>
+          <p class="platform-sub">Company page · <code>@antongroupnyc</code></p>
+        </div>
+      </div>
+      <p class="platform-source">
+        Source: monthly page-analytics export → Neon.
+        <span class="muted">Not live — as fresh as the last import.</span>
+      </p>
+    </div>
+
+    <!-- Freshness belongs to LinkedIn specifically: it describes the age of
+         that export, not of the dashboard as a whole. -->
+    <div id="freshness-strip" class="strip" aria-live="polite"></div>
+
+    <div class="tiles" id="tiles" aria-label="LinkedIn headline figures"></div>
+
+    <section class="panel">
+      <div class="panel-head">
+        <h3>Posting cadence <span class="pill pill-li">LinkedIn</span></h3>
+        <p class="panel-note">
+          Bars are posts published to the company page. The band is the 4–6 per
+          month the baseline recommends. This is the constraint — per-post
+          performance is healthy; supply is not.
+        </p>
+        <p class="tip">
+          <span class="tip-label">Get noticed</span>
+          <span>Pages that post at least once a week see 5× more followers. <span class="tip-src">LinkedIn page admin guidance</span></span>
+        </p>
+      </div>
+      <div id="chart-cadence" class="chart"></div>
+    </section>
+
+    <section class="panel">
+      <div class="panel-head">
+        <h3>Reach and follower growth <span class="pill pill-li">LinkedIn</span></h3>
+        <p class="panel-note">
+          Monthly organic impressions on the company page against net new
+          followers. Follower gain tracks posting, not reach.
+        </p>
+      </div>
+      <div id="chart-trend" class="chart"></div>
+    </section>
+
+    <section class="panel">
+      <div class="panel-head">
+        <h3>Audience quality <span class="pill pill-li">LinkedIn</span></h3>
+        <p class="panel-note" id="composition-note"></p>
+      </div>
+      <div id="chart-composition" class="chart"></div>
+    </section>
+
+    <section class="panel">
+      <div class="panel-head">
+        <h3>Every post <span class="pill pill-li">LinkedIn</span></h3>
+        <p class="panel-note">
+          Company-page posts, newest first. Engagement rate and CTR are stored as
+          fractions and formatted here. These are per-post figures and will not
+          sum to the page-level totals above — page counts include activity not
+          attributable to a specific post.
+        </p>
+      </div>
+      <div class="table-scroll">
+        <table id="posts-table">
+          <thead>
+            <tr>
+              <th scope="col">Date</th>
+              <th scope="col">Post</th>
+              <th scope="col" class="num">Impressions</th>
+              <th scope="col" class="num">Clicks</th>
+              <th scope="col" class="num">CTR</th>
+              <th scope="col" class="num">Reactions</th>
+              <th scope="col" class="num">Reposts</th>
+              <th scope="col" class="num">Eng. rate</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </section>
+  </section>
+
+  <!-- ================= WEBSITE ================= -->
+  <section class="platform" aria-labelledby="web-heading">
+    <div class="platform-head">
+      <div class="platform-id">
+        <span class="platform-mark platform-mark-web" aria-hidden="true">↗</span>
+        <div>
+          <h2 id="web-heading">Website &amp; Search</h2>
+          <p class="platform-sub"><code>antongroupnyc.com</code></p>
+        </div>
+      </div>
+      <p class="platform-source">
+        Three sources, one connected: Burst → Neon.
+        <span class="muted">GA4 and Search Console hold too little history to chart.</span>
+      </p>
+    </div>
+
+    <div class="tiles" id="burst-tiles" aria-label="Burst headline figures"></div>
+
+    <section class="panel">
+      <div class="panel-head">
+        <h3>Traffic volume <span class="pill pill-burst">Burst</span></h3>
+        <p class="panel-note">
+          Monthly pageviews and visitors recorded on the site itself since March
+          2024 — the only surface here with real history. Read it as a
+          <b>baseline, not an audience</b>: over the last 365 days Burst logged
+          <b>3,524 sessions of which 3,523 bounced</b>, a 99.97% bounce rate,
+          with one first-time visitor. The prior year was 100.00%. Recorded
+          top paths include injection probes and a mangled
+          <code>urldefense</code> URL. This is very largely automated traffic.
+          Its value is as the line GA4 will be measured against once real
+          visitors arrive.
+        </p>
+      </div>
+      <div id="chart-burst" class="chart"></div>
+    </section>
+
+    <div class="panel panel-staged">
+      <div class="panel-head">
+        <h3>Search performance <span class="pill">not yet</span></h3>
+      </div>
+      <p class="panel-note">
+        Search Console was verified <b>2026-08-21</b> and holds ten days of
+        history — 27 impressions, 4 clicks, 7 queries. Google backfills nothing
+        before verification, so there is no earlier data to recover and no trend
+        to draw. GA4 tracking began 2026-08-22. <b>Revisit October 2026</b>, when
+        both have enough history to say something.
+      </p>
+    </div>
+  </section>
+
+  <!-- ================= INSTAGRAM ================= -->
+  <section class="platform platform-staged" aria-labelledby="ig-heading">
+    <div class="platform-head">
+      <div class="platform-id">
+        <span class="platform-mark platform-mark-ig" aria-hidden="true">◎</span>
+        <div>
+          <h2 id="ig-heading">Instagram <span class="pill">not connected</span></h2>
+          <p class="platform-sub">Company account · <code>@antongroupnyc</code></p>
+        </div>
+      </div>
+      <p class="platform-source">
+        Source: Instagram Graph API → Neon.
+        <span class="muted">Not yet connected.</span>
+      </p>
+    </div>
+
+    <div class="panel">
+      <p class="panel-note">
+        The account exists but is dormant, and is not yet confirmed as a
+        Business or Creator account linked to a Facebook Page. Meta Business
+        Verification has not started and takes weeks of elapsed time — that is
+        the gating step, not the code. Panels appear here once data lands.
+      </p>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <p class="muted">
+    Every figure on this page is labelled with the platform it comes from. LinkedIn
+    is a monthly manual export; Website &amp; Search read from Google's APIs. The two
+    are never combined into a single number — different platforms count impressions
+    differently and a blended total would mean nothing.
+  </p>
+</footer>
+
+<script>
+/* Hand-built inline SVG charts. No library — three chart types do not justify
+ * a dependency, and inline SVG inherits the CSS custom properties so both
+ * colour schemes work without a second palette.
+ *
+ * Every chart draws into a fixed viewBox and scales via CSS, so there is no
+ * resize handling and no layout thrash.
+ */
+(function (global) {
+  'use strict';
+
+  const NS = 'http://www.w3.org/2000/svg';
+  const el = (name, attrs = {}, text = null) => {
+    const n = document.createElementNS(NS, name);
+    for (const [k, v] of Object.entries(attrs)) n.setAttribute(k, String(v));
+    if (text !== null) n.textContent = text;
+    return n;
+  };
+
+  /** Round a max up to something a human would choose for an axis top. */
+  function niceMax(v) {
+    if (v <= 0) return 1;
+    const mag = Math.pow(10, Math.floor(Math.log10(v)));
+    const norm = v / mag;
+    const step = norm <= 1 ? 1 : norm <= 2 ? 2 : norm <= 5 ? 5 : 10;
+    return step * mag;
+  }
+
+  const fmt = (n) => (n === null || n === undefined ? '—' : n.toLocaleString('en-US'));
+  const shortMonth = (ym) => {
+    const [y, m] = ym.split('-');
+    return ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'][+m - 1]
+      + (m === '01' ? ` ’${y.slice(2)}` : '');
+  };
+
+  function legend(items) {
+    const ul = document.createElement('ul');
+    ul.className = 'chart-legend';
+    for (const it of items) {
+      const li = document.createElement('li');
+      const sw = document.createElement('span');
+      sw.className = 'swatch';
+      sw.style.background = it.color;
+      li.append(sw, document.createTextNode(it.label));
+      ul.appendChild(li);
+    }
+    return ul;
+  }
+
+  /* ------------------------------------------------------------------ *
+   * Posting cadence: bars with the 4–6/month target band behind them.
+   * The band is the whole point — it turns "1 post" from a number into a
+   * miss you can see without reading the axis.
+   * ------------------------------------------------------------------ */
+  function cadence(mount, rows, target = [4, 6]) {
+    mount.textContent = '';
+    if (!rows || !rows.length) return empty(mount, 'No posts in this window.');
+
+    const W = 900, H = 260, P = { t: 14, r: 14, b: 30, l: 40 };
+    const iw = W - P.l - P.r, ih = H - P.t - P.b;
+    const max = niceMax(Math.max(target[1], ...rows.map((r) => r.posts)));
+    const y = (v) => P.t + ih - (v / max) * ih;
+    const bw = Math.min(46, (iw / rows.length) * 0.62);
+
+    const svg = el('svg', {
+      viewBox: `0 0 ${W} ${H}`, role: 'img',
+      'aria-label': `Posts per month. Target ${target[0]} to ${target[1]}.`,
+    });
+
+    svg.appendChild(el('rect', {
+      class: 'target-band', x: P.l, y: y(target[1]),
+      width: iw, height: Math.max(1, y(target[0]) - y(target[1])),
+    }));
+
+    for (let i = 0; i <= 4; i++) {
+      const v = (max / 4) * i;
+      svg.appendChild(el('line', { class: 'gridline', x1: P.l, x2: P.l + iw, y1: y(v), y2: y(v) }));
+      svg.appendChild(el('text', {
+        class: 'axis-label', x: P.l - 8, y: y(v) + 3.5, 'text-anchor': 'end',
+        fill: 'currentColor', style: 'font-size:10px;opacity:.55',
+      }, String(Math.round(v))));
+    }
+
+    rows.forEach((r, i) => {
+      const cx = P.l + (iw / rows.length) * (i + 0.5);
+      const h = Math.max(0, P.t + ih - y(r.posts));
+      const g = el('g');
+      g.appendChild(el('rect', {
+        class: 'bar' + (r.posts < target[0] ? ' below' : ''),
+        x: cx - bw / 2, y: y(r.posts), width: bw, height: h, rx: 2,
+      }));
+      g.appendChild(el('title', {}, `${r.month}: ${r.posts} post${r.posts === 1 ? '' : 's'}`));
+      if (r.posts > 0) {
+        g.appendChild(el('text', {
+          x: cx, y: y(r.posts) - 5, 'text-anchor': 'middle',
+          fill: 'currentColor', style: 'font-size:10px;opacity:.7',
+        }, String(r.posts)));
+      }
+      g.appendChild(el('text', {
+        x: cx, y: H - 10, 'text-anchor': 'middle',
+        fill: 'currentColor', style: 'font-size:10px;opacity:.55',
+      }, shortMonth(r.month)));
+      svg.appendChild(g);
+    });
+
+    mount.appendChild(svg);
+    mount.appendChild(legend([
+      { color: 'var(--series-a)', label: 'On or above target' },
+      { color: 'var(--line-firm)', label: 'Below 4/month' },
+      { color: 'var(--band)', label: 'Target band (4–6)' },
+    ]));
+  }
+
+  /* ------------------------------------------------------------------ *
+   * Reach vs follower growth: two lines on independent scales.
+   * Independent axes are deliberate — the question is whether the shapes
+   * move together, not how the magnitudes compare.
+   * ------------------------------------------------------------------ */
+  function trend(mount, rows) {
+    mount.textContent = '';
+    if (!rows || !rows.length) return empty(mount, 'No daily data in this window.');
+
+    const W = 900, H = 280, P = { t: 16, r: 46, b: 30, l: 48 };
+    const iw = W - P.l - P.r, ih = H - P.t - P.b;
+    const maxI = niceMax(Math.max(...rows.map((r) => r.impressions || 0)));
+    const maxF = niceMax(Math.max(1, ...rows.map((r) => r.net_followers || 0)));
+    const x = (i) => P.l + (rows.length === 1 ? iw / 2 : (iw / (rows.length - 1)) * i);
+    const yI = (v) => P.t + ih - ((v || 0) / maxI) * ih;
+    const yF = (v) => P.t + ih - ((v || 0) / maxF) * ih;
+
+    const svg = el('svg', {
+      viewBox: `0 0 ${W} ${H}`, role: 'img',
+      'aria-label': 'Monthly organic impressions and net new followers.',
+    });
+
+    for (let i = 0; i <= 4; i++) {
+      const v = (maxI / 4) * i;
+      svg.appendChild(el('line', { class: 'gridline', x1: P.l, x2: P.l + iw, y1: yI(v), y2: yI(v) }));
+      svg.appendChild(el('text', {
+        x: P.l - 8, y: yI(v) + 3.5, 'text-anchor': 'end',
+        fill: 'currentColor', style: 'font-size:10px;opacity:.55',
+      }, v >= 1000 ? `${Math.round(v / 1000)}k` : String(Math.round(v))));
+      svg.appendChild(el('text', {
+        x: P.l + iw + 8, y: yF((maxF / 4) * i) + 3.5,
+        fill: 'currentColor', style: 'font-size:10px;opacity:.55',
+      }, String(Math.round((maxF / 4) * i))));
+    }
+
+    const path = (acc, yf) => rows.map((r, i) => `${i ? 'L' : 'M'}${x(i)},${yf(r[acc])}`).join(' ');
+    svg.appendChild(el('path', { class: 'series-a', d: path('impressions', yI) }));
+    svg.appendChild(el('path', { class: 'series-b', d: path('net_followers', yF) }));
+
+    rows.forEach((r, i) => {
+      const a = el('circle', { class: 'dot-a', cx: x(i), cy: yI(r.impressions), r: 3 });
+      a.appendChild(el('title', {}, `${r.month}: ${fmt(r.impressions)} impressions`));
+      svg.appendChild(a);
+      const b = el('circle', { class: 'dot-b', cx: x(i), cy: yF(r.net_followers), r: 3 });
+      b.appendChild(el('title', {}, `${r.month}: ${fmt(r.net_followers)} net followers`));
+      svg.appendChild(b);
+      if (i % Math.ceil(rows.length / 8) === 0 || i === rows.length - 1) {
+        svg.appendChild(el('text', {
+          x: x(i), y: H - 10, 'text-anchor': 'middle',
+          fill: 'currentColor', style: 'font-size:10px;opacity:.55',
+        }, shortMonth(r.month)));
+      }
+    });
+
+    mount.appendChild(svg);
+    mount.appendChild(legend([
+      { color: 'var(--series-a)', label: 'Organic impressions (left)' },
+      { color: 'var(--series-b)', label: 'Net new followers (right)' },
+    ]));
+  }
+
+  /* ------------------------------------------------------------------ *
+   * Audience quality: a back-to-back bar chart.
+   * Followers left, visitors right, one shared seniority axis. Charted
+   * separately these two are unremarkable; opposed, the divergence is the
+   * entire finding — the followers are senior, the visitors are not.
+   * ------------------------------------------------------------------ */
+  function composition(mount, rows) {
+    mount.textContent = '';
+    if (!rows || !rows.length) return empty(mount, 'No demographic snapshot loaded.');
+
+    const byAud = { followers: {}, visitors: {} };
+    for (const r of rows) (byAud[r.audience_type] ||= {})[r.value] = Number(r.pct);
+
+    const ORDER = ['CXO', 'Owner', 'Partner', 'VP', 'Director', 'Senior', 'Manager', 'Entry', 'Training', 'Unpaid'];
+    const labels = ORDER.filter((k) => byAud.followers[k] != null || byAud.visitors[k] != null);
+    if (!labels.length) return empty(mount, 'No seniority breakdown available.');
+
+    const W = 900, H = 30 + labels.length * 26, GUT = 96;
+    const half = (W - GUT) / 2;
+    const max = Math.max(10, ...labels.map((k) => Math.max(byAud.followers[k] || 0, byAud.visitors[k] || 0)));
+    const rowH = 26, bh = 14;
+
+    const svg = el('svg', {
+      viewBox: `0 0 ${W} ${H}`, role: 'img',
+      'aria-label': 'Seniority of followers compared with page visitors, percent.',
+    });
+
+    labels.forEach((k, i) => {
+      const cy = 18 + i * rowH;
+      svg.appendChild(el('text', {
+        x: W / 2, y: cy + bh - 3, 'text-anchor': 'middle',
+        fill: 'currentColor', style: 'font-size:11px',
+      }, k));
+
+      const f = byAud.followers[k] || 0;
+      const wf = (f / max) * half;
+      const gf = el('g');
+      gf.appendChild(el('rect', { class: 'bar-followers', x: W / 2 - GUT / 2 - wf, y: cy, width: wf, height: bh, rx: 2 }));
+      gf.appendChild(el('title', {}, `Followers · ${k}: ${f}%`));
+      svg.appendChild(gf);
+      if (f >= 3) svg.appendChild(el('text', {
+        x: W / 2 - GUT / 2 - wf - 5, y: cy + bh - 3, 'text-anchor': 'end',
+        fill: 'currentColor', style: 'font-size:10px;opacity:.7',
+      }, `${f}%`));
+
+      const v = byAud.visitors[k] || 0;
+      const wv = (v / max) * half;
+      const gv = el('g');
+      gv.appendChild(el('rect', { class: 'bar-visitors', x: W / 2 + GUT / 2, y: cy, width: wv, height: bh, rx: 2 }));
+      gv.appendChild(el('title', {}, `Visitors · ${k}: ${v}%`));
+      svg.appendChild(gv);
+      if (v >= 3) svg.appendChild(el('text', {
+        x: W / 2 + GUT / 2 + wv + 5, y: cy + bh - 3,
+        fill: 'currentColor', style: 'font-size:10px;opacity:.7',
+      }, `${v}%`));
+    });
+
+    mount.appendChild(svg);
+    mount.appendChild(legend([
+      { color: 'var(--series-a)', label: 'Followers (left)' },
+      { color: 'var(--series-b)', label: 'Page visitors (right)' },
+    ]));
+  }
+
+  /* ------------------------------------------------------------------ *
+   * Traffic volume: paired monthly bars, no target band.
+   * Used for Burst. There is deliberately no goal line here — this series
+   * is automated traffic, so "more" would not be better and a target would
+   * imply otherwise.
+   * ------------------------------------------------------------------ */
+  function volume(mount, rows) {
+    mount.textContent = '';
+    if (!rows || !rows.length) return empty(mount, 'No traffic data in this window.');
+
+    const W = 900, H = 240, P = { t: 14, r: 14, b: 30, l: 44 };
+    const iw = W - P.l - P.r, ih = H - P.t - P.b;
+    const max = niceMax(Math.max(1, ...rows.map((r) => Math.max(r.pageviews, r.visitors))));
+    const y = (v) => P.t + ih - (v / max) * ih;
+    const slot = iw / rows.length;
+    const bw = Math.min(18, slot * 0.32);
+
+    const svg = el('svg', {
+      viewBox: `0 0 ${W} ${H}`, role: 'img',
+      'aria-label': 'Monthly Burst pageviews and visitors.',
+    });
+
+    for (let i = 0; i <= 4; i++) {
+      const v = (max / 4) * i;
+      svg.appendChild(el('line', { class: 'gridline', x1: P.l, x2: P.l + iw, y1: y(v), y2: y(v) }));
+      svg.appendChild(el('text', {
+        x: P.l - 8, y: y(v) + 3.5, 'text-anchor': 'end',
+        fill: 'currentColor', style: 'font-size:10px;opacity:.55',
+      }, String(Math.round(v))));
+    }
+
+    rows.forEach((r, i) => {
+      const cx = P.l + slot * (i + 0.5);
+      const g = el('g');
+      [['pageviews', 'bar-followers', -bw / 2 - 1], ['visitors', 'bar-visitors', 1]].forEach(
+        ([key, cls, dx]) => {
+          const h = Math.max(0, P.t + ih - y(r[key]));
+          const rect = el('rect', {
+            class: cls, x: cx + dx, y: y(r[key]), width: bw, height: h, rx: 2,
+          });
+          rect.appendChild(el('title', {}, `${r.month}: ${fmt(r[key])} ${key}`));
+          g.appendChild(rect);
+        }
+      );
+      if (i % Math.ceil(rows.length / 8) === 0 || i === rows.length - 1) {
+        g.appendChild(el('text', {
+          x: cx, y: H - 10, 'text-anchor': 'middle',
+          fill: 'currentColor', style: 'font-size:10px;opacity:.55',
+        }, shortMonth(r.month)));
+      }
+      svg.appendChild(g);
+    });
+
+    mount.appendChild(svg);
+    mount.appendChild(legend([
+      { color: 'var(--series-a)', label: 'Pageviews' },
+      { color: 'var(--series-b)', label: 'Visitors' },
+    ]));
+  }
+
+  function empty(mount, msg) {
+    const p = document.createElement('p');
+    p.className = 'panel-note';
+    p.textContent = msg;
+    mount.appendChild(p);
+  }
+
+  global.Charts = { cadence, trend, composition, volume, fmt };
+})(window);
+
+</script>
+<script>
+/* One fetch, one render. All arithmetic that could go wrong lives in SQL;
+ * this file formats and places.
+ *
+ * The single formatting rule that matters: engagement_rate and ctr are stored
+ * as FRACTIONS (0.0483, not 4.83). pct() is the only place they are multiplied,
+ * so there is exactly one line to get wrong instead of six.
+ */
+(function () {
+  'use strict';
+
+  const $ = (id) => document.getElementById(id);
+  const fmt = (n) => (n === null || n === undefined ? '—' : Number(n).toLocaleString('en-US'));
+  const pct = (frac, dp = 1) =>
+    frac === null || frac === undefined ? '—' : `${(Number(frac) * 100).toFixed(dp)}%`;
+  const plural = (n, s, p) => `${n} ${n === 1 ? s : p}`;
+  // Postgres dates arrive from the Function as full ISO timestamps
+  // ("2026-08-24T04:00:00.000Z"). Printed raw they read as machine output in
+  // the middle of a sentence. Sliced rather than parsed: `new Date(...)` and
+  // then formatting would shift the calendar date by one for any viewer west
+  // of UTC, because these are dates, not instants.
+  const day = (v) => (typeof v === 'string' ? v.slice(0, 10) : v == null ? '—' : String(v));
+
+  function showError(msg) {
+    const box = $('error');
+    box.textContent = msg;
+    box.hidden = false;
+  }
+
+  /* ---------- freshness strip ----------
+     Renders days-since-last-post and the age of the import together, always.
+     The tile exists because the page once went 56 days dark unnoticed; since
+     the feed is a monthly manual export, showing the first figure without the
+     second would reproduce exactly that blindness. */
+  function renderFreshness(f) {
+    const strip = $('freshness-strip');
+    strip.textContent = '';
+    if (!f) {
+      strip.textContent = 'Freshness unavailable.';
+      return;
+    }
+    strip.classList.toggle('is-overdue', Boolean(f.export_overdue));
+
+    const bits = [
+      `<span><b>${plural(f.days_since_last_post, 'day', 'days')}</b> since the last post
+        <span class="muted">(${day(f.last_post)})</span></span>`,
+      `<span>Data runs through <b>${day(f.data_through)}</b>
+        <span class="muted">— ${plural(f.data_age_days, 'day', 'days')} ago</span></span>`,
+      `<span><b>${f.days_of_data}</b> days loaded
+        <span class="muted">from ${day(f.data_from)}</span></span>`,
+    ];
+    if (f.export_overdue) {
+      bits.push('<span><b>Export overdue.</b> Run the monthly LinkedIn export — '
+        + 'every figure below is older than it looks.</span>');
+    }
+    strip.innerHTML = bits.join('');
+  }
+
+  /* ---------- tiles ---------- */
+  function renderTiles(d) {
+    const f = d.freshness || {};
+    const totals = (d.trend || []).reduce(
+      (a, r) => ({
+        impressions: a.impressions + (r.impressions || 0),
+        clicks: a.clicks + (r.clicks || 0),
+        followers: a.followers + (r.net_followers || 0),
+      }),
+      { impressions: 0, clicks: 0, followers: 0 }
+    );
+
+    const monthly = d.cadence || [];
+    const avg = monthly.length
+      ? monthly.reduce((s, r) => s + r.posts, 0) / monthly.length
+      : 0;
+
+    const tiles = [
+      {
+        label: 'Posts this month',
+        value: f.posts_this_month ?? '—',
+        sub: `${avg.toFixed(1)}/month average · target 4–6`,
+        state: (f.posts_this_month ?? 0) >= 4 ? 'is-good' : 'is-bad',
+      },
+      {
+        label: 'Organic impressions',
+        value: fmt(totals.impressions),
+        sub: `${fmt(totals.clicks)} clicks · ${
+          totals.impressions ? pct(totals.clicks / totals.impressions, 2) : '—'
+        } page CTR`,
+      },
+      {
+        label: 'Net new followers',
+        value: fmt(totals.followers),
+        sub: `${plural(f.posts_total ?? 0, 'post', 'posts')} in the window`,
+      },
+      {
+        label: 'Followers per post',
+        value: f.posts_total ? (totals.followers / f.posts_total).toFixed(1) : '—',
+        sub: 'Posting drives follower growth; reach alone does not',
+      },
+    ];
+
+    $('tiles').innerHTML = tiles
+      .map(
+        (t) => `<article class="tile ${t.state || ''}">
+            <p class="tile-label">${t.label}</p>
+            <p class="tile-value">${t.value}</p>
+            <p class="tile-sub">${t.sub}</p>
+          </article>`
+      )
+      .join('');
+  }
+
+  /* ---------- posts table ---------- */
+  function renderPosts(rows) {
+    const body = document.querySelector('#posts-table tbody');
+    body.textContent = '';
+    if (!rows || !rows.length) {
+      body.innerHTML = '<tr><td colspan="8" class="muted">No posts loaded.</td></tr>';
+      return;
+    }
+    body.innerHTML = rows
+      .map((r) => {
+        // Post text can contain markup-significant characters; build with
+        // textContent semantics by escaping rather than interpolating raw.
+        const text = String(r.content || '')
+          .replace(/&/g, '&amp;')
+          .replace(/</g, '&lt;')
+          .replace(/>/g, '&gt;');
+        return `<tr>
+          <td>${r.posted_at || '—'}</td>
+          <td><span class="post-text" title="${text}">${text || '—'}</span></td>
+          <td class="num">${fmt(r.impressions)}</td>
+          <td class="num">${fmt(r.clicks)}</td>
+          <td class="num">${pct(r.ctr, 2)}</td>
+          <td class="num">${fmt(r.likes)}</td>
+          <td class="num">${fmt(r.reposts)}</td>
+          <td class="num">${pct(r.engagement_rate)}</td>
+        </tr>`;
+      })
+      .join('');
+  }
+
+  /* ---------- Burst (website) ----------
+     Deliberately uncoloured. The tile states elsewhere mean "off target", and
+     there is no target here — this series is very largely automated traffic,
+     so a rising number is not an improvement and must not be styled as one.
+     No bounce tile: the stored counts are page-level and cannot produce a
+     session-level rate, so the measured figure stays in the panel note where
+     its source and window are stated. */
+  function renderBurst(burst) {
+    const mount = $('burst-tiles');
+    const t = burst && burst.totals;
+    if (!t) {
+      mount.innerHTML = '<article class="tile"><p class="tile-label">Burst</p>'
+        + '<p class="tile-value">—</p><p class="tile-sub">No data returned.</p></article>';
+      Charts.volume($('chart-burst'), []);
+      return;
+    }
+
+    const span = t.first_month && t.last_month ? `${t.first_month} → ${t.last_month}` : '—';
+    const tiles = [
+      { label: 'Pageviews',  value: fmt(t.pageviews),
+        sub: 'Recorded on-site by Burst' },
+      { label: 'Sessions',   value: fmt(t.sessions),
+        sub: 'Site-wide daily figure, not summed per page' },
+      { label: 'Visitors',   value: fmt(t.visitors),
+        sub: 'Counted per page, so higher than sessions' },
+      { label: 'History',    value: (t.months ?? (burst.monthly || []).length) + ' mo',
+        sub: span },
+    ];
+    mount.innerHTML = tiles.map((x) => `<article class="tile">
+        <p class="tile-label">${x.label}</p>
+        <p class="tile-value">${x.value}</p>
+        <p class="tile-sub">${x.sub}</p>
+      </article>`).join('');
+
+    Charts.volume($('chart-burst'), burst.monthly || []);
+  }
+
+  /* ---------- load ---------- */
+  async function load(range) {
+    $('error').hidden = true;
+    try {
+      const res = await fetch(`/api/metrics?range=${encodeURIComponent(range)}`, {
+        headers: { Accept: 'application/json' },
+        credentials: 'same-origin',
+      });
+      if (!res.ok) {
+        // 403 here almost always means the Cloudflare Access session lapsed
+        // rather than a genuine permission problem, so say so.
+        if (res.status === 403) {
+          showError('Your session expired. Reload the page to sign in again.');
+        } else {
+          showError(`Could not load data (HTTP ${res.status}). The panels below may be blank.`);
+        }
+        return;
+      }
+      const data = await res.json();
+
+      renderFreshness(data.freshness);
+      renderTiles(data);
+      Charts.cadence($('chart-cadence'), data.cadence);
+      Charts.trend($('chart-trend'), data.trend);
+      Charts.composition($('chart-composition'), data.composition);
+      renderPosts(data.posts);
+      renderBurst(data.burst);
+
+      const asOf = data.freshness?.demographics_as_of;
+      $('composition-note').textContent =
+        'Seniority of followers against seniority of page visitors'
+        + (asOf ? `, as of ${asOf}` : '')
+        + '. A single snapshot, not a trend — LinkedIn exports demographics '
+        + 'without history. The gap is the point: the followers are senior, '
+        + 'the visitors are not.';
+
+      $('generated').textContent =
+        'Loaded ' + new Date(data.generated_at).toLocaleString('en-US');
+    } catch (err) {
+      showError('Could not reach the data service. Check your connection and reload.');
+    }
+  }
+
+  $('range').addEventListener('change', (e) => load(e.target.value));
+  load($('range').value);
+})();
+
+</script>
+</body>
+</html>

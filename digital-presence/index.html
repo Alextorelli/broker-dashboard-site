@@ -506,8 +506,8 @@ code {
         </div>
       </div>
       <p class="platform-source">
-        Three sources, one connected: Burst → Neon.
-        <span class="muted">GA4 and Search Console hold too little history to chart.</span>
+        Three sources → Neon: Burst until Aug 21, 2026, then GA4; Search Console since Aug 24, 2026.
+        <span class="muted">Not live — as fresh as the last load.</span>
       </p>
     </div>
 
@@ -517,8 +517,8 @@ code {
       <div class="panel-head">
         <h3>Traffic volume <span class="pill pill-burst">Burst</span></h3>
         <p class="panel-note">
-          Monthly pageviews and visitors recorded on the site itself since March
-          2024 — the only surface here with real history. Read it as a
+          Monthly pageviews and visitors recorded on the site itself from March
+          2024 until <b>Aug 21, 2026</b>, when Burst stopped and GA4 took over. Read it as a
           <b>baseline, not an audience</b>: over the last 365 days Burst logged
           <b>3,524 sessions of which 3,523 bounced</b>, a 99.97% bounce rate,
           with one first-time visitor. The prior year was 100.00%. Recorded
@@ -531,18 +531,29 @@ code {
       <div id="chart-burst" class="chart"></div>
     </section>
 
-    <div class="panel panel-staged">
+    <section class="panel">
       <div class="panel-head">
-        <h3>Search performance <span class="pill">not yet</span></h3>
+        <h3>Traffic since GA4 <span class="pill pill-burst">GA4</span></h3>
+        <p class="panel-note" id="ga4-note">
+          Sessions and page views measured by GA4 since tracking began. GA4 counts
+          real visits more strictly than Burst, so the two series are not joined.
+        </p>
       </div>
-      <p class="panel-note">
-        Search Console was verified <b>2026-08-21</b> and holds ten days of
-        history — 27 impressions, 4 clicks, 7 queries. Google backfills nothing
-        before verification, so there is no earlier data to recover and no trend
-        to draw. GA4 tracking began 2026-08-22. <b>Revisit October 2026</b>, when
-        both have enough history to say something.
-      </p>
-    </div>
+      <div class="tiles" id="ga4-tiles" aria-label="GA4 headline figures"></div>
+      <div id="chart-ga4" class="chart"></div>
+    </section>
+
+    <section class="panel">
+      <div class="panel-head">
+        <h3>Search performance <span class="pill pill-burst">Search Console</span></h3>
+        <p class="panel-note" id="search-note"></p>
+      </div>
+      <div class="tiles" id="search-tiles" aria-label="Search Console headline figures"></div>
+      <table id="search-table">
+        <thead><tr><th>Top queries by impressions</th><th class="num">Impressions</th><th class="num">Clicks</th></tr></thead>
+        <tbody></tbody>
+      </table>
+    </section>
   </section>
 
   <!-- ================= INSTAGRAM ================= -->
@@ -826,20 +837,21 @@ code {
    * is automated traffic, so "more" would not be better and a target would
    * imply otherwise.
    * ------------------------------------------------------------------ */
-  function volume(mount, rows) {
+  function volume(mount, rows, o) {
+    o = o || { a: 'pageviews', b: 'visitors', la: 'Pageviews', lb: 'Visitors', aria: 'Monthly Burst pageviews and visitors.' };
     mount.textContent = '';
     if (!rows || !rows.length) return empty(mount, 'No traffic data in this window.');
 
     const W = 900, H = 240, P = { t: 14, r: 14, b: 30, l: 44 };
     const iw = W - P.l - P.r, ih = H - P.t - P.b;
-    const max = niceMax(Math.max(1, ...rows.map((r) => Math.max(r.pageviews, r.visitors))));
+    const max = niceMax(Math.max(1, ...rows.map((r) => Math.max(r[o.a], r[o.b]))));
     const y = (v) => P.t + ih - (v / max) * ih;
     const slot = iw / rows.length;
     const bw = Math.min(18, slot * 0.32);
 
     const svg = el('svg', {
       viewBox: `0 0 ${W} ${H}`, role: 'img',
-      'aria-label': 'Monthly Burst pageviews and visitors.',
+      'aria-label': o.aria,
     });
 
     for (let i = 0; i <= 4; i++) {
@@ -854,7 +866,7 @@ code {
     rows.forEach((r, i) => {
       const cx = P.l + slot * (i + 0.5);
       const g = el('g');
-      [['pageviews', 'bar-followers', -bw / 2 - 1], ['visitors', 'bar-visitors', 1]].forEach(
+      [[o.a, 'bar-followers', -bw / 2 - 1], [o.b, 'bar-visitors', 1]].forEach(
         ([key, cls, dx]) => {
           const h = Math.max(0, P.t + ih - y(r[key]));
           const rect = el('rect', {
@@ -875,8 +887,8 @@ code {
 
     mount.appendChild(svg);
     mount.appendChild(legend([
-      { color: 'var(--series-a)', label: 'Pageviews' },
-      { color: 'var(--series-b)', label: 'Visitors' },
+      { color: 'var(--series-a)', label: o.la },
+      { color: 'var(--series-b)', label: o.lb },
     ]));
   }
 
@@ -1070,6 +1082,67 @@ code {
     Charts.volume($('chart-burst'), burst.monthly || []);
   }
 
+  /* ---------- GA4 and Search Console ---------- */
+  function tilesHTML(list) {
+    return list.map((x) => `<article class="tile">
+        <p class="tile-label">${x.label}</p>
+        <p class="tile-value">${x.value}</p>
+        <p class="tile-sub">${x.sub}</p>
+      </article>`).join('');
+  }
+  const share = (n, d) => (d ? Math.round((100 * n) / d) + '%' : '—');
+
+  function renderGA4(ga4) {
+    const t = ga4 && ga4.totals;
+    if (!t || !t.sessions) {
+      $('ga4-tiles').innerHTML = tilesHTML([{ label: 'GA4', value: '—', sub: 'No data returned.' }]);
+      Charts.volume($('chart-ga4'), []);
+      return;
+    }
+    const ch = Object.fromEntries((ga4.channels || []).map((c) => [c.channel_group, c]));
+    const search = ch['Organic Search'] || { sessions: 0, engaged_sessions: 0 };
+    const direct = ch['Direct'] || { sessions: 0, engaged_sessions: 0 };
+    $('ga4-tiles').innerHTML = tilesHTML([
+      { label: 'Sessions', value: fmt(t.sessions), sub: `${t.first_day} → ${t.last_day}` },
+      { label: 'Engaged', value: share(t.engaged_sessions, t.sessions), sub: 'of sessions, all channels' },
+      { label: 'Direct', value: share(direct.sessions, t.sessions),
+        sub: `of sessions; ${share(direct.engaged_sessions, direct.sessions)} engaged` },
+      { label: 'Search', value: share(search.sessions, t.sessions),
+        sub: `of sessions; ${share(search.engaged_sessions, search.sessions)} engaged` },
+    ]);
+    Charts.volume($('chart-ga4'), ga4.monthly || [],
+      { a: 'page_views', b: 'sessions', la: 'Page views', lb: 'Sessions', aria: 'Monthly GA4 page views and sessions.' });
+  }
+
+  function renderSearch(sc) {
+    const t = sc && sc.totals;
+    const body = $('search-table').querySelector('tbody');
+    if (!t || !t.impressions) {
+      $('search-tiles').innerHTML = tilesHTML([{ label: 'Search Console', value: '—', sub: 'No data returned.' }]);
+      body.innerHTML = '';
+      return;
+    }
+    $('search-note').textContent = `Google Search, ${t.first_day} to ${t.last_day}. `
+      + `Search finds the brand, not the expertise: ${fmt(sc.mm_impressions)} impressions came from `
+      + 'Marcus & Millichap queries that never mention us.';
+    $('search-tiles').innerHTML = tilesHTML([
+      { label: 'Impressions', value: fmt(t.impressions), sub: `${fmt(sc.queries)} queries` },
+      { label: 'Clicks', value: fmt(t.clicks), sub: `${t.impressions ? ((100 * t.clicks) / t.impressions).toFixed(1) : '—'}% click-through` },
+      { label: 'Brand clicks', value: fmt(sc.brand_clicks), sub: `of ${fmt(t.clicks)}, from searches naming us` },
+    ]);
+    body.innerHTML = '';
+    (sc.top_queries || []).forEach((q) => {
+      const tr = document.createElement('tr');
+      [q.query, fmt(q.impressions), fmt(q.clicks)].forEach((v, i) => {
+        const td = document.createElement('td');
+        td.textContent = v;
+        if (i) td.className = 'num';
+        tr.appendChild(td);
+      });
+      body.appendChild(tr);
+    });
+  }
+
   /* ---------- load ---------- */
   async function load(range) {
     $('error').hidden = true;
@@ -1097,6 +1170,8 @@ code {
       Charts.composition($('chart-composition'), data.composition);
       renderPosts(data.posts);
       renderBurst(data.burst);
+      renderGA4(data.ga4);
+      renderSearch(data.search);
 
       const asOf = data.freshness?.demographics_as_of;
       $('composition-note').textContent =
